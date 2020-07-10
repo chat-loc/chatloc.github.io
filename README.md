@@ -8,7 +8,7 @@ This app aims to solve the need of connecting users, who share the same national
 ## Group Members
 
 1. Khush
-2. Aman
+2. [Amandeep Singh] (#amandeep-singh)
 3. [Kay](#ibiyemi-kayode)
 
 
@@ -20,4 +20,12 @@ There will be a login system to capture the details of the users. And the detail
 
 As highlighted, the third consideration for this app is distance. This application will only 'lock in' users who are within a 1-mile perimeter. The application will create a catalogue of users that meet this criteria. The closest possible users will be on top of the stack. When users fall out of the perimeter, a disconnection triggers. In similar vein, when users have actually struck up a connection, there would be a warning if they are on the threshold of disconnecting. In the event there is a connection, the application will try to improve the chat flow if there are delays in the chat or there are infrequencies or simply put: a lack of 'vibe'. The application will have to listen for chat drabness and try to help users by making suggestions of news or current events by lifting some words in the chats and running a search query or fetching from some data source e.g. a News-headline API.
 
+# Amandeep Singh
 
+In order to make a collab app the ideas which i got after doing  some research on different collab platforms available are as follow:
+
+* There should a particular page which include all the users in a team with there contact details and work assigned to them. Then there should be a status column which high lights there progress of particular project, time spent.
+
+* users on same projects can create there chat group which can be linked to the project. here they have an option to send attachments too.
+
+* will try to integrate it with slack api so that users can get updates about the changes in there projects.
