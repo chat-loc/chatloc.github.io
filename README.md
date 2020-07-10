@@ -7,9 +7,21 @@ This app aims to solve the need of connecting users, who share the same national
 
 ## Group Members
 
-1. Khush
+1. [Khush](#Khushboo-Umrigar)
 2. [Amandeep Singh](#amandeep-singh)
 3. [Kay](#ibiyemi-kayode)
+
+
+# Khushboo Umrigar
+
+After using slack application for a while, my idea is to create a collabrative app where 
+1. all the user can chat
+2. share the files. 
+3. Having a to-do list feature will be a great addition to that. 
+  3. In the to-do list we can assign task by selecting a person name and can assign deadline for the same.
+4. link with google calender or apple reminders to have reminer set for upcoming meetings or other important stuff
+
+My ides is very simple yet have all the necessary features that a collaborative application should have with a clear and easy to understand, user friendly layout.
 
 
 # Ibiyemi Kayode 
