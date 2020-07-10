@@ -1,8 +1,12 @@
 # chat-loc.github.io
-This app tries to solve the need of  connecting to users, who share the same nationality and ethnicity with you and happen to be in close proximity.
+This app aims to solve the need of connecting users, who share the same nationality and ethnicity and happen to be in close proximity.
 
 ***
 
 # Community Application
 
-## Group
+## Group Members
+
+1. Khush
+2. Aman
+3. Kay
