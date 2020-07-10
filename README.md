@@ -8,7 +8,7 @@ This app aims to solve the need of connecting users, who share the same national
 ## Group Members
 
 1. Khush
-2. Aman
+2. [Amandeep Singh] (#amandeep-singh)
 3. [Kay](#ibiyemi-kayode)
 
 
@@ -22,3 +22,13 @@ As highlighted, the third consideration for this app is distance. This applicati
 
 The application will work with NodeJS. Socket.io and Express server will be used to publicly expose endpoints and intercept and send back appropriate responses. Mongoose will be used as the object modelling tool for database items and Atlas as the MongoDB clour provider.
 
+
+# Amandeep Singh
+
+In order to make a collab app the ideas which i got after doing  some research on different collab platforms available are as follow:
+
+* There should a particular page which include all the users in a team with there contact details and work assigned to them. Then there should be a status column which high lights there progress of particular project, time spent.
+
+* users on same projects can create there chat group which can be linked to the project. here they have an option to send attachments too.
+
+* will try to integrate it with slack api so that users can get updates about the changes in there projects.
