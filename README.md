@@ -8,7 +8,7 @@ This app aims to solve the need of connecting users, who share the same national
 ## Group Members
 
 1. Khush
-2. [Amandeep Singh] (#amandeep-singh)
+2. [Amandeep Singh](#amandeep-singh)
 3. [Kay](#ibiyemi-kayode)
 
 
