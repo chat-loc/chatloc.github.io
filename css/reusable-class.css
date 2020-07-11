@@ -1,0 +1,69 @@
+/*~~~~~~~~~~~~~~*/
+/* Common classes   */
+/*~~~~~~~~~~~~~~*/
+.row{ display: flex;  justify-content: space-between; flex-wrap: wrap;}
+.column{ display: flex; flex-direction: column;}
+.col{ flex-basis: calc(90% / 2);}
+.col-equal-3{ flex-basis: calc(100% / 3);}
+.col-equal-5{ flex-basis: calc(100% / 5);}
+
+.col-3{ flex-basis: calc(85% / 3);}
+.col-4{ flex-basis: calc(80% / 4);}
+
+.img-block { display: block;}
+
+.hidden{ display: none; }
+.visibilty-hidden { visibility: hidden !important;}
+
+.text-center{ text-align: center;}
+.text-uppercase{ text-transform: uppercase;}
+.text-capitalize{ text-transform: capitalize; }
+.font-size-sm{ font-size: 1.1em;}
+.content{ max-width: 50em; margin: 0 auto; padding: 1em;}
+a{ text-decoration: none;}
+.a-link{ color: #686666; }
+.a-link:hover{ color: #000000; }
+
+.auto-center{ max-width: 90em; margin: 0 auto; }
+.margin-0{ margin:0; }
+.margin-1em{ margin:  1em; }
+.margin-bottom-1em{margin-bottom: 1em;}
+.margin-bottom-2em{ margin-bottom: 2em;}
+.margin-top{ margin-top: auto;}
+
+.padding-2em{ padding: 2em;}
+.padding-right-2em{ padding-right: 2em; }
+
+.border-radius-xthin{ border-radius: .2em; }
+
+.heading { font-size: 3em; text-transform: capitalize; margin-bottom: 1em; color:var(--color-accent);}
+.title { text-transform: capitalize; color:var(--color-accent); }
+
+.button{
+    cursor: pointer;
+    color:var(--color-secondary); 
+    background-color: var(--color-accent); 
+    
+    border:0;
+    border-radius: 0.3em;
+    padding: .5em 3em;
+    font-size: 2em;
+    margin-bottom: 2em;
+}
+.btn-explore{ color:var(--color-accent); transition: all 0.3s ease-in-out 0s;}
+.btn-explore:hover{ color:var(--color-secondary); }
+
+.btn-add-cart{ padding: .5em 1.5em;}
+
+.transition-all-ease-in-out{
+transition: all 0.7s ease-in-out 0s;
+-webkit-transition: all 0.7s ease-in-out 0s;
+-moz-transition: all 0.7s ease-in-out 0s;
+-ms-transition: all 0.7s ease-in-out 0s;
+-o-transition: all 0.7s ease-in-out 0s;
+
+}
+
+.color-secondary{ color: var(--color-secondary);}
+
+.input_field{ width: 100%; padding: 1.5em 2em; border-radius: 0.3em; margin-bottom: 2em ; background-color: transparent; border: 0.1em solid var(--color-accent);}
