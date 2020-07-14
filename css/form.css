@@ -1,0 +1,28 @@
+.register-now {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    min-height: 60vh;
+    border: thin solid maroon;
+}
+.connect, .register {
+    padding: 60px 30px;
+}
+.connect {
+    flex: 0 0 40%;
+}
+.registration {
+    flex: 0 0 60%;
+}
+.connect .header {
+    font-size: 2em;
+    margin-bottom: .7em;
+}
+.register {
+    display: block;
+    width: 100%;
+    border: 1px solid indigo;
+}
+.form-group {
+    border: 1px solid red;
+}
