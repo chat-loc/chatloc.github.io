@@ -1,6 +1,6 @@
 /*
 *   Chat-Loc v1.0 Default Stylesheet 
-*	Author: Aman, Khushboo, Kay (Full-stack web developer)
+*	Team: Aman, Khushboo, Kay 
 *	Author Email: kayodeibiyemi92@gmail.com
 *	Author URI: 
 *	Template Name: Crafty
@@ -14,6 +14,7 @@
 2. TAGS
 	-h1, h2, h3, h4, h5, h6
 	-hr
+    -p
 	-input
 
 2. BROWSERS
@@ -71,8 +72,8 @@
 
 :root {
     /*primary colours*/
-    --blue: #000033;
-    --yellow: #DEB406;
+    --purple: #826CBC;
+    --red: #aa0c0c;
 
     --link: #007BFF;
     --link-hover: #D9534F;
@@ -90,13 +91,13 @@
   	/*font-size: 62.5%; make rem units base on 10*/
 
     /*font families*/
-    --font-primary: "Khand", Tahoma, Calibri, sans-serif;
-    --font-secondary: Space Mono, Tahoma, Calibri, sans-serif;
-    --font-tertiary: "Century Gothic", Tahoma, Calibri, sans-serif;
+    --font-primary: "Titillium Web", Tahoma, Calibri, sans-serif;
+    --font-secondary: "Futura-medium", Tahoma, Calibri, sans-serif;
+    --font-tertiary: "Rajdhani", Tahoma, Calibri, sans-serif;
 
 }
 
-body{
+body {
 	font-weight: 400;
 	min-width: 320px;
 	color: #212529;
@@ -104,11 +105,6 @@ body{
 	background-color: #fff;
 	font-family: var(--font-primary);
 }
-
-body > header > h1{
-	font-size: 7w;	/*Heading is never too small or wider than document itself*/
-}
-
 
 /*2. TAGS
 ==============================================================================================================================================================*/
@@ -124,12 +120,17 @@ input:out-of-range {
 input:invalid{
 
 }
+
 h1,h2,h3,h4,h5,h6 {
     font-weight: 400;
 }
 hr {
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #fff;
+}
+p {
+    font-family: var(--font-secondary);
+    font-size: 1.0em;
 }
 
 /*3. BROWSERS
@@ -221,11 +222,17 @@ input {
    font-family: inherit;
    font-size: inherit;
    color: inherit;
-   -webkit-box-sizing: border-box;
-   -moz-box-sizing: border-box;
    box-sizing: border-box;
 }
-
+label {
+    opacity: .5;
+    font-size: .9em;
+    text-transform: uppercase;
+}
+.form-group {
+    border-bottom: 1px solid var(--light-grey);
+    margin-bottom: .7em;
+}
 .register-input {
    display: block;
    width: 100%;
@@ -234,12 +241,29 @@ input {
    font-weight: 500;
    background: none;
    border: 0;
-   border-bottom: 1px solid #d8d8d8;
+   border-bottom: 1px solid rgba(216, 216, 216,.2);
 }
-
 .register-input:focus {
    border-color: #1e9ce6;
    outline: 0;
+}
+.register-button {
+    display: block;
+    width: 100%;
+    height: 42px;
+    margin-top: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #494d59;
+    text-align: center;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+    background: #fcfcfc;
+    border: 1px solid;
+    border-color: #d8d8d8 #d1d1d1 #c3c3c3;
+    border-radius: 2px;
+    cursor: pointer;
+    background-image: linear-gradient(to bottom, #fefefe, #eeeeee);
+    box-shadow: inset 0 -1px rgba(0, 0, 0, 0.03), 0 1px rgba(0, 0, 0, 0.04);
 }
 /*
 :-moz-placeholder {
@@ -267,3 +291,67 @@ input {
    border: 0;
    padding: 0;
 }*/
+
+
+/*HEADER*/
+
+.page-header {
+    background-color: rgba(26, 10, 56, 0.53);
+    color: #fff;
+    z-index: 1000;
+    width: 100%;
+    position: absolute;
+}
+.header-inner {
+    padding: 30px;
+}
+.page-header:after {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.02);
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+}
+
+.main-nav-links {
+    display: flex;
+}
+.page-header h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.5em;
+    font-family: var(--font-tertiary);
+    font-weight: bolder;
+}
+.fa.loc {
+    font-size: .8em;
+    transform: rotate(-45deg);
+    color: var(--red);
+}
+
+
+/*MAIN*/
+main {
+    display: block;
+    padding-top: 110px;
+    background: url("../images/page-bg-2.jpg") no-repeat;
+    background-size: cover;
+}
+.main-wrapper {
+    position: relative;
+    width: 100%;
+    margin: auto;
+}
+.main-wrapper:before{
+    position: absolute;
+    content: "";
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background: url("../images/page-bg.png") no-repeat center;
+    background-size: cover;
+    opacity: .5;
+}
