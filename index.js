@@ -3,22 +3,46 @@ const exphbs  = require('express-handlebars');
 
 // Add body parser to process form data 
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-const product = require("./models/user");
+//This loads all our environment variables from the keys.env
+require("dotenv").config({path:'./config/keys.env'});
 
+// Import router objects
+const userRoutes = require("./controllers/User"
+
+const user = require("./models/user");
+
+// Creation of app object
 const app = express();
 
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+// BodyParser middleware
+app.use(bodyParser.urlencoded({extended:false}));
 
+//express static middleware
 app.use(express.static("public"));
 
+//Handlebars middlware
+app.engine("handlebars", exphbs({
+    extname : '.handlebars',
+    helpers : require('./config/handlebars-helpers')
+}));
 
+app.set("view engine", "handlebars");
+
+// Handle PUT and DELETE requests
 app.use((req, res, next) => {
-    next(); 
-})
+    if (req.query.method == "PUT") {
+        req.method = "PUT"
+    } else if (req.query.method == "DELETE") {
+        req.method = "DELETE"
+    }
+    next();
+});
 
-app.use(bodyParser.urlencoded({extended: false}));
+// User Routes
+app.use("/user", userRoutes);
+
 
 app.get('/', (req, res) => {
     res.render("registration.html", {
