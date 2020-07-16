@@ -7,6 +7,10 @@
 .connect, .register {
     padding: 60px 30px;
 }
+.register {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
 .connect {
     position: relative;
     flex: 0 0 40%;
@@ -48,7 +52,9 @@
     font-family: var(--font-primary);
     opacity: .7;
     padding-bottom: .3em;
-    border-bottom: 2px solid var(--purple);
+}
+.connect p {
+    border-bottom: 2px solid var(--red);
 }
 .connect .toronto-map {
     position: absolute;
@@ -106,7 +112,8 @@
 }
 .have-account {
     position: relative;
-    bottom: 55px;
+    bottom: 25px;
     text-align: right;
     padding: 0 40px 0 0;
+    font-size: .8em;
 }

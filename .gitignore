@@ -1,2 +1,4 @@
 index.html
+config/key.env
 node_modules
+unused-files

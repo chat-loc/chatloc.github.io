@@ -5,13 +5,13 @@ const exphbs  = require('express-handlebars');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-//This loads all our environment variables from the keys.env
-require("dotenv").config({path:'./config/keys.env'});
+//This loads all our environment variables from the key.env
+require("dotenv").config({path:'./config/key.env'});
 
 // Import router objects
-const userRoutes = require("./controllers/User"
+const userRoutes = require("./controllers/User");
 
-const user = require("./models/user");
+const user = require("./models/User");
 
 // Creation of app object
 const app = express();
@@ -24,8 +24,8 @@ app.use(express.static("public"));
 
 //Handlebars middlware
 app.engine("handlebars", exphbs({
-    extname : '.handlebars',
-    helpers : require('./config/handlebars-helpers')
+    extname : '.handlebars'/*,
+    helpers : require('./config/handlebars-helpers')*/
 }));
 
 app.set("view engine", "handlebars");
@@ -43,13 +43,20 @@ app.use((req, res, next) => {
 // User Routes
 app.use("/user", userRoutes);
 
-
-app.get('/', (req, res) => {
-    res.render("registration.html", {
+/*app.get('/', (req, res) => {
+    res.render("registration", {
         title : "Registration Page"
     });
-});
+});*/
 
+
+// Pass in the connection string variable from the env variable as 1st argument
+mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true}
+                    ).then(()=> {
+                        console.log(`Connected to MongoDB Database`);
+                    }).catch(()=> {
+                        console.log (`Error occured when connecting to the database ${err}`);
+                    });
 const PORT = process.env.PORT || 5003;
 
 app.listen(PORT, () => {
