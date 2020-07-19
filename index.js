@@ -21,6 +21,7 @@ app.engine("handlebars", exphbs({
 // Import router objects
 const userRoutes = require("./controllers/User");
 const generalRoutes = require("./controllers/General");
+const chatSuggestionsRoutes = require("./controllers/Chatsuggestions");
 
 
 // BodyParser middleware
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 // User Routes
 app.use("/", generalRoutes);
 app.use("/user", userRoutes);
+app.use("/getsuggestions", chatSuggestionsRoutes);
 
 /*app.get('/', (req, res) => {
     res.render("registration", {
