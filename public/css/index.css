@@ -313,13 +313,20 @@ label {
 main {
     display: block;
     padding-top: 110px;
+    min-height: 100vh;
     background: url("../images/page-bg-2.jpg") no-repeat;
     background-size: cover;
 }
 .main-wrapper {
+    display: flex;
+    align-items: center;
     position: relative;
     width: 100%;
     margin: auto;
+    min-height: 100%;
+}
+.login-main .main-wrapper {
+    padding: 75px;
 }
 .main-wrapper:before{
     position: absolute;

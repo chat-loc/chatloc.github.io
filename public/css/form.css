@@ -19,6 +19,9 @@
     background-position: -35px center;
     border: 5px solid rgba(255,255,255,.7);
 }
+.login-main .connect {
+    padding-top: 30px;
+}
 .connect::before {
     position: absolute;
     content: "";
@@ -46,15 +49,16 @@
 .connect p {
     position: relative;
     color: white;
+    border-bottom: 2px solid var(--red);
 }
 .register-now p {
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-family: var(--font-primary);
     opacity: .7;
     padding-bottom: .3em;
 }
-.connect p {
-    border-bottom: 2px solid var(--red);
+.login-main .register-now p {
+    font-size: 1em;
 }
 .connect .toronto-map {
     position: absolute;
@@ -63,14 +67,14 @@
     width: 100%;
     left: 0;
     right: 0;
-    height: 220px;
+    height: 50%;
     overflow: hidden;
 }
 .connect .toronto-map img {
     display: inline-block;
     height: 100%;
     max-width: none;
-    margin-left: -40px;
+    margin-left: -30px;
     opacity: .5;
 }
 .register {
