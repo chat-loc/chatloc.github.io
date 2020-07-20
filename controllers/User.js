@@ -27,4 +27,29 @@ router.post("/registration", (req, res) => {
  
 });
 
+router.post("/login", (req, res) => { 
+
+	const name = req.body.name;
+	const password = req.body.password;
+
+	// Check if login details exist in DB
+
+	userModel.findOne({
+
+		name : name,
+		password : password
+
+	}, function (err, login) {
+
+		if (err || !login) {
+			console.log (err);
+			res.redirect("/user/login");
+		} else {
+			res.redirect("/");
+		}
+
+	});
+
+});
+
 module.exports = router;
