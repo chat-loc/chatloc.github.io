@@ -31,6 +31,10 @@ const userSchema = new Schema({
     },
     profilePic : {
         type : String, 
+    },
+    location : {
+        type : String,
+        required : true
     }
 });
 
