@@ -10,6 +10,7 @@ require("dotenv").config({path:'./config/key.env'});
 
 // Import router objects
 const userRoutes = require("./controllers/User");
+const loginRoutes = require("./controllers/Login");
 
 const user = require("./models/User");
 
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 
 // User Routes
 app.use("/user", userRoutes);
+app.use("/user", loginRoutes);
 
 /*app.get('/', (req, res) => {
     res.render("registration", {

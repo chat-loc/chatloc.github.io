@@ -225,6 +225,9 @@ input, select {
     color: inherit;
     box-sizing: border-box;
 }
+input[type=submit], button[type=submit] {
+    padding-left: 0;
+}
 label {
     opacity: .5;
     font-size: .9em;

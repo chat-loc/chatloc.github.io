@@ -20,19 +20,11 @@ router.post("/registration", (req, res) => {
 		sex : req.body.sex
 	}
 
-	console.log(req.body);
-
 	const user = new userModel(newUser);
 	user.save().then(() => {
 		res.redirect("/")
 	}).catch(err => console.log(`Error while inserting into the data ${err}`));
  
-});
-
-
-//Route to direct use to Registration form
-router.get("/login", (req, res) => {
-    res.render("User/login");
 });
 
 module.exports = router;
