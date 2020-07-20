@@ -26,31 +26,32 @@
 
                     <section class="registration">
 
-                        <form action="" class="register">
+                        <form action="/user/registration" method="POST" class="register">
                             <div class="form-group">
-                                <label for="uname">Username</label>
-                                <input type="text" id="name" class="register-input">
+                                <label for="name">Username</label>
+                                <input type="text" name="name" id="name" class="register-input">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" class="register-input">
+                                <input type="email" name="email" id="email" class="register-input">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" id="password" class="register-input">
+                                <input type="password" name="password" id="password" class="register-input">
                             </div>
                             <div class="form-group">
-                                <label for="country-origin">Country of Origin</label>
-                                <input id="country-origin" type="text" class="register-input">
+                                <label for="origin">Country of Origin</label>
+                                <input type="text" id="origin" name="origin" class="register-input">
                             </div>
                             <div class="form-group register-switch">
-                                <input type="radio" name="sex" value="F" id="sex-f" class="register-switch-input" checked>
-                                <label for="sex-f" class="register-switch-label">Female</label>
-                                <input type="radio" name="sex" value="M" id="sex-m" class="register-switch-input">
-                                <label for="sex-m" class="register-switch-label">Male</label>
+                                <input type="radio" name="sex" id="female" class="register-switch-input" checked>
+                                <label for="female" class="register-switch-label">Female</label>
+
+                                <input type="radio" name="sex" id="male" class="register-switch-input">
+                                <label for="male" class="register-switch-label">Male</label>
                             </div>
                             <div class="form-group">
-                                <input type="submit" value="Get Started" class="register-button"> 
+                                <input type="submit" name="submit-btn" id="submit-btn" value="Get Started" class="register-button"> 
                             </div>
 
                         </form>

@@ -26,17 +26,17 @@
 
                     <section class="registration">
 
-                        <form action="" class="register">
+                        <form action="/user/login" method="POST" class="register">
                             <div class="form-group">
-                                <label for="uname">Username</label>
-                                <input type="text" id="name" class="register-input">
+                                <label for="name">Username</label>
+                                <input type="text" name="name" id="name" class="register-input">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" id="password" class="register-input">
+                                <input type="password" name="password" id="password" class="register-input">
                             </div>
                             <div class="form-group">
-                                <input type="submit" value="Log In" id="submit" class="register-button"> 
+                                <input type="submit" name="submit-btn" value="Log In" id="submit-btn" class="register-button">
                             </div>
 
                         </form>

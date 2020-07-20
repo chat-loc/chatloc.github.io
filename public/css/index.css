@@ -219,10 +219,11 @@ img {
 ==============================================================================================================================================================*/
 
 input {
-   font-family: inherit;
-   font-size: inherit;
-   color: inherit;
-   box-sizing: border-box;
+    padding-left: .2in;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    box-sizing: border-box;
 }
 label {
     opacity: .5;
