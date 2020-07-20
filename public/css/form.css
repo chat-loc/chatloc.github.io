@@ -121,3 +121,15 @@
     padding: 0 40px 0 0;
     font-size: .8em;
 }
+
+.error {
+    display: inline-block;
+    color: var(--yellow);
+    text-align: start;
+    width: 100%;
+    font-size: .8rem;
+    margin-bottom: 10px;
+}
+.error .fa {
+    color: red;
+}
