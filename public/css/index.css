@@ -218,11 +218,18 @@ img {
 /*4. FORMS
 ==============================================================================================================================================================*/
 
-input {
-   font-family: inherit;
-   font-size: inherit;
-   color: inherit;
-   box-sizing: border-box;
+input, select {
+    padding-left: .2in;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    box-sizing: border-box;
+}
+select, option {
+    cursor: pointer;
+}
+input[type=submit], button[type=submit] {
+    padding-left: 0;
 }
 label {
     opacity: .5;

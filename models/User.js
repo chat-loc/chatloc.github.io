@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 Just good practice*/
 
 const userSchema = new Schema({
-    userName : {
+    name : {
         type : String,
         required : true
     },
@@ -13,10 +13,10 @@ const userSchema = new Schema({
         type : String,
         required : true
     },
-    dateCreated : {
+    /*dateCreated : {
         type : Date,
         required : Date.now()
-    },
+    },*/
     password : {
         type : String,
         required : true
@@ -25,17 +25,17 @@ const userSchema = new Schema({
         type : String,
         required : true
     },
-    gender : {
+    sex : {
         type : String,
         required : true
-    },
+    }/*,
     profilePic : {
         type : String, 
     },
     location : {
         type : String,
         required : true
-    }
+    }*/
 });
 
 /*For every Schema you create (create a schema per collection), you must also create a model
