@@ -1,11 +1,15 @@
-
+.roomlist-area {
+	position: relative;
+}
 .roomlist {
 	display: flex;
+	position: relative;
 	margin-top: 50px auto 0;
 	min-height: 520px;
 	width: 100%;
 	padding: 50px 0;
-	background: rgba(0,0,0,.7);
+	background: rgba(0,0,0,.6);
+	z-index: 1;
 }
 .rooms {
 	flex: 0 0 30%;
@@ -61,4 +65,18 @@
 	min-width: 60%;
 	margin: auto;
 	border-color: var(--red);
+}
+
+/*map*/
+
+.map-canvas {
+	position: absolute; 
+	top: 0; 
+	bottom: 0; 
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	opacity: .7;
+	border: 1px solid whitesmoke;
 }

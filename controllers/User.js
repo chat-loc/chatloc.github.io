@@ -120,7 +120,8 @@ router.post("/registration", (req, res) => {
 
     	const user = new userModel(newUser);
     	user.save().then(() => {
-    		/*res.redirect("/")*/
+    		res.redirect("/")
+    		/*res.render*/
     	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 	}
  
