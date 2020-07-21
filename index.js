@@ -19,10 +19,9 @@ app.engine("handlebars", exphbs({
 
 // Import router objects
 const userRoutes = require("./controllers/User");
-/*const loginRoutes = require("./controllers/Login");
-*/
-/*const user = require("./models/User");
-*/
+const generalRoutes = require("./controllers/General");
+
+
 // BodyParser middleware
 app.use(bodyParser.urlencoded({extended:false}));
 
@@ -43,6 +42,7 @@ app.use((req, res, next) => {
 });
 
 // User Routes
+app.use("/", generalRoutes);
 app.use("/user", userRoutes);
 
 /*app.get('/', (req, res) => {

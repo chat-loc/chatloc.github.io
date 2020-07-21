@@ -28,7 +28,12 @@ const userSchema = new Schema({
     sex : {
         type : String,
         required : true
-    }/*,
+    }, 
+    location : {
+        type : String,
+        required : true
+    }
+    /*,
     profilePic : {
         type : String, 
     },
