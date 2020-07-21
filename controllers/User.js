@@ -73,7 +73,6 @@ router.post("/registration", (req, res) => {
 	    if (!pattern.test(field)) {
 	        errors.regex[`${key}`] = msg;
 	    }
-	    console.log (pattern.test(field));
 	}
 
 	// If errors for invalid patterns exist, re-render route to referring page and export errors object
@@ -110,6 +109,7 @@ router.post("/registration", (req, res) => {
 
     if (formValid) {
 
+    	// Fetch user details from body object
     	const newUser = {
     		name : ((req.body.name).trim()).toLowerCase(), 
     		email : (req.body.email).trim(),
@@ -120,7 +120,7 @@ router.post("/registration", (req, res) => {
 
     	const user = new userModel(newUser);
     	user.save().then(() => {
-    		res.redirect("/")
+    		/*res.redirect("/")*/
     	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 	}
  
