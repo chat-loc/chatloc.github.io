@@ -1,5 +1,6 @@
 .roomlist-area {
 	position: relative;
+	overflow: hidden;
 }
 .roomlist {
 	display: flex;
@@ -72,11 +73,26 @@
 .map-canvas {
 	position: absolute; 
 	top: 0; 
-	bottom: 0; 
 	left: 0;
 	right: 0;
 	width: 100%;
-	height: 100%;
+	height: 1000px;
 	opacity: .7;
-	border: 1px solid whitesmoke;
+	transform: scale(1.5) rotate(70deg);
+	animation: rotate_zoom 30s forwards ease;
+}
+
+/*ANIMATIONS*/
+
+@keyframes rotate_zoom {
+
+	0% {
+		transform: scale(4.5) rotate(70deg);
+		height: 1000px;
+	}
+	100% {
+		transform: scale(1.3) rotate(-2deg);
+		height: 600px;
+	}
+
 }
