@@ -1,4 +1,15 @@
 
+
+	const $appClose = document.querySelector('#app-alert-close');
+	const $dialogModal = document.querySelector('#dialog-app-modal');
+	const $page = document.querySelector('.main-wrapper');
+
+	const $countryLoc = document.querySelector('#location-country');
+	const $stateLoc = document.querySelector('#location-state');
+	const $districtLoc = document.querySelector('#location-district');
+	const $roadLoc = document.querySelector('#location-road');
+
+
 	/*let 
 		district = '', 
 		state = '', 
@@ -36,15 +47,39 @@
 		    // see full list of possible response codes:
 		    // https://opencagedata.com/api#codes
 
-		    if (request.status == 200){ 
+		    if (request.status == 200) { 
 		        // Success!
 		        let data = JSON.parse(request.responseText);
 		        console.log (data);
 
 		        let components = data.results[0].components;
-		        console.log(components);
+		        // console.log(components);
 
-		        const {city_district, country, road, state} = components;
+		        /*
+		        ISO_3166-1_alpha-2: "CA"
+				ISO_3166-1_alpha-3: "CAN"
+				city: "Toronto"
+				city_district: "Etobicoke North"
+				continent: "North America"
+				country: "Canada"
+				country_code: "ca"
+				house_number: "13"
+				neighbourhood: "West Humber Estates"
+				postcode: "M9V 3W9"
+				road: "Milkwood Avenue"
+				state: "Ontario"
+				state_code: "ON"
+				_category: "building"
+				_type: "building"
+				*/
+
+		        const {country, state, city_district, road} = components;
+
+		        // Pass in location details to form
+		        $countryLoc.value = country;
+		        $stateLoc.value = state;
+		        $districtLoc.value = city_district;
+		        $roadLoc.value = road;
 
 		    } else if (request.status <= 500){ 
 		      // We reached our target server, but it returned an error
@@ -52,6 +87,9 @@
 		        console.log("unable to geocode! Response code: " + request.status);
 		        let data = JSON.parse(request.responseText);
 		        console.log(data.status.message);
+		        alert('There is a server error, Please try again later');
+		        $page.style.display = 'none';
+		        $dialogModal.style.display = 'none';
 		    } else {
 		        console.log("server error");
 		        alert('There is a server error, Please try again later');
@@ -85,7 +123,7 @@
 		}
 		*/
 
-		$appClose.classList.add('allowed');
+		$appClose.classList.add('allowed');	// enable button interaction if user accepts location sharing
 
 		// Unpack latlong values
 		const {latitude, longitude} = position.coords;
@@ -93,14 +131,14 @@
 		
 	}
 
-	// User declines to share location
+	// If ser declines to share location, interrupt app
 	const errorCallback = (error) => {
 		console.log(error);
 		$page.style.display = 'none';
 		$dialogModal.style.display = 'none';
 	}
 	
-	// Get location
+	// Get location. 
 	async function geolocate () {
 		const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
 			enableHighAccuracy : true, 	//try best to provide with a high accurate location
@@ -113,10 +151,6 @@
 			$dialogModal.classList.add('hide');
 		});
 	}
-	
-	const $appClose = document.querySelector('#app-alert-close');
-	const $dialogModal = document.querySelector('#dialog-app-modal');
-	const $page = document.querySelector('.main-wrapper');
 
 	geolocate().then(closeModal());
 
