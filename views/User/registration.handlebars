@@ -29,19 +29,40 @@
                         <form action="/user/registration" method="POST" class="register">
                             <div class="form-group">
                                 <label for="name">Username</label>
-                                <input type="text" name="name" id="name" class="register-input">
+                                <input type="text" name="name" id="name" class="register-input" required 
+                                    {{#if loginVals.name}}
+                                        value="{{loginVals.name}}"
+                                    {{/if}} class="register-input" placeholder="Less than 20 characters please" required>
                             </div>
+                            {{#if errors.name}}
+                                <span class="error">Username should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+                            {{/if}}
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email" class="register-input" pattern="^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,6})$">
+                                <input type="email" name="email" id="email" class="register-input" pattern="^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,6})$" 
+                                {{#if loginVals.email}}
+                                    value="{{loginVals.email}}"
+                                {{/if}} class="register-input" required>
                             </div>
+                            {{#if errors.email}}
+                                <span class="error">Email should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+                            {{/if}}
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" name="password" id="password" class="register-input">
+                                <input type="password" name="password" id="password" class="register-input" 
+                                    {{#if loginVals.password}}
+                                        value="{{loginVals.password}}"
+                                    {{/if}} placeholder="Password (between 6 & 12 upper- and lower-case characters, and nos)" required>
                             </div>
+                            {{#if errors.passwordLength}}
+                                <span class="error">{{errors.passwordLength}} <span class="fa fa-exclamation-triangle"></span></span>
+                            {{/if}}
+                            {{#if errors.accountPasswordMix}}
+                                <span class="error">{{errors.accountPasswordMix}} <span class="fa fa-exclamation-triangle"></span></span>
+                            {{/if}}
                             <div class="form-group">
                                 <label for="origin">Country of Origin</label>
-                                <select id="origin" name="origin" class="register-input">
+                                <select id="origin" name="origin" class="register-input" required>
                                    <option value="Afganistan">Afghanistan</option>
                                    <option value="Albania">Albania</option>
                                    <option value="Algeria">Algeria</option>
@@ -291,10 +312,14 @@
                                 </select>
                             </div>
                             <div class="form-group register-switch">
-                                <input type="radio" name="sex" id="female" class="register-switch-input" checked>
+                                <input type="radio" name="sex" id="female" value="female" 
+                                    {{#ifeq sex 'female'}}checked{{/ifeq}} 
+                                class="register-switch-input" checked>
                                 <label for="female" class="register-switch-label">Female</label>
 
-                                <input type="radio" name="sex" id="male" class="register-switch-input">
+                                <input type="radio" name="sex" id="male" value="male" 
+                                    {{#ifeq sex 'male'}}checked{{/ifeq}} 
+                                class="register-switch-input">
                                 <label for="male" class="register-switch-label">Male</label>
                             </div>
                             <div class="form-group">

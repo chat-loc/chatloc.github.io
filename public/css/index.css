@@ -225,6 +225,9 @@ input, select {
     color: inherit;
     box-sizing: border-box;
 }
+select, option {
+    cursor: pointer;
+}
 input[type=submit], button[type=submit] {
     padding-left: 0;
 }
