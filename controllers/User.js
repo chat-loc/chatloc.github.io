@@ -1,8 +1,10 @@
 /*********************USER ROUTES***************************/
 const express = require('express')
 const router = express.Router();
+
 // Import schema
 const userModel = require("../models/User");
+const loginModel = require("../models/Login");
 
 // Function to check for nulls
 const checkNull = (key, field, errors, loginVals) => {
@@ -13,6 +15,12 @@ const checkNull = (key, field, errors, loginVals) => {
 router.get("/registration", (req, res) => {
     res.render("User/registration");
 });
+
+//Route to direct use to Registration form
+router.get("/login", (req, res) => {
+    res.render("User/login");
+});
+
 
 //Route to process user's request and data when user submits registration form
 router.post("/registration", (req, res) => {
@@ -146,7 +154,6 @@ router.post("/login", (req, res) => {
 	    res.render('User/login', {
 	        errors : errors.null,
 	        loginVals,
-	        errorClass : {active: "active"},
 	    });
 
 	}    // Otherwise redirect (and reload) Home page
@@ -166,7 +173,6 @@ router.post("/login", (req, res) => {
      			res.render('User/login', {
      			    errors : errors.null,
      			    loginVals,
-     			    errorClass : {active: "active"},
      			});
      		} else {
      			console.log ('Login successful');

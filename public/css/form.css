@@ -153,3 +153,6 @@
 .error .fa {
     color: red;
 }
+.error-final {
+    color: #ff0000;
+}

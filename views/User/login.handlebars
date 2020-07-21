@@ -29,9 +29,11 @@
                         <form action="/user/login" method="POST" class="register">
                             <div class="form-group">
                                 <label for="name">Username</label>
-                                <input type="text" name="name" id="name" {{#if loginVals.name}}
+                                <input type="text" name="name" id="name" 
+                                    {{#if loginVals.name}}
                                         value="{{loginVals.name}}"
-                                    {{/if}} class="register-input" required>
+                                    {{/if}} 
+                                class="register-input" required>
                             </div>
                             {{#if errors.name}}
                                 <span class="error">Username should not be empty <span class="fa fa-exclamation-triangle"></span></span>
@@ -40,9 +42,17 @@
                                 <label for="password">Password</label>
                                 <input type="password" name="password" id="password" class="register-input" required>
                             </div>
+                            {{#if errors.password}}
+                                <span class="error">Password should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+                            {{/if}}
                             <div class="form-group">
                                 <input type="submit" name="submit-btn" value="Log In" id="submit-btn" class="register-button">
                             </div>
+                            {{#if errors}}
+                                <span class="error error-final">Wrong login credentials.</span>
+                            {{/if}}
+
+                            <input type="hidden" id="location-input" name="submit-btn" id="submit-btn" value=""> 
 
                         </form>
 
