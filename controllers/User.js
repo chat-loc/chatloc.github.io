@@ -1,10 +1,34 @@
 /*********************USER ROUTES***************************/
 const express = require('express')
 const router = express.Router();
+const session = require('express-session');
 
 // Import schema
 const userModel = require("../models/User");
 const loginModel = require("../models/Login");
+
+// Session middleware
+const IN_PROD = 'production';
+
+router.use(session({
+    name : 'sid',
+    saveUninitialized : false,
+    secret : 'chat-loc-2020-07-22',
+    cookie : {
+        maxAge : 1000 * 60 * 60 * 10,
+        sameSite : true,
+        secure : IN_PROD
+    }
+}));
+
+
+const redirectLogin = (req, res, next) => {
+    if (!req.session.userId) {  // User not logged in
+        res.redirect('/login');
+    } else {
+        next();
+    }
+}
 
 // Function to check for nulls
 const checkNull = (key, field, errors, loginVals) => {
@@ -20,18 +44,6 @@ router.get("/registration", (req, res) => {
 router.get("/login", (req, res) => {
     res.render("User/login");
 });
-
-const roomlistRoute = (obj) => {
-
-	// console.log ('Login successful');
-	// Redirect to roomlist page
-	router.get('/roomlist', (req, res) => {
-	    res.render("General/roomlist.handlebars", {
-	    	obj
-	    });
-	   	 			  		
-	});
-}
 
 //Route to process user's request and data when user submits registration form
 router.post("/registration", (req, res) => {

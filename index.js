@@ -11,6 +11,7 @@ require("dotenv").config({path:'./config/key.env'});
 // Creation of app object
 const app = express();
 
+
 //Handlebars middlware
 app.engine("handlebars", exphbs({
     extname : '.handlebars',
