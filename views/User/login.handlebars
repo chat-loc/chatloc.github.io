@@ -52,7 +52,10 @@
                                 <span class="error error-final">Wrong login credentials.</span>
                             {{/if}}
 
-                            <input type="hidden" id="location-input" name="submit-btn" id="submit-btn" value=""> 
+                            <input type="hidden" id="location-country" name="location-country" value=""> 
+                            <input type="hidden" id="location-state" name="location-state" value="">
+                            <input type="hidden" id="location-district" name="location-district" value="">
+                            <input type="hidden" id="location-road" name="location-road" value="">
 
                         </form>
 
@@ -66,7 +69,7 @@
         
             </main>
 
-            <section class="dialog-app-modal" id="dialog-app-modal">
+            <section class="dialog-app-modal {{#if errors}}hide{{/if}}" id="dialog-app-modal">
                 <div class="modal-app-alert">
                     <h3 class="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
                     <button id="app-alert-close" class="app-alert-close">Close</button>

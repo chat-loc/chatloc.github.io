@@ -29,7 +29,19 @@ const userSchema = new Schema({
         type : String,
         required : true
     }, 
-    location : {
+    countryLoc : {
+        type : String,
+        required : true
+    },
+    stateLoc : {
+        type : String,
+        required : true
+    },
+    districtLoc : {
+        type : String,
+        required : true
+    },
+    roadLoc : {
         type : String,
         required : true
     }

@@ -21,16 +21,27 @@ router.get("/login", (req, res) => {
     res.render("User/login");
 });
 
+const roomlistRoute = (obj) => {
+
+	// console.log ('Login successful');
+	// Redirect to roomlist page
+	router.get('/roomlist', (req, res) => {
+	    res.render("General/roomlist.handlebars", {
+	    	obj
+	    });
+	   	 			  		
+	});
+}
 
 //Route to process user's request and data when user submits registration form
 router.post("/registration", (req, res) => {
 
 	// Create object to hold errors
 	/*
-	What errors object will eventually look like: 
+	What errors object will eventual ly look like: 
 	errors = {
-	    null : {firstName : true, lastName : true}
-	    regex : {accountPassword : 'Should be more than 0 character long'}
+	    null : {name : true, lastName : true}
+	    regex : {password : 'Should be more than 0 character long'}
 	}
 	*/
 	let errors = {
@@ -109,24 +120,32 @@ router.post("/registration", (req, res) => {
 
     if (formValid) {
 
+    	console.log(req.body);
+
     	// Fetch user details from body object
     	const newUser = {
     		name : ((req.body.name).trim()).toLowerCase(), 
     		email : (req.body.email).trim(),
     		password : req.body.password,
     		origin : req.body.origin,
-    		sex : req.body.sex
+    		sex : req.body.sex,
+    		countryLoc: req.body["location-country"],
+    		stateLoc : req.body["location-state"],
+    		districtLoc : req.body["location-district"],
+    		roadLoc : req.body["location-road"]
     	}
 
     	const user = new userModel(newUser);
     	user.save().then(() => {
-    		res.redirect("/")
-    		/*res.render*/
+    		res.render("General/roomlist.handlebars", {
+    			...newUser, ...{login: true}	// Pass in login to determine redirection in homepage
+    		});
     	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 	}
  
 });
 
+// Coming from login form
 router.post("/login", (req, res) => { 
 
 	// Fetch the details
@@ -163,11 +182,10 @@ router.post("/login", (req, res) => {
 
      	// Check if login details exist in DB
      	userModel.findOne({
-
      		name : name,
      		password : password
 
-     	}, function (err, login) {
+     	}, function (err, login) {	// Login unsuccessful
 
      		if (err || !login) {
      			console.log (err);
@@ -175,9 +193,41 @@ router.post("/login", (req, res) => {
      			    errors : errors.null,
      			    loginVals,
      			});
-     		} else {
-     			console.log ('Login successful');
-     			res.redirect("/");
+     		} else {	// Login successful 
+     			
+ 			  	// Fetch user details from body object
+ 			  	const newUser = {
+ 			  		name : name, 
+ 			  		password : password,
+ 			  		countryLoc: req.body["location-country"],
+ 			  		stateLoc : req.body["location-state"],
+ 			  		districtLoc : req.body["location-district"],
+ 			  		roadLoc : req.body["location-road"]
+ 			  	}
+
+ 			  	// Save to the database
+ 			  	// User login is saved to DB because it is necessary to use the DB to
+ 			  	// generate the list of active users
+ 			  	const user = new loginModel(newUser);
+ 			  	user.save().then(() => {
+
+				    // The login form has no input for origin and it makes no sense since the 
+				    // user has once filled it in the registration form. However, the 
+				    // origin value is paramount as it is necessary to send the user to the 
+				    // right room. 
+
+				    // If the user is trying to log in, he must have registered. Compare his 
+				    // login details to his registration details to retrieve his 'origin'
+				    userModel.findOne({"password" : password}, {"origin" : 1}).then((user) => {
+				    	const {origin} = user;
+				    	let userFinal = {...newUser, origin, login : 'true'};	// Pass in login to determine redirection in homepage
+				    	console.log(userFinal);
+				    	roomlistRoute(userFinal);
+
+		    			//res.redirect('/roomlist');
+				    });
+ 			  	}).catch(err => console.log(`Error while inserting into the data ${err}`));
+
      		}
 
      	});        

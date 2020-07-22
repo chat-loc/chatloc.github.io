@@ -13,9 +13,21 @@ const loginSchema = new Schema({
         type : String,
         required : true
     },
-    location : {
-    	type : String,
-    	required : true
+    countryLoc : {
+        type : String,
+        required : true
+    },
+    stateLoc : {
+        type : String,
+        required : true
+    },
+    districtLoc : {
+        type : String,
+        required : true
+    },
+    roadLoc : {
+        type : String,
+        required : true
     }
 });
 
