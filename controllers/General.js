@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const session = require('express-session');
+//const session = require('express-session');
 
-// Session middleware
+/*// Session middleware
 const IN_PROD = 'production';
 
 router.use(session({
@@ -17,6 +17,7 @@ router.use(session({
 }));
 
 const redirectLogin = (req, res, next) => {
+	console.log (req.session);
     if (!req.session.userId) {  // User not logged in
         res.redirect('/user/login');
     } else {
@@ -28,15 +29,27 @@ const redirectLogin = (req, res, next) => {
 // Redirect to roomlist page
 router.get("/roomlist", redirectLogin, (req, res) => {
 	const { userId } = req.session;
-
-	if (userId == 1) {
+	console.log (req.session);
+	if (userId) {
 		res.render("General/roomlist");
 	} else {
 		redirect("/user/login");
 	}
 });
+*/
+/*router.get("/roomlist", redirectLogin, (req, res) => {
+	console.log(req.session);
+	let userDetails = req.session.userDetails
 
-
+	if (userId == 1) {
+		res.render("General/roomlist", {
+			...userDetails
+		});
+	} else {
+		redirect("/user/login");
+	}
+});
+*/
 /*GENERAL ROUTES*/
 
 //Route to direct user to roomlist page

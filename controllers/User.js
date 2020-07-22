@@ -1,6 +1,6 @@
 /*********************USER ROUTES***************************/
-const express = require('express')
-const router = express.Router();
+const express = require('express');
+let router = express.Router();
 const session = require('express-session');
 
 // Import schema
@@ -8,23 +8,30 @@ const userModel = require("../models/User");
 const loginModel = require("../models/Login");
 
 // Session middleware
-const IN_PROD = 'production';
-
 router.use(session({
     name : 'sid',
+    resave : false,
     saveUninitialized : false,
     secret : 'chat-loc-2020-07-22',
     cookie : {
         maxAge : 1000 * 60 * 60 * 10,
         sameSite : true,
-        secure : IN_PROD
+        secure : false
     }
 }));
 
-
 const redirectLogin = (req, res, next) => {
-    if (!req.session.userId) {  // User not logged in
-        res.redirect('/login');
+    if (!req.session.userDetails) {  // User not logged in
+        res.redirect('/user/login');
+    } else {
+        next();
+    }
+}
+
+const redirectHome = (req, res, next) => {
+	// console.log(req.session)
+    if (req.session.userDetails) {  // User not logged in
+        res.redirect('/user/roomlist');
     } else {
         next();
     }
@@ -35,13 +42,26 @@ const checkNull = (key, field, errors, loginVals) => {
     (field == "") ? errors.null[`${key}`] = ' should not be empty' : loginVals[`${key}`] = field;
 };
 
+router.get("/roomlist", redirectLogin, (req, res) => {
+	const { userId, userDetails } = req.session;
+	
+	console.log ("userId: " + userId);
+	if (userId) {
+		res.render("General/roomlist", {
+			...userDetails
+		});
+	} else {
+		res.redirect("/user/login");
+	}
+});
+
 //Route to direct use to Registration form
-router.get("/registration", (req, res) => {
+router.get("/registration", redirectHome, (req, res) => {
     res.render("User/registration");
 });
 
 //Route to direct use to Registration form
-router.get("/login", (req, res) => {
+router.get("/login", redirectHome, (req, res) => {
     res.render("User/login");
 });
 
@@ -63,7 +83,7 @@ router.post("/registration", (req, res) => {
 	let loginVals = {};
 	let formValid = true;
 
-	console.log(req.body);
+	// console.log(req.body);
 
 	let name = ((req.body.name).trim()).toLowerCase();
 	let email = (req.body["email"]).trim();
@@ -149,8 +169,11 @@ router.post("/registration", (req, res) => {
 
     	const user = new userModel(newUser);
     	user.save().then(() => {
-    		res.render("General/roomlist.handlebars", {
-    			...newUser, ...{login: true}	// Pass in login to determine redirection in homepage
+    		// Set the session right now after database insertion
+    		req.session.userId = name;
+
+    		res.render("General/roomlist", {
+    			...newUser	// Pass in login to determine redirection in homepage
     		});
     	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 	}
@@ -180,8 +203,8 @@ router.post("/login", (req, res) => {
 	if (Object.keys(errors.null).length > 0) {
 	    formValid = false;
 
-	    console.log(errors);
-	    console.log(loginVals);
+	   /* console.log(errors);
+	    console.log(loginVals);*/
 
 	    res.render('User/login', {
 	        errors : errors.null,
@@ -190,7 +213,7 @@ router.post("/login", (req, res) => {
 
 	}    // Otherwise redirect (and reload) Home page
      else {
-     	console.log(errors);
+     	// console.log(errors);
 
      	// Check if login details exist in DB
      	userModel.findOne({
@@ -223,6 +246,9 @@ router.post("/login", (req, res) => {
  			  	const user = new loginModel(newUser);
  			  	user.save().then(() => {
 
+ 			  		// Set the session right now after database insertion
+ 			  		req.session.userId = name;
+
 				    // The login form has no input for origin and it makes no sense since the 
 				    // user has once filled it in the registration form. However, the 
 				    // origin value is paramount as it is necessary to send the user to the 
@@ -232,11 +258,14 @@ router.post("/login", (req, res) => {
 				    // login details to his registration details to retrieve his 'origin'
 				    userModel.findOne({"password" : password}, {"origin" : 1}).then((user) => {
 				    	const {origin} = user;
-				    	let userFinal = {...newUser, origin, login : 'true'};	// Pass in login to determine redirection in homepage
-				    	console.log(userFinal);
-				    	roomlistRoute(userFinal);
+				    	let userFinal = {...newUser, origin};	// Pass in login to determine redirection in homepage
+						
+						// Also pass in the details 
 
-		    			//res.redirect('/roomlist');
+				    	req.session.userDetails = userFinal;
+				    	// console.log (req.session);
+				    	return res.redirect('/user/roomlist');
+
 				    });
  			  	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 
