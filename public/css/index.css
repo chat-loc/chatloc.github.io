@@ -279,6 +279,7 @@ label {
     z-index: 99;
     width: 100%;
     position: absolute;
+    border-bottom: thin solid rgba(255,255,255,.5);
 }
 .header-inner {
     padding: 30px;
