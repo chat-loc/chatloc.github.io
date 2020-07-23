@@ -28,22 +28,6 @@ const userSchema = new Schema({
     sex : {
         type : String,
         required : true
-    }, 
-    countryLoc : {
-        type : String,
-        required : true
-    },
-    stateLoc : {
-        type : String,
-        required : true
-    },
-    districtLoc : {
-        type : String,
-        required : true
-    },
-    roadLoc : {
-        type : String,
-        required : true
     }
     /*,
     profilePic : {

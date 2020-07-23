@@ -9,7 +9,11 @@ const loginSchema = new Schema({
         type : String,
         required : true
     },
-    password : {
+    origin : {
+        type : String,
+        required : true
+    },
+    sex : {
         type : String,
         required : true
     },

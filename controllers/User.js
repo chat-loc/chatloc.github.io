@@ -42,26 +42,31 @@ const checkNull = (key, field, errors, loginVals) => {
     (field == "") ? errors.null[`${key}`] = ' should not be empty' : loginVals[`${key}`] = field;
 };
 
-router.get("/roomlist", redirectLogin, (req, res) => {
+router.get("/roomlist", /*redirectLogin,*/ (req, res) => {
 	const { userId, userDetails } = req.session;
 	
-	console.log ("userId: " + userId);
+/*	console.log ("userId: " + userId);
 	if (userId) {
 		res.render("General/roomlist", {
 			...userDetails
 		});
 	} else {
 		res.redirect("/user/login");
-	}
+	}*/
+
+	res.render("General/roomlist", {
+		...userDetails
+	});
+
 });
 
 //Route to direct use to Registration form
-router.get("/registration", redirectHome, (req, res) => {
+router.get("/registration", /*redirectHome,*/ (req, res) => {
     res.render("User/registration");
 });
 
 //Route to direct use to Registration form
-router.get("/login", redirectHome, (req, res) => {
+router.get("/login", /*redirectHome,*/ (req, res) => {
     res.render("User/login");
 });
 
@@ -152,7 +157,7 @@ router.post("/registration", (req, res) => {
 
     if (formValid) {
 
-    	console.log(req.body);
+    	// console.log(req.body);
 
     	// Fetch user details from body object
     	const newUser = {
@@ -160,22 +165,85 @@ router.post("/registration", (req, res) => {
     		email : (req.body.email).trim(),
     		password : req.body.password,
     		origin : req.body.origin,
-    		sex : req.body.sex,
-    		countryLoc: req.body["location-country"],
+    		sex : req.body.sex
+    		/*countryLoc: req.body["location-country"],
     		stateLoc : req.body["location-state"],
     		districtLoc : req.body["location-district"],
-    		roadLoc : req.body["location-road"]
+    		roadLoc : req.body["location-road"]*/
     	}
 
+    	const newUserLocDetails = {
+    		name : ((req.body.name).trim()).toLowerCase(), 
+    		origin : req.body.origin,
+    		sex : req.body.sex,
+    		countryLoc: 'Canada',
+    		stateLoc : 'Ontario',
+    		districtLoc : 'Etobicoke North',
+    		roadLoc : 'Foxchase Ave'
+    	}
+
+    	const origin = req.body.origin;
+
+    	// FIRST SAVE ONLY MINIMUM DATA TO USERS DATABASE (WITHOUT THE LOC DETAILS)
     	const user = new userModel(newUser);
     	user.save().then(() => {
     		// Set the session right now after database insertion
     		req.session.userId = name;
 
-    		res.render("General/roomlist", {
-    			...newUser	// Pass in login to determine redirection in homepage
-    		});
     	}).catch(err => console.log(`Error while inserting into the data ${err}`));
+
+		// THEN SAVE TO LOGIN DATABASE (esp.the location details)
+		const login = new loginModel(newUserLocDetails);
+
+		login.save().then(() => {
+
+			/*console.log ("user :" + user);
+			console.log("origin :" + origin);*/
+
+		});
+
+		// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
+
+	    // The login form has no input for origin and it makes no sense since the 
+	    // user has once filled it in the registration form. However, the 
+	    // origin value is paramount as it is necessary to send the user to the 
+	    // right room. 
+
+	    // If the user is trying to log in, he must have registered. Compare his 
+	    // login details to his registration details to retrieve his 'origin'
+
+	    
+    	// Fetch 10 loggedin users from same origin
+
+    	console.log(origin);
+
+    	loginModel.find({origin : origin}).limit(10).then((logins) => {
+
+			const filteredOrigin = logins.map(login => {
+				return {
+					id : login._id,
+					name: login.name,
+					origin : login.origin, 
+					sex : login.sex,
+					countryLoc : login.countryLoc,
+					stateLoc  : login.stateLoc,
+					districtLoc : login.districtLoc,
+					roadLoc : login.roadLoc
+				}
+			});
+
+			console.log(filteredOrigin);
+
+			// Fetch 10 loggedin users from same district
+
+			let userFinal = {...newUser, origin}
+
+			req.session.userDetails = userFinal;
+
+			return res.redirect('/user/roomlist');
+
+		});
+
 	}
  
 });
@@ -229,44 +297,77 @@ router.post("/login", (req, res) => {
      			    loginVals,
      			});
      		} else {	// Login successful 
+
+     			// User credentials have been checked; first find his origin and sex
+     			// from his record in users DB, to be passed to new page.
+
+     			userModel.findOne({name, password}, {"origin": 1, "sex": 1}).then((user) => {
+
+     				const { origin, sex } = user;
+
+     				console.log("origin: " + origin);
+     				console.log("user: " + user);
+
+     				// SAVE THE RIGHT USER'S DETAILS TO THE LOGINDB
+     				const newUserLocDetails = {
+     					name : name,
+     					origin : origin,
+     					sex : sex,
+     					countryLoc: 'Canada',
+     					stateLoc : 'Ontario',
+     					districtLoc : 'Etobicoke North',
+     					roadLoc : 'Mercury Road'     					
+     				}	// dont forget to make these locdetails dynamic
+
+
+     				const login = loginModel(newUserLocDetails);
+
+     				login.save().then(() => {
+
+						// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
+
+					    // The login form has no input for origin and it makes no sense since the 
+					    // user has once filled it in the registration form. However, the 
+					    // origin value is paramount as it is necessary to send the user to the 
+					    // right room. 
+
+					    // If the user is trying to log in, he must have registered. Compare his 
+					    // login details to his registration details to retrieve his 'origin'
+
+					    
+				    	// Fetch 10 loggedin users from same origin
+
+				    	console.log(origin);
+
+				    	loginModel.find({origin : origin}).limit(10).then((logins) => {
+
+							const filteredOrigin = logins.map(login => {
+								return {
+									id : login._id,
+									name: login.name,
+									origin : login.origin, 
+									sex : login.sex,
+									countryLoc : login.countryLoc,
+									stateLoc  : login.stateLoc,
+									districtLoc : login.districtLoc,
+									roadLoc : login.roadLoc
+								}
+							});
+
+							console.log(filteredOrigin);
+
+							// Fetch 10 loggedin users from same district
+
+							let userFinal = {...newUser, origin}
+
+							req.session.userDetails = userFinal;
+
+							return res.redirect('/user/roomlist');
+
+						});
+
+     				});
      			
- 			  	// Fetch user details from body object
- 			  	const newUser = {
- 			  		name : name, 
- 			  		password : password,
- 			  		countryLoc: req.body["location-country"],
- 			  		stateLoc : req.body["location-state"],
- 			  		districtLoc : req.body["location-district"],
- 			  		roadLoc : req.body["location-road"]
- 			  	}
-
- 			  	// Save to the database
- 			  	// User login is saved to DB because it is necessary to use the DB to
- 			  	// generate the list of active users
- 			  	const user = new loginModel(newUser);
- 			  	user.save().then(() => {
-
- 			  		// Set the session right now after database insertion
- 			  		req.session.userId = name;
-
-				    // The login form has no input for origin and it makes no sense since the 
-				    // user has once filled it in the registration form. However, the 
-				    // origin value is paramount as it is necessary to send the user to the 
-				    // right room. 
-
-				    // If the user is trying to log in, he must have registered. Compare his 
-				    // login details to his registration details to retrieve his 'origin'
-				    userModel.findOne({"password" : password}, {"origin" : 1}).then((user) => {
-				    	const {origin} = user;
-				    	let userFinal = {...newUser, origin};	// Pass in login to determine redirection in homepage
-						
-						// Also pass in the details 
-
-				    	req.session.userDetails = userFinal;
-				    	// console.log (req.session);
-				    	return res.redirect('/user/roomlist');
-
-				    });
  			  	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 
      		}
