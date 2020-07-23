@@ -7,6 +7,15 @@ const session = require('express-session');
 const userModel = require("../models/User");
 const loginModel = require("../models/Login");
 
+// Function to check for nulls
+const checkNull = (key, field, errors, loginVals) => {
+    (field == "") ? errors.noll[`${key}`] = ' should not be empty' : loginVals[`${key}`] = field;
+};
+
+const capitalise = (word) => {
+	return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
 // Session middleware
 router.use(session({
     name : 'sid',
@@ -20,6 +29,7 @@ router.use(session({
     }
 }));
 
+// Require auth on roomlist page
 const redirectLogin = (req, res, next) => {
     if (!req.session.userDetails) {  // User not logged in
         res.redirect('/user/login');
@@ -28,6 +38,7 @@ const redirectLogin = (req, res, next) => {
     }
 }
 
+// Requrie auth on reg/login pages
 const redirectHome = (req, res, next) => {
     if (req.session.userDetails) {  // User not logged in
         res.redirect('/user/roomlist');
@@ -35,11 +46,6 @@ const redirectHome = (req, res, next) => {
         next();
     }
 }
-
-// Function to check for nulls
-const checkNull = (key, field, errors, loginVals) => {
-    (field == "") ? errors.noll[`${key}`] = ' should not be empty' : loginVals[`${key}`] = field;
-};
 
 router.get("/roomlist", redirectLogin, (req, res) => {
 	
@@ -49,9 +55,9 @@ router.get("/roomlist", redirectLogin, (req, res) => {
 
 	if (userDetails || filteredOrigin || filteredDistrict) {
 		res.render("General/roomlist", {
-			...userDetails,
-			...filteredOrigin,
-			...filteredDistrict
+			userDetails,
+			filteredOrigin,
+			filteredDistrict
 		});
 	} else {
 		res.redirect("/user/login");
@@ -392,14 +398,14 @@ router.post("/login", (req, res) => {
 
 			    	console.log(origin);
 
-			    	loginModel.find({origin : origin}).limit(10).then((logins) => {
+			    	loginModel.find({origin : origin, districtLoc : districtLoc}).limit(10).then((logins) => {
 
 						const filteredOrigin = logins.map(login => {
 							return {
 								id : login._id,
 								name: login.name,
 								origin : login.origin, 
-								sex : login.sex,
+								sex : (login.sex).charAt(0),
 								countryLoc : login.countryLoc,
 								stateLoc  : login.stateLoc,
 								districtLoc : login.districtLoc,
@@ -418,7 +424,7 @@ router.post("/login", (req, res) => {
 									id : login._id,
 									name: login.name,
 									origin : login.origin, 
-									sex : login.sex,
+									sex : (login.sex).charAt(0),
 									countryLoc : login.countryLoc,
 									stateLoc  : login.stateLoc,
 									districtLoc : login.districtLoc,
@@ -426,11 +432,11 @@ router.post("/login", (req, res) => {
 								}
 							});
 
-							console.log(filteredDistrict);
-
+							// console.log(filteredDistrict);
+							
 							// Fetch 10 loggedin users from same district
 
-							req.session.userDetails = { name, sex, origin };	// User Details
+							req.session.userDetails = { name, sex, origin, districtLoc };	// User Details
 							req.session.filteredOrigin = filteredOrigin;		// 10 users in same origin
 							req.session.filteredDistrict = filteredDistrict;	// 10 users in same district
 
