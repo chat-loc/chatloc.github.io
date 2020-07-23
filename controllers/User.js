@@ -436,7 +436,7 @@ router.post("/login", (req, res) => {
 							
 							// Fetch 10 loggedin users from same district
 
-							req.session.userDetails = { name, sex, origin };	// User Details
+							req.session.userDetails = { name, sex, origin, districtLoc };	// User Details
 							req.session.filteredOrigin = filteredOrigin;		// 10 users in same origin
 							req.session.filteredDistrict = filteredDistrict;	// 10 users in same district
 

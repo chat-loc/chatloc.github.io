@@ -37,7 +37,7 @@
     padding: 7px 0;
     border-bottom: thin solid rgba(246, 246, 246, 0.1);
 }
-b.origin-name {
+b.origin-name, b.district-name {
     display: inline-block;
     width: 45%;
     max-width: 45%;
@@ -60,20 +60,27 @@ b.origin-name {
 same-origin em {
 	font-size: .85em;
 }
-.origin-road {
+.origin-road, .district-road {
 	text-transform: uppercase;
 	font-family: var(--font-tertiary);
 	color: var(--grey);
 	font-size: .9em;
 }
 .joined h2 {
-	font-family: var(--font-primary);
-	opacity: .8;
+	padding: 10px 0;
+	margin-bottom: 10px;
+	font-family: var(--font-tertiary);
+	color: rgba(255,255,255,.5);
 	letter-spacing: 1px;
-	color: white;
-	font-size: 1.4em;
+	font-size: 1.3em;
 	text-align: center;
 	text-transform: uppercase;
+	border: thin solid #fff;
+	font-weight: bolder;
+	background: rgba(255,255,255, .3);
+}
+.joined h2 span {
+	color: rgba(255,255,255,.9);
 }
 .room-btn {
     display: inline-block;
