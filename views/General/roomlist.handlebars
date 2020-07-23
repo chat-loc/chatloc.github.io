@@ -15,9 +15,9 @@
             	<section class="roomlist">
 
             		<section class="rooms">
-            			<a class="room-btn btn" href="">{{userDetails.districtLoc}} chatroom</a>
+            			<a id="districtLink" class="room-btn btn" href="{{userDetails.districtLoc}}">{{userDetails.districtLoc}} chatroom</a>
             			<hr>
-            			<a class="room-btn btn" href="">{{userDetails.origin}} chatroom</a>
+            			<a id="chatroomLink" class="room-btn btn" href="{{userDetails.origin}}">{{userDetails.origin}} chatroom</a>
             		</section>
 
             		<section class="joined">
@@ -39,7 +39,7 @@
             			</section>
 
             			<section class="district">
-            				<h2>Users from <span>{{userDetails.districtLoc}}</span></h2>
+            				<h2>Users at <span>{{userDetails.districtLoc}}</span></h2>
 
             				<ul class="same-origin">
             					{{#each filteredDistrict}}
@@ -53,9 +53,6 @@
             					{{/each}}
             				</ul>
             			</section>
-
-            			<ul class="same-district">
-            			</ul>
 
             		</section>
 
