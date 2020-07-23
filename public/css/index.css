@@ -85,6 +85,7 @@
     --mid-grey: #f2f2f2;
     --black: #000;
     --white: #fff;
+    --faint-grey: #212529;
   
     --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
 
@@ -100,7 +101,7 @@
 body {
 	font-weight: 400;
 	min-width: 320px;
-	color: #212529;
+	color: var(--faint-grey);
 	text-align: left;
 	background-color: #fff;
 	font-family: var(--font-primary);
@@ -123,6 +124,7 @@ input:invalid{
 
 h1,h2,h3,h4,h5,h6 {
     font-weight: 400;
+    color: var(--mid-grey);
 }
 hr {
     border-top: 1px solid #e5e5e5;
@@ -233,6 +235,7 @@ input[type=submit], button[type=submit] {
 }
 label {
     opacity: .5;
+    color: black;
     font-size: .9em;
     text-transform: uppercase;
 }
@@ -257,7 +260,7 @@ label {
     border-color: #1e9ce6;
     outline: 0;
 }
-.register-button {
+.register-button, .app-alert-close {
     display: block;
     width: 100%;
     height: 42px;
@@ -282,7 +285,7 @@ label {
 .page-header {
     background-color: rgba(26, 10, 56, 0.53);
     color: #fff;
-    z-index: 1000;
+    z-index: 99;
     width: 100%;
     position: absolute;
 }
@@ -335,7 +338,7 @@ main {
 .login-main .main-wrapper {
     padding: 75px;
 }
-.main-wrapper:before{
+.main-wrapper:before {
     position: absolute;
     content: "";
     left: 0;
@@ -345,4 +348,60 @@ main {
     background: url("../images/page-bg.png") no-repeat center;
     background-size: cover;
     opacity: .5;
+}
+
+/*Location alert*/
+
+.dialog-app-modal {
+    display: none !important; /*Hide for now to avoid modal interruption.*/
+    position: fixed;
+    display: flex;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .9);
+    z-index: 101;
+    text-align: center;
+    transition: transform 1s ease-out;
+}
+.dialog-app-modal.hide {
+    transform: translateY(-100%);
+}
+
+.modal-app-alert {
+    padding: 50px 20px;
+    text-align: center;
+    width: 100%;
+    font-family: var(--font-secondary);
+    font-size: 1.3em;
+    text-transform: uppercase;
+    background: #000;
+}
+.app-alert-close {
+    appearance: none;
+    -webkit-appearance: none;
+    width: auto;
+    margin: 30px auto;
+    padding: 0 30px;
+    line-height: 150%;
+    color: #fff;
+    background-color: red;
+    background-image: none;
+    cursor: not-allowed;
+    opacity: .3;
+}
+.app-alert-close.allowed {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.app-alert-close.allowed:hover, .app-alert-close.allowed:focus {
+    opacity: .7;
+}
+.app-alert {
+    opacity: .8;
 }

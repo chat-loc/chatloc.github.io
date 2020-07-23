@@ -1,4 +1,5 @@
 
+            
 
             <header class="page-header">        
                 
@@ -8,11 +9,11 @@
                             
             </header>
                     
-            <main>
+            <main id="registration-handlebars">
                 
                 <div class="main-wrapper">
                 
-                     <section class="register-now">
+                    <section class="register-now">
 
                     <section class="connect">
                         <h1 class="header">Sign Up</h1>
@@ -325,8 +326,11 @@
                             <div class="form-group">
                                 <input type="submit" name="submit-btn" id="submit-btn" value="Get Started" class="register-button"> 
                             </div>
-                            
-                            <input type="hidden" id="location-input" name="submit-btn" id="submit-btn" value=""> 
+
+                            <input type="hidden" id="location-country" name="location-country" value=""> 
+                            <input type="hidden" id="location-state" name="location-state" value="">
+                            <input type="hidden" id="location-district" name="location-district" value="">
+                            <input type="hidden" id="location-road" name="location-road" value="">
 
                         </form>
 
@@ -340,4 +344,5 @@
         
             </main>
             
+            <script defer type="text/javascript" src="/js/opencage.js"></script>
             
