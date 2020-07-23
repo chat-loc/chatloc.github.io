@@ -48,8 +48,11 @@
                             <div class="form-group">
                                 <input type="submit" name="submit-btn" value="Log In" id="submit-btn" class="register-button">
                             </div>
-                            {{#if errors}}
+                            {{#if errors.noll}}
                                 <span class="error error-final">Wrong login credentials.</span>
+                            {{/if}}
+                            {{#if errors.server}}
+                                <span class="error error-final">Cannot connect to server.</span>
                             {{/if}}
 
                             <input type="hidden" id="location-country" name="location-country" value=""> 

@@ -38,12 +38,12 @@ const redirectHome = (req, res, next) => {
 
 // Function to check for nulls
 const checkNull = (key, field, errors, loginVals) => {
-    (field == "") ? errors.null[`${key}`] = ' should not be empty' : loginVals[`${key}`] = field;
+    (field == "") ? errors.noll[`${key}`] = ' should not be empty' : loginVals[`${key}`] = field;
 };
 
 router.get("/roomlist", redirectLogin, (req, res) => {
 	
-	console.log(req.session);
+	// console.log(req.session);
 	// If no session is set at all (evidence of login / registration), then reroute
 	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
 
@@ -76,12 +76,12 @@ router.post("/registration", redirectHome, (req, res) => {
 	/*
 	What errors object will eventual ly look like: 
 	errors = {
-	    null : {name : true, lastName : true}
+	    noll : {name : true, lastName : true}
 	    regex : {password : 'Should be more than 0 character long'}
 	}
 	*/
 	let errors = {
-	    null : {},
+	    noll : {},
 	    regex : {}
 	};
 	let loginVals = {};
@@ -123,11 +123,11 @@ router.post("/registration", redirectHome, (req, res) => {
 	}
 
 	// If errors for invalid patterns exist, re-render route to referring page and export errors object
-	if (Object.keys(errors.null).length > 0) {
+	if (Object.keys(errors.noll).length > 0) {
 	    formValid = false;
 
 	    res.render('User/registration', {
-	        errors : errors.null,
+	        errors : errors.noll,
 	        loginVals,
 	    });
 
@@ -277,10 +277,12 @@ router.post("/login", (req, res) => {
 	// Fetch the details
 	const name = ((req.body.name).trim()).toLowerCase();
 	const password = req.body.password;
+	let insertedRec = false;
 
 	// Create object to hold errors
 	let errors = {
-	    null : {},
+	    noll : {},
+	    server : {},
 	    regex : {}
 	};
 	let loginVals = {};
@@ -291,14 +293,14 @@ router.post("/login", (req, res) => {
 	checkNull ("password", password, errors, loginVals);
 
 	// If errors for invalid patterns exist, re-render route to referring page and export errors object
-	if (Object.keys(errors.null).length > 0) {
+	if (Object.keys(errors.noll).length > 0) {
 	    formValid = false;
 
 	   /* console.log(errors);
 	    console.log(loginVals);*/
 
 	    res.render('User/login', {
-	        errors : errors.null,
+	        errors : errors.noll,
 	        loginVals,
 	    });
 
@@ -314,19 +316,27 @@ router.post("/login", (req, res) => {
     	*/
 
      	// Check if login details exist in DB
-     	userModel.findOne({
+     	loginModel.findOne({
      		name : name,
      		password : password
 
      	}, function (err, login) {	// Login unsuccessful
 
-     		if (err || !login) {
+     		if (err) {
+     			console.log("In DB");
      			console.log (err);
      			res.render('User/login', {
-     			    errors : errors.null,
+     			    errors : errors.server,
      			    loginVals,
      			});
+
      		} else {	// Login successful 
+
+     			if (!login) {
+     				insertedRec = true;
+     			}
+
+     			console.log("Not In DB");
 
      			// User credentials have been checked; first find his origin and sex
      			// from his record in users DB, to be passed to new page.
@@ -354,28 +364,56 @@ router.post("/login", (req, res) => {
      				// Unpack this, for use in fetching users from the same district.
      				const districtLoc = newUserLocDetails.districtLoc;
 
-     				const login = loginModel(newUserLocDetails);
+     				const loginDB = loginModel(newUserLocDetails);
 
-     				login.save().then(() => {
+     				// Avoid logging in twice
+     				console.log(name, password);
 
-						// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
+     				
+ 					if (!insertedRec) {
+ 						loginDB.save().then(() => {
+ 							console.log('Record Saved');
+ 						});
+ 					}
 
-					    // The login form has no input for origin and it makes no sense since the 
-					    // user has once filled it in the registration form. However, the 
-					    // origin value is paramount as it is necessary to send the user to the 
-					    // right room. 
 
-					    // If the user is trying to log in, he must have registered. Compare his 
-					    // login details to his registration details to retrieve his 'origin'
+					// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
 
-					    
-				    	// Fetch 10 loggedin users from same origin
+				    // The login form has no input for origin and it makes no sense since the 
+				    // user has once filled it in the registration form. However, the 
+				    // origin value is paramount as it is necessary to send the user to the 
+				    // right room. 
 
-				    	console.log(origin);
+				    // If the user is trying to log in, he must have registered. Compare his 
+				    // login details to his registration details to retrieve his 'origin'
 
-				    	loginModel.find({origin : origin}).limit(10).then((logins) => {
+				    
+			    	// Fetch 10 loggedin users from same origin
 
-							const filteredOrigin = logins.map(login => {
+			    	console.log(origin);
+
+			    	loginModel.find({origin : origin}).limit(10).then((logins) => {
+
+						const filteredOrigin = logins.map(login => {
+							return {
+								id : login._id,
+								name: login.name,
+								origin : login.origin, 
+								sex : login.sex,
+								countryLoc : login.countryLoc,
+								stateLoc  : login.stateLoc,
+								districtLoc : login.districtLoc,
+								roadLoc : login.roadLoc
+							}
+						});
+
+						console.log(filteredOrigin);
+
+						// Fetch 10 loggedin users from same district
+
+				    	loginModel.find({districtLoc : districtLoc}).limit(10).then((logins) => {
+
+							const filteredDistrict = logins.map(login => {
 								return {
 									id : login._id,
 									name: login.name,
@@ -388,40 +426,19 @@ router.post("/login", (req, res) => {
 								}
 							});
 
-							console.log(filteredOrigin);
+							console.log(filteredDistrict);
 
 							// Fetch 10 loggedin users from same district
 
-					    	loginModel.find({districtLoc : districtLoc}).limit(10).then((logins) => {
+							req.session.userDetails = { name, sex, origin };	// User Details
+							req.session.filteredOrigin = filteredOrigin;		// 10 users in same origin
+							req.session.filteredDistrict = filteredDistrict;	// 10 users in same district
 
-								const filteredDistrict = logins.map(login => {
-									return {
-										id : login._id,
-										name: login.name,
-										origin : login.origin, 
-										sex : login.sex,
-										countryLoc : login.countryLoc,
-										stateLoc  : login.stateLoc,
-										districtLoc : login.districtLoc,
-										roadLoc : login.roadLoc
-									}
-								});
-
-								console.log(filteredDistrict);
-
-								// Fetch 10 loggedin users from same district
-
-								req.session.userDetails = { name, sex, origin };	// User Details
-								req.session.filteredOrigin = filteredOrigin;		// 10 users in same origin
-								req.session.filteredDistrict = filteredDistrict;	// 10 users in same district
-
-								return res.redirect('/user/roomlist');
-
-							});
+							return res.redirect('/user/roomlist');
 
 						});
 
-     				});
+					});
      			
  			  	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 
