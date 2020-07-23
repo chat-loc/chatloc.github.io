@@ -8,13 +8,20 @@ const mongoose = require('mongoose');
 //This loads all our environment variables from the key.env
 require("dotenv").config({path:'./config/key.env'});
 
-// Import router objects
-const userRoutes = require("./controllers/User");
-
-const user = require("./models/User");
-
 // Creation of app object
 const app = express();
+
+
+//Handlebars middlware
+app.engine("handlebars", exphbs({
+    extname : '.handlebars',
+    helpers : require('./config/handlebars-helpers')
+}));
+
+// Import router objects
+const userRoutes = require("./controllers/User");
+const generalRoutes = require("./controllers/General");
+
 
 // BodyParser middleware
 app.use(bodyParser.urlencoded({extended:false}));
@@ -22,11 +29,6 @@ app.use(bodyParser.urlencoded({extended:false}));
 //express static middleware
 app.use(express.static("public"));
 
-//Handlebars middlware
-app.engine("handlebars", exphbs({
-    extname : '.handlebars'/*,
-    helpers : require('./config/handlebars-helpers')*/
-}));
 
 app.set("view engine", "handlebars");
 
@@ -41,6 +43,7 @@ app.use((req, res, next) => {
 });
 
 // User Routes
+app.use("/", generalRoutes);
 app.use("/user", userRoutes);
 
 /*app.get('/', (req, res) => {

@@ -1,0 +1,67 @@
+            
+
+            <header class="page-header">        
+                
+                <div class="header-inner">
+                    <h1>Join Logged In Users Now</h1>
+                </div>
+                            
+            </header>
+
+            <main class="roomlist-area">
+
+            	<div id="map" class="map-canvas"></div>
+
+            	<section class="roomlist">
+
+            		<section class="rooms">
+            			<a class="room-btn btn" href="">{{userDetails.districtLoc}} chatroom</a>
+            			<hr>
+            			<a class="room-btn btn" href="">{{userDetails.origin}} chatroom</a>
+            		</section>
+
+            		<section class="joined">
+
+            			<section class="origin">
+            				<h2>Users from <span>{{userDetails.origin}}</span></h2>
+
+            				<ul class="same-origin">
+            					{{#each filteredOrigin}}
+            						<li>
+            							<b class="origin-name">{{this.name}} ({{this.sex}}) </b>
+            							<span class="current-loc">
+            								<em>Currently at</em>: 
+            								<span class="origin-road">{{this.roadLoc}}</span>
+            							</span>
+            						</li>
+            					{{/each}}
+            				</ul>
+            			</section>
+
+            			<section class="district">
+            				<h2>Users from <span>{{userDetails.districtLoc}}</span></h2>
+
+            				<ul class="same-origin">
+            					{{#each filteredDistrict}}
+            						<li>
+            							<b class="district-name">{{this.name}} ({{this.sex}}) </b>
+            							<span class="current-loc">
+            								<em>Currently at</em>: 
+            								<span class="district-road">{{this.roadLoc}}</span>
+            							</span>
+            						</li>
+            					{{/each}}
+            				</ul>
+            			</section>
+
+            			<ul class="same-district">
+            			</ul>
+
+            		</section>
+
+            	</section>
+
+            </main>
+
+            <script defer src="https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js"></script>
+            <script defer type="text/javascript" src="/js/nav.js"></script>

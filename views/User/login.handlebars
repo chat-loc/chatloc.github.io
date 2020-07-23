@@ -26,18 +26,39 @@
 
                     <section class="registration">
 
-                        <form action="" class="register">
+                        <form action="/user/login" method="POST" class="register">
                             <div class="form-group">
-                                <label for="uname">Username</label>
-                                <input type="text" id="name" class="register-input">
+                                <label for="name">Username</label>
+                                <input type="text" name="name" id="name" 
+                                    {{#if loginVals.name}}
+                                        value="{{loginVals.name}}"
+                                    {{/if}} 
+                                class="register-input" required>
                             </div>
+                            {{#if errors.name}}
+                                <span class="error">Username should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+                            {{/if}}
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" id="password" class="register-input">
+                                <input type="password" name="password" id="password" class="register-input" required>
                             </div>
+                            {{#if errors.password}}
+                                <span class="error">Password should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+                            {{/if}}
                             <div class="form-group">
-                                <input type="submit" value="Log In" id="submit" class="register-button"> 
+                                <input type="submit" name="submit-btn" value="Log In" id="submit-btn" class="register-button">
                             </div>
+                            {{#if errors.noll}}
+                                <span class="error error-final">Wrong login credentials.</span>
+                            {{/if}}
+                            {{#if errors.server}}
+                                <span class="error error-final">Cannot connect to server.</span>
+                            {{/if}}
+
+                            <input type="hidden" id="location-country" name="location-country" value=""> 
+                            <input type="hidden" id="location-state" name="location-state" value="">
+                            <input type="hidden" id="location-district" name="location-district" value="">
+                            <input type="hidden" id="location-road" name="location-road" value="">
 
                         </form>
 
@@ -50,5 +71,12 @@
                 </div>
         
             </main>
-            
-            
+
+            <section class="dialog-app-modal {{#if errors}}hide{{/if}}" id="dialog-app-modal">
+                <div class="modal-app-alert">
+                    <h3 class="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
+                    <button id="app-alert-close" class="app-alert-close">Close</button>
+                </div>
+            </section>
+
+            <script defer type="text/javascript" src="/js/opencage.js"></script>
