@@ -110,18 +110,6 @@ body {
 /*2. TAGS
 ==============================================================================================================================================================*/
 
-input {
-}
-input[type="button"] {
-}
-input:read:only {
-}
-input:out-of-range {
-}
-input:invalid{
-
-}
-
 h1,h2,h3,h4,h5,h6 {
     font-weight: 400;
     color: var(--mid-grey);
@@ -133,6 +121,9 @@ hr {
 p {
     font-family: var(--font-secondary);
     font-size: 1.0em;
+}
+ul {
+    list-style: none;
 }
 
 /*3. BROWSERS

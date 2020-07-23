@@ -24,11 +24,26 @@
 
             			<section class="origin">
             				<h2>Logged In Users from (Your Origin)</h2>
+
+            				<ul class="same-origin">
+            					{{#each filteredOrigin}}
+            						<li>
+            							<b class="origin-name">{{this.name}} ({{this.sex}}) </b>
+            							<span class="current-loc">
+            								<em>Currently at</em>: 
+            								<span class="origin-road">{{this.roadLoc}}</span>
+            							</span>
+            						</li>
+            					{{/each}}
+            				</ul>
             			</section>
 
             			<section class="district">
             				<h2>Logged In Users from (Your District)</h2>
             			</section>
+
+            			<ul class="same-district">
+            			</ul>
 
             		</section>
 
