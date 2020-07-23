@@ -236,7 +236,7 @@ router.post("/registration", redirectHome, (req, res) => {
 					id : login._id,
 					name: login.name,
 					origin : login.origin, 
-					sex : login.sex,
+					sex : login.sex.charAt(0),
 					countryLoc : login.countryLoc,
 					stateLoc  : login.stateLoc,
 					districtLoc : login.districtLoc,
@@ -255,7 +255,7 @@ router.post("/registration", redirectHome, (req, res) => {
 						id : login._id,
 						name: login.name,
 						origin : login.origin, 
-						sex : login.sex,
+						sex : login.sex.charAt(0),
 						countryLoc : login.countryLoc,
 						stateLoc  : login.stateLoc,
 						districtLoc : login.districtLoc,
@@ -263,7 +263,7 @@ router.post("/registration", redirectHome, (req, res) => {
 					}
 				});
 
-				req.session.userDetails = { name, sex, origin };	// User Details
+				req.session.userDetails = { name, sex, origin, districtLoc };	// User Details
 				req.session.filteredOrigin = filteredOrigin;		// 10 users in same origin
 				req.session.filteredDistrict = filteredDistrict;	// 10 users in same district
 
