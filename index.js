@@ -132,4 +132,11 @@ tech.on('connection', function (socket) {
 
     });
 
+    // 2a. Form has been submitted on client.
+    // Display message to everyone, including yourself
+    socket.on('message', (data) => {
+        console.log (users[socket.id], data.userMoniker);
+        tech.in(data.room).emit('message', { message: data.chatMsg, otherName: users[socket.id]});
+    });
+
 });
