@@ -170,7 +170,7 @@ tech.on('connection', function (socket) {
     socket.on('message', (data) => {
         // console.log ("Message emitted. User: " + users[socket.id]);
 
-            tech.in(data.room).emit('message', { message: data.chatMsg, otherName: users[socket.id]});
+            tech.in(data.room).emit('message', { message: data.chatMsg, otherName: data.name});
     });
 
     socket.on('mongo-save', (data) => {
@@ -179,21 +179,6 @@ tech.on('connection', function (socket) {
         newMsg.save(function (err) {
             if (err) throw err;
         });
-    });
-
-    socket.on('save-chat', (data) => {
-        /*if (users[socket.id] == data.moniker) {*/
-            let chatsToSave = loadChats('db.json');
-            //console.log("Current state of DB: ", chatsToSave);
-            console.log("User's room ", users["room"]);
-            console.log("Data passed for saving ", data); 
-            /*
-            data <div class='msg'><span class="user">You: </span>  test this - <time class='chat-stamp' datetime='15-15-31'>15:15:31 PM</time></div>
-            */
-            chatsToSave[users["room"]].push(data);  // users['room'] is saved when user first joins room
-
-            saveChat(chatsToSave);
-        /*}*/
     });
 
 });

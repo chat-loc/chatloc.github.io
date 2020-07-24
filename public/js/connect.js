@@ -197,13 +197,15 @@ window.onload = () => {
 		const userDetails =  {
 			chatMsg,
 			room,
-			/*humanisedTime*/
+			name
 		};
-
-
 
 		// socket.emit('message', {chatMsg, room});	
 		socket.emit('message', {...userDetails});	
+
+		const chatSound = new Audio ("/sounds/user-joins.mp3");
+
+		chatSound.play();
 
 		$textbox.value = '';	// clear textbox
 
@@ -227,8 +229,13 @@ window.onload = () => {
 
 		const msgClass = (`${my}msg`); // li class
 		
-		let msgHTML = `<span class="user">${name}: </span>  ${data.message} - ${timeHumanise()}`;
+		// When showing chats locally, let 'You' prefix the owner of the chat, but when 
+		// (saving and) loading from database, it's more ideal that the owner of the chat should show
+		let msgMongo = `<span class="user">${name}: </span>  ${data.message} - ${timeHumanise()}`;
+		let msgHTML = `<span class="user">${msgName}: </span>  ${data.message} - ${timeHumanise()}`;
+		
 		let $msgHTMLDB = `<div class='${msgClass}'>${msgHTML}</div>`;
+		let $msgMongoDB = `<div class='${msgClass}'>${msgMongo}</div>`;
 
 		// 2d. Populate chats for every page submission. (Nothing to do with server for now)
 		loadChatHTML($msgHTMLDB, $msgList);	// Populate page with chats
@@ -238,7 +245,7 @@ window.onload = () => {
 		console.log(room);
 		
 		// Now save to server database 
-		socket.emit('mongo-save', {html : $msgHTMLDB, room : room});
+		socket.emit('mongo-save', {html : $msgMongoDB, room : room});
 
 	});
 
