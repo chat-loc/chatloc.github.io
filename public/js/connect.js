@@ -5,10 +5,6 @@ window.onload = () => {
 	// First connect to socket
 	const socket = io.connect('/tech');
 
-	let localChatDB = {
-		"etobicoke-north-room" : []
-	};
-
 	let humanisedTime = '';
 
 	// Get reference to form and message list
@@ -77,13 +73,13 @@ window.onload = () => {
 		msgList.appendChild(newMsg);	// append <li>msg</li> to end of <ul>
 		// append in human readable format
 		// let $msgHTML = `<span class="user">${msgName}: </span>  ${msg.message} - ${timeHumanise()}`;
-		console.log (chat.msg);
+		console.log (chat);
 
 		if (chat) {
 
-			newMsg.innerHTML = chat.msg;
+			newMsg.innerHTML = chat;
 
-/*			if (notme) {
+			if (notme) {
 				// newMsg.querySelector('div').classList.add('msg');
 				const newmsg = newMsg.querySelectorAll('.msg');
 				const newothermsg = newMsg.querySelectorAll('.other-msg');
@@ -97,12 +93,10 @@ window.onload = () => {
 				    newothermsg[i].classList.add('msg');		        
 				};
 			} else {
-				alert ('me');
-			}*/
+				
+			}
 
 		}
-
-		console.log(localChatDB);
 
 	}
 
@@ -171,7 +165,7 @@ window.onload = () => {
 				let i=0;
 
 				for (i=0; i < (docs).length; i++) {
-					loadChatHTML((docs)[i], $msgList, notme);
+					loadChatHTML((docs)[i].msg, $msgList, notme);
 
 					console.log ((docs)[i]);
 
@@ -191,7 +185,7 @@ window.onload = () => {
 
 	// 2a Listen to submission of chat and then emit message in room (everyone inc. you)
 	$msgForm.addEventListener('submit', (e) => { 
-		alert('working');
+
 		e.preventDefault();	// prevent default action
 
 		// neutralise XSS attack and eliminate unnecessary whitespace
@@ -237,17 +231,14 @@ window.onload = () => {
 		let $msgHTMLDB = `<div class='${msgClass}'>${msgHTML}</div>`;
 
 		// 2d. Populate chats for every page submission. (Nothing to do with server for now)
-		// loadChatHTML($msgHTMLDB, $msgList);	// Populate page with chats
+		loadChatHTML($msgHTMLDB, $msgList);	// Populate page with chats
 		triggerScroll();
 
-		console.log (localChatDB);
 		// First save chat to local DB 
 		console.log(room);
 		
-		// localChatDB/*["chats"]*/[room].push({$msgHTMLDB});
-
 		// Now save to server database 
-		// socket.emit('mongo-save', {html : $msgHTMLDB, room : room});
+		socket.emit('mongo-save', {html : $msgHTMLDB, room : room});
 
 	});
 
