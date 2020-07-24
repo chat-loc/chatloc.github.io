@@ -78,8 +78,8 @@ server.listen(PORT, ()=> {
 
 // DATABASE HANDLERS
 
-function saveChat (json='""') {
-    return fs.writeFileSync('db.json', JSON.stringify(json,null,2))
+function saveChat (json) {
+    return fs.writeFileSync('db.json', JSON.stringify(json, null, 2));
 }
 
 const loadChats = (room) => {
@@ -119,15 +119,15 @@ tech.on('connection', function (socket) {
             // user now, so they are on their machine. 
             // NOTE that function chatsDB lives in this server script
 
-            // let chats = loadChats(data.room);
+            let chats = loadChats(data.room);
             let chatsDB = loadChats('db.json');
-            // console.log (chats);
+            // console.log ("chats from db.json : ", chatsDB);
 
             // console.log(users[socket.id]);
             // load chats to only yourself (privately) to avoid displaying 2ce
 
            // socket.emit('load-chats', { chats : chatsDB["chats"], otherName: users[socket.id], moniker: data.userMoniker });
-           tech.in(data.room).emit('load-chats', { chats : chatsDB["chats"], user : users[socket.id], otherName: users[socket.id]});
+           tech.in(data.room).emit('load-chats', { chats : chatsDB[data.room], user : users[socket.id], otherName: users[socket.id]});
         }
 
     });
@@ -135,8 +135,23 @@ tech.on('connection', function (socket) {
     // 2a. Form has been submitted on client.
     // Display message to everyone, including yourself
     socket.on('message', (data) => {
-        console.log (users[socket.id], data.userMoniker);
+        // console.log ("Message emitted. User: " + users[socket.id]);
         tech.in(data.room).emit('message', { message: data.chatMsg, otherName: users[socket.id]});
+    });
+
+    socket.on('save-chat', (data) => {
+        /*if (users[socket.id] == data.moniker) {*/
+            let chatsToSave = loadChats('db.json');
+            //console.log("Current state of DB: ", chatsToSave);
+            console.log("User's room ", users["room"]);
+            console.log("Data passed for saving ", data); 
+            /*
+            data <div class='msg'><span class="user">You: </span>  test this - <time class='chat-stamp' datetime='15-15-31'>15:15:31 PM</time></div>
+            */
+            chatsToSave[users["room"]].push(data);  // users['room'] is saved when user first joins room
+
+            saveChat(chatsToSave);
+        /*}*/
     });
 
 });

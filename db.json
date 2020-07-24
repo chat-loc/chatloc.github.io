@@ -1,3 +1,10 @@
 {
-  "chatDB" : []
+  "etobicoke-north-room": [
+    "<div class='msg'><span class=\"user\">You: </span>  test - <time class='chat-stamp' datetime='15-14-14'>15:14:14 PM</time></div>",
+    "<div class='msg'><span class=\"user\">You: </span>  test this - <time class='chat-stamp' datetime='15-15-31'>15:15:31 PM</time></div>",
+    "<div class='msg'><span class=\"user\">You: </span>  okay - <time class='chat-stamp' datetime='15-34-04'>15:34:04 PM</time></div>",
+    "<div class='msg'><span class=\"user\">You: </span>  Working - <time class='chat-stamp' datetime='15-34-33'>15:34:33 PM</time></div>",
+    "<div class='msg'><span class=\"user\">You: </span>  Hmmn - <time class='chat-stamp' datetime='15-52-09'>15:52:09 PM</time></div>",
+    "<div class='msg'><span class=\"user\">You: </span>  Oh please work - <time class='chat-stamp' datetime='15-55-54'>15:55:54 PM</time></div>"
+  ]
 }
