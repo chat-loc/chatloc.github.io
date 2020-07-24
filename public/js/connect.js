@@ -74,16 +74,16 @@ window.onload = () => {
 
 		const newMsg = document.createElement('li');	// create li tag
 
-		msgList.appendChild(newMsg);	// append message
+		msgList.appendChild(newMsg);	// append <li>msg</li> to end of <ul>
 		// append in human readable format
 		// let $msgHTML = `<span class="user">${msgName}: </span>  ${msg.message} - ${timeHumanise()}`;
-		console.log (chat);
+		console.log (chat.msg);
 
 		if (chat) {
 
-			newMsg.innerHTML = chat;
+			newMsg.innerHTML = chat.msg;
 
-			if (notme) {
+/*			if (notme) {
 				// newMsg.querySelector('div').classList.add('msg');
 				const newmsg = newMsg.querySelectorAll('.msg');
 				const newothermsg = newMsg.querySelectorAll('.other-msg');
@@ -96,7 +96,9 @@ window.onload = () => {
 				for (let i = 0; i < newothermsg.length; i++) {    
 				    newothermsg[i].classList.add('msg');		        
 				};
-			} 
+			} else {
+				alert ('me');
+			}*/
 
 		}
 
@@ -104,7 +106,9 @@ window.onload = () => {
 
 	}
 
+	const loadChatHTMLSingle = (chat, msgList, notme) => {
 
+	}
 
 	const connect = (name, chatRoom) => {	// called from connect.js
 
@@ -144,55 +148,34 @@ window.onload = () => {
 		// chats from the DB. But not just even the DB. Because in the server file, we have passed 
 		// in this current room as a parameter which means only records of this particular
 		// room are fetched. 
-		socket.on('load-chats', (data) => {
+		socket.on('load-chats', (docs) => {
 
-			let notme = (meVsThey(data.otherName));	// personal styling
+			let notme = (meVsThey(docs.otherName));	// personal styling
 
-			console.log ("data chats from server to be loaded into page: ", data);
+			console.log ("data chats from server to be loaded into page: ", docs);
 
 			// 'chats' is the key from the server on 'load-chats' event
 			/*
-				data = {
-					chats: [
-						0 : {
-							"$msgHTMLDB" : "<div>some html...</div>"
+				docs = [
+					   	  {
+							 _id : ...
+							 dateCreated : ...
+							 msg: <div class="msg">...</div>
+							 room : etobicoke-north-room
 						}
-					],
-					otherName: andrea,
-					user : andrea
-				}
-			*/
-			console.log ("data chat unit from server to be loaded into page: ", data.chats);	
-
-			// 'chats' is the key from the server on 'load-chats' event
-			/*
-				data.chats = [
-					0 : {
-						"$msgHTMLDB" : "<div>some html...</div>"
-					}
-				]
+					]
 			*/
 
-			if (data.chats) {
-
-				/*(data.chats).forEach( (chat, indx) => {
-
-					loadChatHTML(chat['$msgHTMLDB'], $msgList, notme);
-
-					if (indx == ((data.chats).length) - 1) {
-						triggerScroll();	// Scroll to the end on last iteration
-					}
-				});*/
+			if (docs) {
 
 				let i=0;
-				for (i=0; i < (data.chats).length; i++) {
-					loadChatHTML((data.chats)[i], $msgList, notme);
 
-					console.log ((data.chats)[i]);	
-					/*
-					{$msgHTMLDB: "<div class='msg'><span class="user">You: </span>  …amp' datetime='12-58-36'>12:58:36 PM</time></div>"}
-					*/
-					if (i == ((data.chats).length) - 1) {
+				for (i=0; i < (docs).length; i++) {
+					loadChatHTML((docs)[i], $msgList, notme);
+
+					console.log ((docs)[i]);
+
+					if (i == ((docs).length) - 1) {
 						triggerScroll();	// Scroll to the end on last iteration
 					}
 				}
@@ -208,6 +191,7 @@ window.onload = () => {
 
 	// 2a Listen to submission of chat and then emit message in room (everyone inc. you)
 	$msgForm.addEventListener('submit', (e) => { 
+		alert('working');
 		e.preventDefault();	// prevent default action
 
 		// neutralise XSS attack and eliminate unnecessary whitespace
@@ -222,12 +206,14 @@ window.onload = () => {
 			/*humanisedTime*/
 		};
 
+
+
 		// socket.emit('message', {chatMsg, room});	
 		socket.emit('message', {...userDetails});	
 
 		$textbox.value = '';	// clear textbox
 
-		let isTyping = document.querySelector('.is-typing');
+		// let isTyping = document.querySelector('.is-typing');
 		/*if (isTyping !== null) {
 			isTyping.remove();	// remove any notorious lingering '.is-typing'
 		}*/
@@ -247,11 +233,11 @@ window.onload = () => {
 
 		const msgClass = (`${my}msg`); // li class
 		
-		let msgHTML = `<span class="user">${msgName}: </span>  ${data.message} - ${timeHumanise()}`;
+		let msgHTML = `<span class="user">${name}: </span>  ${data.message} - ${timeHumanise()}`;
 		let $msgHTMLDB = `<div class='${msgClass}'>${msgHTML}</div>`;
 
 		// 2d. Populate chats for every page submission. (Nothing to do with server for now)
-		loadChatHTML($msgHTMLDB, $msgList);	// Populate page with chats
+		// loadChatHTML($msgHTMLDB, $msgList);	// Populate page with chats
 		triggerScroll();
 
 		console.log (localChatDB);
@@ -261,14 +247,9 @@ window.onload = () => {
 		// localChatDB/*["chats"]*/[room].push({$msgHTMLDB});
 
 		// Now save to server database 
-		socket.emit('save-chat', $msgHTMLDB);
+		// socket.emit('mongo-save', {html : $msgHTMLDB, room : room});
 
 	});
-
-	window.addEventListener("beforeunload", function() {
-       console.log("Close web socket");
-       socket.close();
-   });
 
 };
 

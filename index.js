@@ -12,6 +12,7 @@ const fs = require('fs');
 // Add body parser to process form data 
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 //This loads all our environment variables from the key.env
 require("dotenv").config({path:'./config/key.env'});
@@ -89,6 +90,31 @@ const loadChats = (room) => {
 }
 
 
+
+const chatSchema = new Schema({
+    name : {
+        type : String
+    },
+    msg : {
+        type : String
+    },
+    room : {
+        type : String
+    },
+    dateCreated : {
+        type : Date,
+        default : Date.now()
+    }
+});
+
+/*For every Schema you create (create a schema per collection), you must also create a model
+The model will allow you to perform CRUD operations on a given collection*/
+
+const mongoChat = mongoose.model('Chat', chatSchema);
+
+
+
+
 const tech = io.of('/tech');
 const users = {};
 
@@ -112,6 +138,7 @@ tech.on('connection', function (socket) {
         // Thus the only data needed is the name of the logged in user that will be
         // obtained from data. i.e. data.name 
         if (data.name != null) {
+
             socket.broadcast.emit('user-connected', data);
 
             // 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
@@ -119,15 +146,21 @@ tech.on('connection', function (socket) {
             // user now, so they are on their machine. 
             // NOTE that function chatsDB lives in this server script
 
-            let chats = loadChats(data.room);
-            let chatsDB = loadChats('db.json');
-            // console.log ("chats from db.json : ", chatsDB);
+            mongoChat.find({room : data.room}, function(err, docs) {
+                if (err) {
+                    throw err;
+                }
+                console.log("Load old messages for newly joined user");
+                socket.emit("load-chats", docs);
+                console.log("THE DOCS : ", docs);
+                //tech.in(data.room).emit("load-old-msgs", docs);
+            })
 
             // console.log(users[socket.id]);
             // load chats to only yourself (privately) to avoid displaying 2ce
 
            // socket.emit('load-chats', { chats : chatsDB["chats"], otherName: users[socket.id], moniker: data.userMoniker });
-           tech.in(data.room).emit('load-chats', { chats : chatsDB[data.room], user : users[socket.id], otherName: users[socket.id]});
+           // tech.in(data.room).emit('load-chats', { chats : chatsDB[data.room], user : users[socket.id], otherName: users[socket.id]});
         }
 
     });
@@ -136,7 +169,16 @@ tech.on('connection', function (socket) {
     // Display message to everyone, including yourself
     socket.on('message', (data) => {
         // console.log ("Message emitted. User: " + users[socket.id]);
-        tech.in(data.room).emit('message', { message: data.chatMsg, otherName: users[socket.id]});
+
+            tech.in(data.room).emit('message', { message: data.chatMsg, otherName: users[socket.id]});
+    });
+
+    socket.on('mongo-save', (data) => {
+
+        const newMsg = new mongoChat({msg : data.html, room: data.room, otherName : users[socket.id]});
+        newMsg.save(function (err) {
+            if (err) throw err;
+        });
     });
 
     socket.on('save-chat', (data) => {
