@@ -10,11 +10,4 @@ router.get("/", (req, res) => {
     res.redirect("/user/login");
 });
 
-/*//Route to direct user to chat app
-router.get("/", (req, res) => {
-    res.render("General/roomlist");
-    res.redirect("/user/login");
-});*/
-
-
 module.exports = router;

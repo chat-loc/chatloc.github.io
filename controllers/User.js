@@ -455,4 +455,21 @@ router.post("/login", (req, res) => {
 
 });
 
+router.get("/etobicoke-north-room", (req, res) => {
+	res.render("User/etobicoke-north-room")
+});
+
+router.get("/italy", (req, res) => {
+	res.render("User/italy")
+});
+
+router.get("/india", (req, res) => {
+	res.render("User/india")
+});
+
+router.get("/nigeria", (req, res) => {
+	res.render("User/nigeria")
+});
+
+
 module.exports = router;
