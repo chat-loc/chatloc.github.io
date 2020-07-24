@@ -465,14 +465,14 @@ router.post("/login", (req, res) => {
 
 // DON'T FORGET TO REMOVE REDIRECTLOGIN
 
-router.get("/etobicoke-north-room", /*redirectLogin,*/ (req, res) => {
+router.get("/etobicoke-north-room", redirectLogin, (req, res) => {
 	// console.log(req.session) There is still access to 
 	// Session either get or post. (So there may be no need for query strings)
 	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
 	/*console.log (req.session);
 	console.log ("userDetails : " + userDetails);*/
 	res.render("User/etobicoke-north-room", {
-		/*user: userDetails.name,*/
+		user: userDetails.name,
 		filteredOrigin,
 		filteredDistrict,
 		page : "chatroom",
