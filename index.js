@@ -74,3 +74,26 @@ const PORT = process.env.PORT || 5003;
 server.listen(PORT, ()=> {
      console.log(`Server is listening on port: ${PORT}`);
 });
+
+const tech = io.of('/tech');
+const users = {};
+
+tech.on('connection', function (socket) {
+    
+    // 1a. Listen for user about to join a room (called on load in client-side)
+    socket.on('join', (data) => {
+
+        socket.join(data.room); //  1b. Identify the appropriate room to work with from data passed in client
+
+        /*1c. Save current user name on 'join' event. This will be used later to compare if its same 
+        user on form 'submit' event.*/
+        users[socket.id] = data.name; 
+
+        console.log(users);
+        users['room'] = data.room;
+
+        // Broadcast message (Load chats when user first joins room)
+
+    });
+
+});

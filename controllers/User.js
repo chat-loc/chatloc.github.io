@@ -57,7 +57,8 @@ router.get("/roomlist", redirectLogin, (req, res) => {
 		res.render("General/roomlist", {
 			userDetails,
 			filteredOrigin,
-			filteredDistrict
+			filteredDistrict,
+			page : "roomlist"
 		});
 	} else {
 		res.redirect("/user/login");
@@ -67,12 +68,16 @@ router.get("/roomlist", redirectLogin, (req, res) => {
 
 //Route to direct use to Registration form
 router.get("/registration", /*redirectHome,*/ (req, res) => {
-    res.render("User/registration");
+    res.render("User/registration", {
+    	page : "form"
+    });
 });
 
 //Route to direct use to Registration form
 router.get("/login", redirectHome, (req, res) => {
-    res.render("User/login");
+    res.render("User/login", {
+    	page : "form"
+    });
 });
 
 //Route to process user's request and data when user submits registration form
@@ -135,6 +140,7 @@ router.post("/registration", redirectHome, (req, res) => {
 	    res.render('User/registration', {
 	        errors : errors.noll,
 	        loginVals,
+	        form : "form"
 	    });
 
 	} else {
@@ -155,7 +161,8 @@ router.post("/registration", redirectHome, (req, res) => {
             formValid = false;
             res.render("User/registration", {
                 errors : errors.regex,
-                loginVals
+                loginVals,
+                form : "form"
             });
         } 
     }
@@ -308,6 +315,7 @@ router.post("/login", (req, res) => {
 	    res.render('User/login', {
 	        errors : errors.noll,
 	        loginVals,
+	        page : "form"
 	    });
 
 	    console.log(errors);
@@ -334,6 +342,7 @@ router.post("/login", (req, res) => {
      			res.render('User/login', {
      			    errors : errors.server,
      			    loginVals,
+     			    page : "form"
      			});
 
      		} else {	// Login successful 
@@ -352,9 +361,9 @@ router.post("/login", (req, res) => {
 
      				const { origin, sex } = user;
 
-     				console.log("origin: " + origin);
+     				/*console.log("origin: " + origin);
      				console.log("user: " + user);
-
+*/
      				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
      				const newUserLocDetails = {
      					name : name,
@@ -371,10 +380,6 @@ router.post("/login", (req, res) => {
      				const districtLoc = newUserLocDetails.districtLoc;
 
      				const loginDB = loginModel(newUserLocDetails);
-
-     				// Avoid logging in twice
-     				console.log(name, password);
-
      				
  					if (!insertedRec) {
  						loginDB.save().then(() => {
@@ -396,7 +401,7 @@ router.post("/login", (req, res) => {
 				    
 			    	// Fetch 10 loggedin users from same origin
 
-			    	console.log(origin);
+			    	// console.log(origin);
 
 			    	loginModel.find({origin : origin, districtLoc : districtLoc}).limit(10).then((logins) => {
 
@@ -413,7 +418,7 @@ router.post("/login", (req, res) => {
 							}
 						});
 
-						console.log(filteredOrigin);
+						// console.log(filteredOrigin);
 
 						// Fetch 10 loggedin users from same district
 
@@ -455,20 +460,38 @@ router.post("/login", (req, res) => {
 
 });
 
-router.get("/etobicoke-north-room", (req, res) => {
-	res.render("User/etobicoke-north-room")
+router.get("/etobicoke-north-room", redirectLogin, (req, res) => {
+	// console.log(req.session) There is still access to 
+	// Session either get or post. (So there may be no need for query strings)
+	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
+	/*console.log (req.session);
+	console.log ("userDetails : " + userDetails);*/
+	res.render("User/etobicoke-north-room", {
+		user: userDetails.name,
+		filteredOrigin,
+		filteredDistrict,
+		page : "chatroom",
+		room : "etobicoke-north-room",
+
+	});
 });
 
 router.get("/italy", (req, res) => {
-	res.render("User/italy")
+	res.render("User/italy", {
+		page : "chatroom"
+	});
 });
 
 router.get("/india", (req, res) => {
-	res.render("User/india")
+	res.render("User/india", {
+		page : "chatroom"
+	});
 });
 
 router.get("/nigeria", (req, res) => {
-	res.render("User/nigeria")
+	res.render("User/nigeria", {
+		page : "chatroom"
+	});
 });
 
 

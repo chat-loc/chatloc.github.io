@@ -1,6 +1,6 @@
 
     <header class="page-header">     
-        <h1>Welcome to Your Etobicoke-North Room</h1>
+        <h1>Welcome to Etobicoke North Room</h1>
         <a class="index-link" href="/"><span class="fa fa-home"></span></a>
     </header>
 
@@ -12,10 +12,12 @@
              Messages: ordered list -->
     <form id="sendMsg" class="sendMsg">
         <input type="text" class="msgTextbox" id="txt" autocomplete="off" placeholder="Type message..." name="txt">
-        <input type="submit" name="" value="Send">
+        <input type="hidden" name="userName" id="userName" value="{{user}}">
+        <input type="hidden" name="userRoom" id="userRoom" value="{{room}}">
+        <input type="submit" name="" id="Send" value="Send">
+
     </form>
 
     <script src="https://use.fontawesome.com/f91f1a6630.js"></script>
     <script src="/socket.io/socket.io.js" type="text/javascript"></script>
-    <script src="js/connect.js"></script>
-    <script src="js/index.js"></script>
+    <script src="/js/connect.js"></script>

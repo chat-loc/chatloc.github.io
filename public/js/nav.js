@@ -8,15 +8,10 @@
 		zoom: 13 // starting zoom
 	});
 
-	// Make the links operable
-	const stripLinkSpace = (query) => {
-
-		const $query = document.getElementById(query);	// select link
-		$queryHref = (($query.href).toLowerCase()).trim();	// remove outer spaces
-		$queryHref = $queryHref.replace('%20', '-');	// replace inner spaces with hyphen
-
-		$query.href = $queryHref + "-room";	
+	const lowercaseHref = (element) => {
+		const $elm = document.getElementById(element);
+		$elm.href = (($elm.href).toLowerCase()).replace("%20", "-");
 	}
 
-	stripLinkSpace ('districtLink');
-	stripLinkSpace ('chatroomLink');
+	lowercaseHref ("districtLink");
+	lowercaseHref ("chatroomLink");

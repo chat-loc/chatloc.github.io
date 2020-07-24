@@ -25,9 +25,15 @@
         <!-- CSS
         ================================================== -->        
         <link rel="stylesheet" href="/css/index.css"><!--Main Stylesheet-->
-        <link rel="stylesheet" href="/css/form.css"><!--Registration / Login Stylesheet-->
-        <link rel="stylesheet" href="/css/roomlist.css"><!-- Roomlist Stylesheet-->
-        <link rel="stylesheet" href="/css/chat.css"><!-- Roomlist Stylesheet-->
+        {{#ifeq page 'form'}}
+            <link rel="stylesheet" href="/css/form.css"><!--Registration / Login Stylesheet-->
+        {{/ifeq}}
+        {{#ifeq page 'roomlist'}}
+            <link rel="stylesheet" href="/css/roomlist.css"><!-- Roomlist Stylesheet-->
+        {{/ifeq}}
+        {{#ifeq page 'chatroom'}}
+            <link rel="stylesheet" href="/css/chat.css"><!-- Chat Stylesheet-->
+        {{/ifeq}}
         
         <!--FONTS
         ================================================== -->
