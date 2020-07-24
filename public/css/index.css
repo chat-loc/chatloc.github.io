@@ -122,7 +122,7 @@ p {
     font-family: var(--font-secondary);
     font-size: 1.0em;
 }
-ul {
+ul, ol {
     list-style: none;
 }
 

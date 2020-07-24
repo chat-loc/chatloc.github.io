@@ -17,6 +17,79 @@ const room = (document.getElementById('userRoom')).value;
 
 console.log (name, room);
 
+const timeHumanise = () => {
+	let date = new Date();	// get date now
+	let day = date.getDate();	// get day
+
+	let hr = date.getHours();	// hours
+	let min = date.getMinutes();	// mins
+	let sec = date.getSeconds();	// secs 
+
+	let AMPM = (hr >= 12) ? 'PM' : 'AM';
+
+	// Prefix with '0' if second is less than 10
+	(sec) = (sec.toString().length == '1') ? ('0' + sec) : sec;
+	(min) = (min.toString().length == '1') ? ('0' + min) : min;
+	return `<time class='chat-stamp' datetime='${hr}-${min}-${sec}'>${hr}:${min}:${sec} ${AMPM}</time>`;
+}
+
+const sanitiseHTML = function (str) {
+	let temp = document.createElement('div');	// create new div
+	temp.textContent = str;	// populate with string using safe 'textContent' JS set property
+	return temp.innerHTML;	// return stripped HTML
+};
+
+const meVsThey = (othername) => {
+	return (name == othername) ? true : false;
+}
+
+const triggerScroll = () => {
+	const $chatPane = $msgList;
+	$chatPane.scrollTop = $chatPane.scrollHeight;
+}
+
+// PRINT '<USER> HAS CONNECTED' TO OTHER USERS
+const logged = ({msgList, state, name}) => {
+	// Check if it is 'connected' or 'disconnected' event that was fired
+	let connected = (state === 'online') ? 'connected' : 'disconnected';
+
+	const newMsg = document.createElement('li');	// create new li to append
+	newMsg.classList.add('joined');	// style
+	msgList.appendChild(newMsg);	// append HTML 
+	// Display logged message
+	newMsg.innerHTML= `<span><span class="other-user">${name.toUpperCase()}</span> has ${connected}</span>`;	
+}
+
+
+const loadChatHTML = (chat, msgList, notme) => {
+
+	const newMsg = document.createElement('li');	// create li tag
+
+	msgList.appendChild(newMsg);	// append message
+	// append in human readable format
+	// let $msgHTML = `<span class="user">${msgName}: </span>  ${msg.message} - ${timeHumanise()}`;
+	let $msgHTML = chat;
+	newMsg.innerHTML = $msgHTML;
+
+	if (notme) {
+		// newMsg.querySelector('div').classList.add('msg');
+		const newmsg = newMsg.querySelectorAll('.msg');
+		const newothermsg = newMsg.querySelectorAll('.other-msg');
+
+		for (let i = 0; i < newmsg.length; i++) {   
+			newmsg[i].classList.remove('msg');
+		    newmsg[i].classList.add('other-msg');
+		        
+		};
+		for (let i = 0; i < newothermsg.length; i++) {    
+		    newothermsg[i].classList.add('msg');		        
+		};
+	} 
+
+	console.log(localChatDB);
+
+}
+
 
 const connect = (name, chatRoom) => {	// called from connect.js
 
@@ -27,10 +100,16 @@ const connect = (name, chatRoom) => {	// called from connect.js
 
 	const socket = io.connect('/tech');
 
+	// 1a. First thing is to send a 'join' transmitting event to server. This is 
+	// done on load event (and precedes the logic for the form submit event) for 
+	// the sole reason to announce presence in the room to other users
+
 	// Moniker and room are the most important details when connecting
+	// Send details to server first,
 	socket.emit('join', {name, room});
 
-	// When user makes connection, inform other users
+	// 1b. Coming back from server: 'user-connected' an exposed function coming from BROADCAST.EMIT in server.
+	// Thus, when user makes connection, display a welcome message to the others
 	socket.on('user-connected', data => {
 		logged({
 			'msgList' : $msgList,
@@ -39,7 +118,7 @@ const connect = (name, chatRoom) => {	// called from connect.js
 		});
 	});
 
-	// When user disconnects, inform other users
+	// 1c. When user disconnects, inform other users
 	socket.on('user-disconnected', data => {
 		logged({
 			'msgList' : $msgList,
@@ -47,9 +126,33 @@ const connect = (name, chatRoom) => {	// called from connect.js
 			'name' : data.name
 		});
 	});
-}
 
+	// 2a. After displaying message in the previous step, the next is to load the 
+	// chats from the DB
+	socket.on('load-chats', (data) => {
+
+		let notme = (meVsThey(data.otherName));	// personal styling
+
+		if ((data.chats) != undefined) {
+			localChatDB = data;	// Store the chat Array locally on connection
+
+			(data.chats[room]).forEach( (chat, indx) => {
+
+				loadChatHTML(chat['$msgHTMLDB'], $msgList, notme);
+
+				if (indx == ((data.chats).length) - 1) {
+					triggerScroll();	// Scroll to the end on last iteration
+				}
+			});
+		}
+	});
+
+
+};
+
+//1. Send 'Welcome Message to others on load of page', load chats for user
 connect(name, room);
+
 
 // Listen to submission of chat and then emit message in room (everyone inc. you)
 /*$msgForm.addEventListener('submit', (e) => { 

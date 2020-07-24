@@ -75,6 +75,20 @@ server.listen(PORT, ()=> {
      console.log(`Server is listening on port: ${PORT}`);
 });
 
+
+// DATABASE HANDLERS
+
+function saveChat (json='""') {
+    return fs.writeFileSync('db.json', JSON.stringify(json,null,2))
+}
+
+const loadChats = (room) => {
+    return JSON.parse(
+        fs.existsSync('db.json') ? fs.readFileSync('db.json').toString() : '""'
+    )
+}
+
+
 const tech = io.of('/tech');
 const users = {};
 
@@ -89,10 +103,32 @@ tech.on('connection', function (socket) {
         user on form 'submit' event.*/
         users[socket.id] = data.name; 
 
-        console.log(users);
+        // console.log(users);
         users['room'] = data.room;
 
-        // Broadcast message (Load chats when user first joins room)
+        // 1d. Broadcast a welcome message (Load chats when user first joins room)
+        // In other words let users know a new user joined. Thats what 'socket.broadcast' does
+        // A simple message saying '$username has connected' is enough.
+        // Thus the only data needed is the name of the logged in user that will be
+        // obtained from data. i.e. data.name 
+        if (data.name != null) {
+            socket.broadcast.emit('user-connected', data);
+
+            // 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
+            // the others because the code will be personalised for them too. Thus, as you're the
+            // user now, so they are on their machine. 
+            // NOTE that function chatsDB lives in this server script
+
+            // let chats = loadChats(data.room);
+            let chatsDB = loadChats('db.json');
+            // console.log (chats);
+
+            // console.log(users[socket.id]);
+            // load chats to only yourself (privately) to avoid displaying 2ce
+
+           // socket.emit('load-chats', { chats : chatsDB["chats"], otherName: users[socket.id], moniker: data.userMoniker });
+           tech.in(data.room).emit('load-chats', { chats : chatsDB["chats"], user : users[socket.id], otherName: users[socket.id]});
+        }
 
     });
 
