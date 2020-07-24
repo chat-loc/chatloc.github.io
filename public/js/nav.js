@@ -15,7 +15,7 @@
 		$queryHref = (($query.href).toLowerCase()).trim();	// remove outer spaces
 		$queryHref = $queryHref.replace('%20', '-');	// replace inner spaces with hyphen
 
-		$query.href = $queryHref;	
+		$query.href = $queryHref + "-room";	
 	}
 
 	stripLinkSpace ('districtLink');
