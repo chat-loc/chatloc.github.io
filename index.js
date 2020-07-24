@@ -1,15 +1,20 @@
 const express = require("express");
 const exphbs  = require('express-handlebars');
 
+// Creation of app object
+const app = express();
+
+// Set up socket
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+const fs = require('fs');
+
 // Add body parser to process form data 
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 //This loads all our environment variables from the key.env
 require("dotenv").config({path:'./config/key.env'});
-
-// Creation of app object
-const app = express();
 
 
 //Handlebars middlware
@@ -62,6 +67,10 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {useNewUrlParser: true,
                     });
 const PORT = process.env.PORT || 5003;
 
-app.listen(PORT, () => {
+/*app.listen(PORT, () => {
     console.log(`The webserver is up and running`);
+});*/
+
+server.listen(PORT, ()=> {
+     console.log(`Server is listening on port: ${PORT}`);
 });

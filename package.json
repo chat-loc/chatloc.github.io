@@ -25,6 +25,7 @@
     "express-handlebars": "^5.0.0",
     "express-session": "^1.17.1",
     "mongoose": "^5.9.25",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0"
   }
 }
