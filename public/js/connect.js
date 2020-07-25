@@ -277,6 +277,8 @@ window.onload = () => {
     			let user = data.user;
     			user = user.charAt(0).toUpperCase() + user.slice(1);
     			newMsg.innerHTML= `<span><span class="other-user">${user}</span> is typing...</span>`;	
+
+    			triggerScroll();
     		}
 
 		} else {

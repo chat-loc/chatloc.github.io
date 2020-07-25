@@ -10,7 +10,6 @@ body {
 }
 .page-header {
     display: flex;
-    display:none;
     flex-direction: row;
     justify-content: flex-start;
     text-align: center;
@@ -63,7 +62,7 @@ body {
 	opacity: .9;
 	text-shadow: 1px 0 1px rgba(255,255,255,.3);
 }
-.btn-room, .sendMsg input[type=submit] {
+.sendMsg input[type=submit] {
 	display: inline-block;
     font-weight: 400;
     color: #212529;
@@ -74,23 +73,26 @@ body {
     -webkit-user-select:none;
     padding: 0 .75rem;
     font-size: 1.3em;
+    min-width: 200px;
     border-radius: .25rem;
     transition: all .2s;
     color: var(--red);
     background-color: black;
     transition: all .2s;
 }
-.btn-room:hover, .btn-room:focus {
-	transform: scale(1.1);
-	opacity: .8;
+.sendMsg input[type=submit]:hover, .sendMsg input[type=submit]:focus {
+	color: var(--purple)
 }
 .messages {
-	height: calc(91vh - 40px);
+	height: calc(84vh - 40px);
 	overflow-y: scroll;
 	padding: 7px 0 10px;
-	margin-top: 37px;
-	background-size: cover;
-	background-repeat: no-repeat;
+	margin-top: 76px;
+}
+.old.messages {
+	height: auto;
+	overflow-y: visible;
+	margin-top: 0;
 }
 .old.messages li div {
 	padding-top: 10px;
@@ -111,8 +113,9 @@ form {
 	margin: 0 5px;
 	appearance: none;
 	-webkit-appearance: none;
-	border: 2px solid rgba(26, 10, 56, 1);
+	border: thin solid rgba(26, 10, 56, 1);
 	border-radius: 5px;
+	background-color: rgba(26, 10, 56, .1);
 }
 .msgTextbox {
 	flex: 2;
