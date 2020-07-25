@@ -158,16 +158,14 @@ a:focus {
     outline: none;
 }
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: pink;
-  font-size: .8em;
-  opacity: .7;
-  font-weight: lighter;
+  color: var(--red);
+  font-size: 1em;
+  font-weight: 500;
 }
 ::-moz-placeholder { /* Firefox 19+ */
-  color: pink;
-  font-size: .8em;
-  opacity: .7;
-  font-weight: lighter;
+  color: var(--red);
+  font-size: 1em;
+  font-weight: 500;
 }
 
 font-weight: lighter;*/

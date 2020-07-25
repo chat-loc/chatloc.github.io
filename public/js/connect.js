@@ -10,6 +10,7 @@ window.onload = () => {
 	// Get reference to form and message list
 	const $msgForm = document.getElementById('sendMsg');
 	const $msgList = document.getElementById('messages'); 
+	const $oldMsgList = document.getElementById('old-messages');
 	let $textbox = document.getElementById('txt');
 
 
@@ -66,11 +67,11 @@ window.onload = () => {
 	}
 
 
-	const loadChatHTML = (chat, msgList, notme) => {
+	const loadChatHTML = (chat, msgList, notme, mongoDB=false) => {
 
 		const newMsg = document.createElement('li');	// create li tag
 
-		msgList.appendChild(newMsg);	// append <li>msg</li> to end of <ul>
+		(mongoDB) ? $oldMsgList.appendChild(newMsg) : msgList.appendChild(newMsg);	// append <li>msg</li> to end of <ul>
 		// append in human readable format
 		// let $msgHTML = `<span class="user">${msgName}: </span>  ${msg.message} - ${timeHumanise()}`;
 		console.log (chat);
@@ -97,10 +98,6 @@ window.onload = () => {
 			}
 
 		}
-
-	}
-
-	const loadChatHTMLSingle = (chat, msgList, notme) => {
 
 	}
 
@@ -147,8 +144,6 @@ window.onload = () => {
 			let notme = (meVsThey(docs.otherName));	// personal styling
 
 			console.log ("data chats from server to be loaded into page: ", docs);
-
-			// 'chats' is the key from the server on 'load-chats' event
 			/*
 				docs = [
 					   	  {
@@ -165,7 +160,7 @@ window.onload = () => {
 				let i=0;
 
 				for (i=0; i < (docs).length; i++) {
-					loadChatHTML((docs)[i].msg, $msgList, notme);
+					loadChatHTML((docs)[i].msg, $msgList, notme, true);
 
 					console.log ((docs)[i]);
 
