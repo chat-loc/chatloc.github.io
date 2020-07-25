@@ -226,8 +226,8 @@ window.onload = () => {
 		
 		// When showing chats locally, let 'You' prefix the owner of the chat, but when 
 		// (saving and) loading from database, it's more ideal that the owner of the chat should show
-		let msgMongo = `<span class="user">${name}: </span>  ${data.message} - ${timeHumanise()}`;
-		let msgHTML = `<span class="user">${msgName}: </span>  ${data.message} - ${timeHumanise()}`;
+		let msgMongo = `<span class="user">${name}: </span>  ${data.message} ${timeHumanise()}`;
+		let msgHTML = `<span class="user">${msgName}: </span>  ${data.message} ${timeHumanise()}`;
 		
 		let $msgHTMLDB = `<div class='${msgClass}'>${msgHTML}</div>`;
 		let $msgMongoDB = `<div class='${msgClass}'>${msgMongo}</div>`;
