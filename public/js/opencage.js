@@ -156,7 +156,7 @@
 	const registrationHandlebars = document.querySelector('#registration-handlebars');
 
 	// Modal must only appear on login page to avoid error
-	// geolocate().then(closeModal());
+	geolocate().then(closeModal());
 	
 
 
