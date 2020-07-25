@@ -122,7 +122,7 @@ p {
     font-family: var(--font-secondary);
     font-size: 1.0em;
 }
-ul {
+ul, ol {
     list-style: none;
 }
 
@@ -158,28 +158,17 @@ a:focus {
     outline: none;
 }
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-/*  color: pink;
-  font-size: .8em;
-  opacity: .7;
-  font-weight: lighter;*/
+  color: var(--red);
+  font-size: 1em;
+  font-weight: 500;
 }
 ::-moz-placeholder { /* Firefox 19+ */
-  color: pink;
-  font-size: .8em;
-  opacity: .7;
-  font-weight: lighter;
+  color: var(--red);
+  font-size: 1em;
+  font-weight: 500;
 }
-:-ms-input-placeholder { /* IE 10+ */
-/*  color: pink;
-  font-size: .8em;
-  opacity: .7;
-  font-weight: lighter;*/
-}
-:-moz-placeholder { /* Firefox 18- */
-/*  color: pink;
-  font-size: .8em;
-  opacity: .7;
-  font-weight: lighter;*/
+
+font-weight: lighter;*/
 }
 a {
 	transition: .2s;
@@ -345,7 +334,6 @@ main {
 /*Location alert*/
 
 .dialog-app-modal {
-    display: none !important; /*Hide for now to avoid modal interruption.*/
     position: fixed;
     display: flex;
     align-items: center;

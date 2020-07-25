@@ -25,13 +25,21 @@
         <!-- CSS
         ================================================== -->        
         <link rel="stylesheet" href="/css/index.css"><!--Main Stylesheet-->
-        <link rel="stylesheet" href="/css/form.css"><!--Registration / Login Stylesheet-->
-        <link rel="stylesheet" href="/css/roomlist.css"><!-- Roomlist Stylesheet-->
+        {{#ifeq page 'form'}}
+            <link rel="stylesheet" href="/css/form.css"><!--Registration / Login Stylesheet-->
+        {{/ifeq}}
+        {{#ifeq page 'roomlist'}}
+            <link rel="stylesheet" href="/css/roomlist.css"><!-- Roomlist Stylesheet-->
+        {{/ifeq}}
+        {{#ifeq page 'chatroom'}}
+            <link rel="stylesheet" href="/css/chat.css"><!-- Chat Stylesheet-->
+        {{/ifeq}}
         
         <!--FONTS
         ================================================== -->
         <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;600&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         
         <link rel="stylesheet" href="/css/font.css">
         
