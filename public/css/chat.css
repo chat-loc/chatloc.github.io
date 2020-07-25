@@ -19,6 +19,7 @@ body {
 .page-header h1 {
 	order: 1;
 	margin-left: 20%;
+	animation: glow 3s infinite ease-in both alternate;
 }
 .page-title {
     /font-size: 2em;
@@ -209,4 +210,17 @@ form {
 }
 .old .msg:before {
 	display: none;
+}
+
+/*GLOW*/
+
+@keyframes glow {
+	from {
+		opacity: 1;
+		transform: scale(1);
+	}
+	to {
+		opacity: 6;
+		transform: scale(.98);
+	}
 }
