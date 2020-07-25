@@ -67,7 +67,7 @@ router.get("/roomlist", redirectLogin, (req, res) => {
 });
 
 //Route to direct use to Registration form
-router.get("/registration", /*redirectHome,*/ (req, res) => {
+router.get("/registration",  (req, res) => {
     res.render("User/registration", {
     	page : "form"
     });
@@ -78,6 +78,55 @@ router.get("/login", redirectHome, (req, res) => {
     res.render("User/login", {
     	page : "form"
     });
+});
+
+router.get("/etobicoke-north-room", redirectLogin, (req, res) => {
+	// console.log(req.session) There is still access to 
+	// Session either get or post. (So there may be no need for query strings)
+	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
+	/*console.log (req.session);
+	console.log ("userDetails : " + userDetails);*/
+	res.render("User/etobicoke-north-room", {
+		user: userDetails.name,
+		filteredOrigin,
+		filteredDistrict,
+		page : "chatroom",
+		room : "etobicoke-north-room"
+
+	});
+});
+
+router.get("/italy-room", redirectLogin, (req, res) => {
+	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
+	res.render("User/italy-room", {
+		user: userDetails.name,
+		filteredOrigin,
+		filteredDistrict,
+		page : "chatroom",
+		room : "italy-room"
+	});
+});
+
+router.get("/india-room", redirectLogin, (req, res) => {
+	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
+	res.render("User/india-room", {
+		user: userDetails.name,
+		filteredOrigin,
+		filteredDistrict,
+		page : "chatroom",
+		room : "india-room"
+	});
+});
+
+router.get("/nigeria-room", redirectLogin, (req, res) => {
+	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
+	res.render("User/nigeria-room", {
+		user: userDetails.name,
+		filteredOrigin,
+		filteredDistrict,
+		page : "chatroom",
+		room : "nigeria-room"
+	});
 });
 
 //Route to process user's request and data when user submits registration form
@@ -326,36 +375,12 @@ router.post("/login", (req, res) => {
     	*/
 
      	// Check if login details exist in DB
-     	loginModel.findOne({
-     		name : name,
-     		password : password
 
-     	}, function (err, login) {	// Login unsuccessful
+     	userModel.findOne({name, password}).then(login => {
 
-     		if (err) {
-     			console.log("In DB");
-     			console.log (err);
-     			res.render('User/login', {
-     			    errors : errors,
-     			    loginVals,
-     			    page : "form"
-     			});
+     		console.log (login);
 
-     		} else {	// Login successful 
-
-     			if (!login) {
-     				insertedRec = true;
-     				console.log("was login successful?");
-
-     				// This is condition for where error is: 
-     				res.render('User/login', {
-	     			    errors : errors,
-	     			    loginVals,
-	     			    page : "form"
-     				});
-     			}
-
-     			console.log("Not In DB");
+     		if (login) {
 
      			// User credentials have been checked; first find his origin and sex
      			// from his record in users DB, to be passed to new page.
@@ -368,29 +393,29 @@ router.post("/login", (req, res) => {
      				/*console.log("origin: " + origin);
      				console.log("user: " + user);
 */
-     				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
-     				const newUserLocDetails = {
-     					name : name,
-     					origin : origin,
-     					sex : sex,
+	 				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
+	 				const newUserLocDetails = {
+	 					name : name,
+	 					origin : origin,
+	 					sex : sex,
 	   					countryLoc: req.body["location-country"],
 	   					stateLoc : req.body["location-state"],
 	   					districtLoc : req.body["location-district"],
 	   					roadLoc : req.body["location-road"]
-     				}	
+	 				}	
 
-     				console.log(newUserLocDetails);
+	 				console.log(newUserLocDetails);
 
-     				// Unpack this, for use in fetching users from the same district.
-     				const districtLoc = newUserLocDetails.districtLoc;
+	 				// Unpack this, for use in fetching users from the same district.
+	 				const districtLoc = newUserLocDetails.districtLoc;
 
-     				const loginDB = loginModel(newUserLocDetails);
-     				
- 					if (!insertedRec) {
- 						loginDB.save().then(() => {
- 							console.log('Record Saved');
- 						});
- 					}
+	 				const loginDB = loginModel(newUserLocDetails);
+	 				
+					if (!insertedRec) {
+						loginDB.save().then(() => {
+							console.log('Record Saved');
+						});
+					}
 
 
 					// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
@@ -455,50 +480,26 @@ router.post("/login", (req, res) => {
 						});
 
 					});
-     			
- 			  	}).catch(err => console.log(`Error while inserting into the data ${err}`));
+	 			
+				});
 
+
+     		} else {
+     			console.log("Not in DB");
+     			res.render('User/login', {
+     			    errors : errors,
+     			    loginVals,
+     			    page : "form"
+     			});
      		}
 
-     	});        
+     	})
+     
     }
 
 });
 
 
-router.get("/etobicoke-north-room", redirectLogin, (req, res) => {
-	// console.log(req.session) There is still access to 
-	// Session either get or post. (So there may be no need for query strings)
-	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
-	/*console.log (req.session);
-	console.log ("userDetails : " + userDetails);*/
-	res.render("User/etobicoke-north-room", {
-		user: userDetails.name,
-		filteredOrigin,
-		filteredDistrict,
-		page : "chatroom",
-		room : "etobicoke-north-room",
-
-	});
-});
-
-router.get("/italy", (req, res) => {
-	res.render("User/italy", {
-		page : "chatroom"
-	});
-});
-
-router.get("/india", (req, res) => {
-	res.render("User/india", {
-		page : "chatroom"
-	});
-});
-
-router.get("/nigeria", (req, res) => {
-	res.render("User/nigeria", {
-		page : "chatroom"
-	});
-});
 
 
 module.exports = router;

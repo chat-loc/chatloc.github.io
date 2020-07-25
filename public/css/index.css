@@ -336,6 +336,7 @@ main {
 .dialog-app-modal {
     position: fixed;
     display: flex;
+    display: none;
     align-items: center;
     top: 0;
     left: 0;
