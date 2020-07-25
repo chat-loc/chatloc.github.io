@@ -1,0 +1,173 @@
+.roomlist-area {
+	position: relative;
+	overflow: hidden;
+}
+.roomlist {
+	display: flex;
+	position: relative;
+	min-height: 520px;
+	width: 100%;
+	padding: 20px 0;
+	background: rgba(0,0,0,.6);
+	z-index: 1;
+}
+.rooms {
+	flex: 0 0 30%;
+	padding: 0 25px;
+	min-height: 200px;
+	text-align: center;
+}
+.joined {
+	flex: 0 0 70%;
+	display: flex;
+	justify-content: space-around;
+	padding: 10px;
+	border: rgba(255,255,255,.3);
+}
+.origin, .district {
+	flex-basis: 45%;
+	padding: 20px;
+	background-color: rgba(170, 12, 12, 0.35);
+	transform: translateY(50px);
+	opacity: .2;
+	animation: slide_one 1.5s forwards ease;
+}
+.district {
+	transform: translateY(-50px);
+	animation: slide_two 1.5s forwards ease;
+}
+.same-origin {
+    color: white;
+}
+.same-origin li {
+    padding: 7px 0;
+    border-bottom: thin solid rgba(246, 246, 246, 0.1);
+}
+b.origin-name, b.district-name {
+    display: inline-block;
+    width: 45%;
+    max-width: 45%;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1em;
+}
+.same-origin em {
+	display: inline-block;
+	padding-left: 2px;
+	font-style: normal;
+	font-size: 13px;
+}
+.current-loc {
+	display: inline-block;
+	width: 50%;
+	text-align: right;
+	padding-right: 5px;
+}
+same-origin em {
+	font-size: .85em;
+}
+.origin-road, .district-road {
+	text-transform: uppercase;
+	font-family: var(--font-tertiary);
+	color: var(--grey);
+	font-size: .9em;
+}
+.district-road {
+	white-space: nowrap;
+}
+.joined h2 {
+	padding: 10px 0;
+	margin-bottom: 10px;
+	font-family: var(--font-tertiary);
+	color: rgba(255,255,255,.5);
+	letter-spacing: 1px;
+	font-size: 1.3em;
+	text-align: center;
+	text-transform: uppercase;
+	border: thin solid #fff;
+	font-weight: bolder;
+	background: rgba(255,255,255, .3);
+}
+.joined h2 span {
+	color: rgba(255,255,255,.9);
+}
+.room-btn {
+    display: inline-block;
+   	width: 300px;
+   	margin: 30px auto;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    font-size: 1.3em;
+    border-radius: .25rem;
+    transition: all .2s;
+    color: #fff;
+    text-decoration: none;
+    background-color:  rgba(26, 10, 56, 0.5);
+    border-color: rgba(255, 255, 255, 0.5);
+    transition: all .2s;
+}
+.rooms hr {
+	opacity: .3;
+	min-width: 60%;
+	margin: auto;
+	border-color: var(--red);
+}
+
+/*map*/
+
+.map-canvas {
+	position: absolute; 
+	top: 0; 
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 1000px;
+	opacity: .7;
+	transform: scale(1.5) rotate(70deg);
+	animation: rotate_zoom 15s forwards ease;
+}
+
+/*ANIMATIONS*/
+
+@keyframes rotate_zoom {
+
+	0% {
+		transform: scale(4.5) rotate(70deg);
+		height: 1000px;
+	}
+	100% {
+		transform: scale(1.3) rotate(-2deg);
+		height: 600px;
+	}
+
+}
+
+@keyframes slide_one {
+	from {
+		transform: translateY(50px);
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+@keyframes slide_two {
+	from {
+		transform: translateY(-50px);
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}

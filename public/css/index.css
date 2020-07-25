@@ -1,0 +1,387 @@
+/*
+*   Chat-Loc v1.0 Default Stylesheet 
+*	Team: Aman, Khushboo, Kay 
+*	Author Email: kayodeibiyemi92@gmail.com
+*	Author URI: 
+*	Template Name: Crafty
+*   Start date: 07-09-2020
+=====================================================================*/
+
+/*
+1. LAYOUT
+	-document
+
+2. TAGS
+	-h1, h2, h3, h4, h5, h6
+	-hr
+    -p
+	-input
+
+2. BROWSERS
+	-zooming problem
+
+3. LINKS
+	-link styles
+	-indicate downloadable docs
+	-add logo before particular link
+	-indicate 'nofollow' links
+	-indicate email link
+	-indicate external links but override if your site
+
+4. FORMS
+	-indicate valid / invalid inputs on focus
+	-indicate required field by adding '*' after
+
+5. LISTS
+
+6. MORE SPECIFIC (like form h2 {}, )
+
+7. HELPER STYLES (error messages...)
+
+
+. FREESTYLES
+	-bevel text-shadow
+	-dropcap
+	-flame text-shadow
+	-tooltip
+
+. MEDIA QUERIES 
+	-print	
+		-turn off display of elements useless for printing purposes
+		-indicate PDF files
+		-no need for decorating any links
+		-external links should have their text replaced with where they link to
+		-table head colours
+	-handheld and small-screen width phones
+	-targeting a width range
+
+*/
+
+/*1. LAYOUT
+==============================================================================================================================================================*/
+
+/*document*/
+
+/*basic*/
+
+*, *:before, *:after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+    /*primary colours*/
+    --purple: #826CBC;
+    --red: #aa0c0c;
+
+    --link: #007BFF;
+    --link-hover: #D9534F;
+  
+  
+    /*shades of grey*/
+    --grey: #F6F6F6;
+    --light-grey: #efefef;
+    --mid-grey: #f2f2f2;
+    --black: #000;
+    --white: #fff;
+    --faint-grey: #212529;
+  
+    --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
+
+  	/*font-size: 62.5%; make rem units base on 10*/
+
+    /*font families*/
+    --font-primary: "Titillium Web", Tahoma, Calibri, sans-serif;
+    --font-secondary: "Futura-medium", Tahoma, Calibri, sans-serif;
+    --font-tertiary: "Rajdhani", Tahoma, Calibri, sans-serif;
+
+}
+
+body {
+	font-weight: 400;
+	min-width: 320px;
+	color: var(--faint-grey);
+	text-align: left;
+	background-color: #fff;
+	font-family: var(--font-primary);
+}
+
+/*2. TAGS
+==============================================================================================================================================================*/
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 400;
+    color: var(--mid-grey);
+}
+hr {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #fff;
+}
+p {
+    font-family: var(--font-secondary);
+    font-size: 1.0em;
+}
+ul, ol {
+    list-style: none;
+}
+
+/*3. BROWSERS
+==============================================================================================================================================================*/
+
+/*Zooming*/
+
+html{
+	font-size: 100%;
+	scroll-behavior: smooth;
+}
+
+
+/*3. LINKS*
+==============================================================================================================================================================*/
+
+/*Link styles*/
+
+a {
+	color: #34495e;
+    transition: 300ms;
+}
+a:link{
+	/*style only unvisited links*/
+}
+a:link, a:visited {
+}
+a:hover,
+a:focus {
+    color: #d9534f;
+    text-decoration: none;
+    outline: none;
+}
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: var(--red);
+  font-size: 1em;
+  font-weight: 500;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: var(--red);
+  font-size: 1em;
+  font-weight: 500;
+}
+
+font-weight: lighter;*/
+}
+a {
+	transition: .2s;
+}
+
+/*Indicate downloadable docs
+
+a[href$='pdf'] {
+/*	background: url('pdf') no-repeat right top;
+	padding-right: 10px;*/
+}
+a[href$='.doc'] {
+/*	background: url('img/wordLink.gif') no-repeat right top;
+	padding-right: 10px;*/
+}
+a[href$='.rss'], a[href$='.rdf'] {
+/*	background: url('img/feedLink') no-repeat right top;
+	padding-right: 10px;*/
+}
+
+/*Indicate 'nofollow' links*/
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+
+/*4. FORMS
+==============================================================================================================================================================*/
+
+input, select {
+    padding-left: .2in;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    box-sizing: border-box;
+}
+select, option {
+    cursor: pointer;
+}
+input[type=submit], button[type=submit] {
+    padding-left: 0;
+}
+label {
+    opacity: .5;
+    color: black;
+    font-size: .9em;
+    text-transform: uppercase;
+}
+.form-group {
+    border-bottom: 1px solid var(--light-grey);
+    margin-bottom: .7em;
+}
+.form-group:last-of-type {
+    margin-bottom: .3em;
+}
+.register-input {
+    display: block;
+    width: 100%;
+    height: 38px;
+    margin-top: 2px;
+    font-weight: 500;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid rgba(216, 216, 216,.2);
+}
+.register-input:focus {
+    border-color: #1e9ce6;
+    outline: 0;
+}
+.register-button, .app-alert-close {
+    display: block;
+    width: 100%;
+    height: 42px;
+    margin-top: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #494d59;
+    text-align: center;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+    background: #fcfcfc;
+    text-transform: uppercase;
+    border: 1px solid;
+    border-color: #d8d8d8 #d1d1d1 #c3c3c3;
+    border-radius: 2px;
+    cursor: pointer;
+    background-image: linear-gradient(to bottom, #fefefe, #eeeeee);
+    box-shadow: inset 0 -1px rgba(0, 0, 0, 0.03), 0 1px rgba(0, 0, 0, 0.04);
+}
+
+/*HEADER*/
+
+.page-header {
+    background-color: rgba(26, 10, 56, 0.53);
+    color: #fff;
+    z-index: 99;
+    width: 100%;
+    position: absolute;
+    border-bottom: thin solid rgba(255,255,255,.5);
+}
+.header-inner {
+    padding: 30px;
+}
+.page-header:after {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.02);
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+}
+
+.main-nav-links {
+    display: flex;
+}
+.page-header h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.5em;
+    font-family: var(--font-tertiary);
+    font-weight: bolder;
+}
+.fa.loc {
+    font-size: .8em;
+    transform: rotate(-45deg);
+    color: var(--red);
+}
+
+
+/*MAIN*/
+main {
+    display: block;
+    padding-top: 110px;
+    min-height: 100vh;
+    background: url("../images/page-bg-2.jpg") no-repeat;
+    background-size: cover;
+}
+.main-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    margin: auto;
+    min-height: 100%;
+}
+.login-main .main-wrapper {
+    padding: 75px;
+}
+.main-wrapper:before {
+    position: absolute;
+    content: "";
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background: url("../images/page-bg.png") no-repeat center;
+    background-size: cover;
+    opacity: .5;
+}
+
+/*Location alert*/
+
+.dialog-app-modal {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .9);
+    z-index: 101;
+    text-align: center;
+    transition: transform 1s ease-out;
+}
+.dialog-app-modal.hide {
+    transform: translateY(-100%);
+}
+
+.modal-app-alert {
+    padding: 50px 20px;
+    text-align: center;
+    width: 100%;
+    font-family: var(--font-secondary);
+    font-size: 1.3em;
+    text-transform: uppercase;
+    background: #000;
+}
+.app-alert-close {
+    appearance: none;
+    -webkit-appearance: none;
+    width: auto;
+    margin: 30px auto;
+    padding: 0 30px;
+    line-height: 150%;
+    color: #fff;
+    background-color: red;
+    background-image: none;
+    cursor: not-allowed;
+    opacity: .3;
+}
+.app-alert-close.allowed {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.app-alert-close.allowed:hover, .app-alert-close.allowed:focus {
+    opacity: .7;
+}
+.app-alert {
+    opacity: .8;
+}
