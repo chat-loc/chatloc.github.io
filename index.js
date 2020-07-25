@@ -174,11 +174,19 @@ tech.on('connection', function (socket) {
     });
 
     socket.on('mongo-save', (data) => {
-
         const newMsg = new mongoChat({msg : data.html, room: data.room, otherName : users[socket.id]});
         newMsg.save(function (err) {
             if (err) throw err;
         });
+    });
+
+    // Typing... event
+    socket.on('typing', (data) => {
+       if(data.typing==true) {
+            socket.broadcast.emit('display', data);
+       } else {
+            socket.broadcast.emit('display', data);
+       }
     });
 
 });

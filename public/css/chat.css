@@ -10,6 +10,7 @@ body {
 }
 .page-header {
     display: flex;
+    display:none;
     flex-direction: row;
     justify-content: flex-start;
     text-align: center;
@@ -129,24 +130,29 @@ form {
 }
 .joined, .is-typing {
 	margin: 0 auto;
-	color: #070b17;
+	color: black;
 	padding: 3px 10px;
 	text-align: center;
 }
 .joined > span, .is-typing > span {
 	display: inline-block;
 	background : rgba(159, 192, 228, 0.4);
-	font-size: 1.1em;
+	font-size: 1.2em;
 	padding: 5px 5px;	
 	border: thin rgba(255,255,255,.3) solid;	
 	text-shadow: 1px 1px 1px rgba(255,255,255,.3);
 }
 .is-typing > span {
 	background: none;
+}
+.is-typing > span > span {
+	background: none;
 	text-shadow: 1px 1px 1px rgba(255,255,255,.3);
 	border: none;
-	color: #f0f1d0;
+	color: var(--red);
 	font-weight: bolder;
+	display: inline-block;
+	animation: glow-ii .5s alternate infinite ease-in-out;
 }
 .msg, .other-msg {
 	position: relative;
@@ -220,7 +226,15 @@ form {
 		transform: scale(1);
 	}
 	to {
-		opacity: 6;
+		opacity: .6;
 		transform: scale(.98);
+	}
+}
+@keyframes glow-ii {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: .2;
 	}
 }

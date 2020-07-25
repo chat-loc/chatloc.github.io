@@ -244,5 +244,48 @@ window.onload = () => {
 
 	});
 
+
+	// 4a. IMPLEMENTING'TYPING' LOGIC
+
+	let typing = false;
+	let textboxValue = '';
+
+	$textbox.addEventListener("keyup", (e) => {
+		textboxValue = (e.target).value;
+
+		if (e.which != 13) {	// Listen to keyup except 'Enter'
+			socket.emit('typing', {user:name, typing:true, elm:textboxValue});
+		} else {
+			socket.emit('typing', {user:name, typing:false, elm:textboxValue});
+		}
+	});
+
+	// 5. 'TYPING...' RESPONSE FROM SERVER EVENT
+	socket.on('display', (data) => {
+
+    	if (data.typing==true) {
+
+    		let $isTyping = document.querySelector('.is-typing');
+    		// use null instead of $isTyping.length <= 1 because this condition may not fire
+    		// if the typing speed is very fast
+    		if ($isTyping == null) {	// Append message to DOM only once
+    			const newMsg = document.createElement('li');	// create new li to append
+    			newMsg.classList.add('is-typing');	// style
+    			$msgList.appendChild(newMsg);	// append HTML 
+
+    			// Display logged message
+    			let user = data.user;
+    			user = user.charAt(0).toUpperCase() + user.slice(1);
+    			newMsg.innerHTML= `<span><span class="other-user">${user}</span> is typing...</span>`;	
+    		}
+
+		} else {
+			let $isTyping = document.querySelector('.is-typing');
+			if ($isTyping !== null) {
+				$isTyping.remove();
+			}
+		}
+	});
+
 };
 
