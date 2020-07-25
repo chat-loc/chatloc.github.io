@@ -124,9 +124,7 @@
 		*/
 
 		// Only target for login page
-		if (!registrationHandlebars) {
-			$appClose.classList.add('allowed');	// enable button interaction if user accepts location sharing
-		}
+		$appClose.classList.add('allowed');	// enable button interaction if user accepts location sharing
 
 		// Unpack latlong values
 		const {latitude, longitude} = position.coords;
@@ -158,7 +156,7 @@
 	const registrationHandlebars = document.querySelector('#registration-handlebars');
 
 	// Modal must only appear on login page to avoid error
-	// (registrationHandlebars) ? geolocate() : geolocate().then(closeModal());
+	geolocate().then(closeModal());
 	
 
 

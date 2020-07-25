@@ -334,7 +334,6 @@ main {
 /*Location alert*/
 
 .dialog-app-modal {
-    display: none !important; /*Hide for now to avoid modal interruption.*/
     position: fixed;
     display: flex;
     align-items: center;

@@ -343,6 +343,13 @@
                 </div>
         
             </main>
+
+            <section class="dialog-app-modal {{#if errors}}hide{{/if}}" id="dialog-app-modal">
+                <div class="modal-app-alert">
+                    <h3 class="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
+                    <button id="app-alert-close" class="app-alert-close">Close</button>
+                </div>
+            </section>
             
             <script defer type="text/javascript" src="/js/opencage.js"></script>
             

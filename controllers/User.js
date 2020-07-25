@@ -140,7 +140,7 @@ router.post("/registration", redirectHome, (req, res) => {
 	    res.render('User/registration', {
 	        errors : errors.noll,
 	        loginVals,
-	        form : "form"
+	        page : "form"
 	    });
 
 	} else {
@@ -162,7 +162,7 @@ router.post("/registration", redirectHome, (req, res) => {
             res.render("User/registration", {
                 errors : errors.regex,
                 loginVals,
-                form : "form"
+                page : "form"
             });
         } 
     }
@@ -184,22 +184,16 @@ router.post("/registration", redirectHome, (req, res) => {
     		password : req.body.password,
     		origin : req.body.origin,
     		sex : req.body.sex
-    		/*countryLoc: req.body["location-country"],
-    		stateLoc : req.body["location-state"],
-    		districtLoc : req.body["location-district"],
-    		roadLoc : req.body["location-road"]*/
     	}
 
     	const newUserLocDetails = {
     		name : ((req.body.name).trim()).toLowerCase(), 
     		origin : req.body.origin,
     		sex : req.body.sex,
-    		countryLoc: 'Canada',
-    		stateLoc : 'Ontario',
-    		districtLoc : 'Etobicoke North',
-    		roadLoc : 'Foxchase Ave'
-
-    		// DON'T FORGET TO MAKE LOCS DYNAMIC
+    		countryLoc: req.body["location-country"],
+    		stateLoc : req.body["location-state"],
+    		districtLoc : req.body["location-district"],
+    		roadLoc : req.body["location-road"]
     	}
 
     	const {name, sex, origin } = newUser;
@@ -315,7 +309,7 @@ router.post("/login", (req, res) => {
 	    console.log(loginVals);*/
 
 	    res.render('User/login', {
-	        errors : errors.noll,
+	        errors : errors,
 	        loginVals,
 	        page : "form"
 	    });
@@ -342,7 +336,7 @@ router.post("/login", (req, res) => {
      			console.log("In DB");
      			console.log (err);
      			res.render('User/login', {
-     			    errors : errors.server,
+     			    errors : errors,
      			    loginVals,
      			    page : "form"
      			});
@@ -351,6 +345,14 @@ router.post("/login", (req, res) => {
 
      			if (!login) {
      				insertedRec = true;
+     				console.log("was login successful?");
+
+     				// This is condition for where error is: 
+     				res.render('User/login', {
+	     			    errors : errors,
+	     			    loginVals,
+	     			    page : "form"
+     				});
      			}
 
      			console.log("Not In DB");
@@ -371,13 +373,13 @@ router.post("/login", (req, res) => {
      					name : name,
      					origin : origin,
      					sex : sex,
-     					countryLoc: 'Canada',
-     					stateLoc : 'Ontario',
-     					districtLoc : 'Etobicoke North',
-     					roadLoc : 'Mercury Road'     					
+	   					countryLoc: req.body["location-country"],
+	   					stateLoc : req.body["location-state"],
+	   					districtLoc : req.body["location-district"],
+	   					roadLoc : req.body["location-road"]
      				}	
 
-     				// DON'T FORGET TO MAKE LOCS DYNAMIC
+     				console.log(newUserLocDetails);
 
      				// Unpack this, for use in fetching users from the same district.
      				const districtLoc = newUserLocDetails.districtLoc;
@@ -463,7 +465,6 @@ router.post("/login", (req, res) => {
 
 });
 
-// DON'T FORGET TO REMOVE REDIRECTLOGIN
 
 router.get("/etobicoke-north-room", redirectLogin, (req, res) => {
 	// console.log(req.session) There is still access to 
