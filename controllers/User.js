@@ -16,6 +16,36 @@ const capitalise = (word) => {
 	return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+const lowerCaseNoSpaces = (input) => {
+	return ((input).toLowerCase()).replace(" ", "-");
+}
+
+// "etobicoke-north" => "Etobicoke North" (Used for the heading in the chatroom)
+const upperCaseSomeSpaces = (input) => {
+    let val = (input).split('-');
+    val.forEach((elm, index, theArray)=> {
+        theArray[index] = capitalise(elm);
+    });
+    return val.join(" ");
+}
+
+/*
+	UNDERSTANDING THE PARAMETERS PASSED IN THE ROUTERS
+
+	1. userDetails: Contains name, sex, origin, districtLoc, saved in a session. DistrictLoc will be used to 
+		create button leading to District room. While origin, to create button leading to Origin room. Both in
+		"roomlist" page.
+
+	2. filteredOrigin: Fetched users (from login DB) who share the same origin as user and the details fetched 
+		are : id, name, origin, sex, countryLoc, stateLoc, districtLoc, and roadLoc. Also saved in a session.
+		Will be used to display a list of name, sex and road of users who share the same origin in "roomlist" page
+
+	3. filteredDistrict: Fetched users (from login DB) who share the same district as user (not necessarily the 
+		origin) and the details fetched are: id, name, origin, sex, countryLoc, stateloc, districtLoc, roadLoc
+
+	4. page: Used for knowing what stylesheet should be linked to format the appropriate page (on main)
+*/
+
 // Session middleware
 router.use(session({
     name : 'sid',
@@ -56,6 +86,8 @@ router.get("/roomlist", redirectLogin, (req, res) => {
 	if (userDetails || filteredOrigin || filteredDistrict) {
 		res.render("General/roomlist", {
 			userDetails,
+			districtLink : upperCaseSomeSpaces(userDetails.districtLoc),
+			originLink : upperCaseSomeSpaces(userDetails.origin),
 			filteredOrigin,
 			filteredDistrict,
 			page : "roomlist"
@@ -80,54 +112,39 @@ router.get("/login", redirectHome, (req, res) => {
     });
 });
 
-router.get("/etobicoke-north-room", redirectLogin, (req, res) => {
+router.get("/[A-Za-z-.]+-district-room$/", redirectLogin, (req, res) => {
 	// console.log(req.session) There is still access to 
 	// Session either get or post. (So there may be no need for query strings)
 	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
 	/*console.log (req.session);
 	console.log ("userDetails : " + userDetails);*/
-	res.render("User/etobicoke-north-room", {
-		user: userDetails.name,
+	res.render("User/chatroom", {
+		user: (userDetails.name).toLowerCase(),
 		filteredOrigin,
 		filteredDistrict,
 		page : "chatroom",
-		room : "etobicoke-north-room"
-
+		room: (userDetails.districtLoc).toLowerCase(),
+		header : upperCaseSomeSpaces(userDetails.districtLoc)
 	});
 });
 
-router.get("/italy-room", redirectLogin, (req, res) => {
+router.get("/[A-Za-z-.]+-origin-room$/", redirectLogin, (req, res) => {
+	// console.log(req.session) There is still access to 
+	// Session either get or post. (So there may be no need for query strings)
 	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
-	res.render("User/italy-room", {
-		user: userDetails.name,
+	/*console.log (req.session);
+	console.log ("userDetails : " + userDetails);*/
+	res.render("User/chatroom", {
+		user: (userDetails.name).toLowerCase(),
 		filteredOrigin,
 		filteredDistrict,
 		page : "chatroom",
-		room : "italy-room"
+		room: (userDetails.origin).toLowerCase(),
+		header : upperCaseSomeSpaces(userDetails.origin)
 	});
 });
 
-router.get("/india-room", redirectLogin, (req, res) => {
-	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
-	res.render("User/india-room", {
-		user: userDetails.name,
-		filteredOrigin,
-		filteredDistrict,
-		page : "chatroom",
-		room : "india-room"
-	});
-});
 
-router.get("/nigeria-room", redirectLogin, (req, res) => {
-	const { userDetails, filteredOrigin, filteredDistrict } = req.session;
-	res.render("User/nigeria-room", {
-		user: userDetails.name,
-		filteredOrigin,
-		filteredDistrict,
-		page : "chatroom",
-		room : "nigeria-room"
-	});
-});
 
 //Route to process user's request and data when user submits registration form
 router.post("/registration", redirectHome, (req, res) => {
@@ -231,40 +248,58 @@ router.post("/registration", redirectHome, (req, res) => {
     		name : ((req.body.name).trim()).toLowerCase(), 
     		email : (req.body.email).trim(),
     		password : req.body.password,
-    		origin : req.body.origin,
+    		origin : (req.body.origin).toLowerCase(),
     		sex : req.body.sex
     	}
 
     	const newUserLocDetails = {
     		name : ((req.body.name).trim()).toLowerCase(), 
-    		origin : req.body.origin,
+    		origin : (req.body.origin).toLowerCase(),
     		sex : req.body.sex,
-    		countryLoc: req.body["location-country"],
-    		stateLoc : req.body["location-state"],
-    		districtLoc : req.body["location-district"],
-    		roadLoc : req.body["location-road"]
+    		countryLoc: lowerCaseNoSpaces(req.body["location-country"]),
+    		stateLoc : lowerCaseNoSpaces(req.body["location-state"]),
+    		districtLoc : lowerCaseNoSpaces(req.body["location-district"]),
+    		roadLoc : lowerCaseNoSpaces(req.body["location-road"])
     	}
 
-    	const {name, sex, origin } = newUser;
+    	const { name, sex, origin, password } = newUser;
     	const districtLoc = newUserLocDetails.districtLoc;
 
     	// FIRST SAVE ONLY MINIMUM DATA TO USERS DATABASE (WITHOUT THE LOC DETAILS)
     	const user = new userModel(newUser);
-    	user.save().then(() => {
-    		// Set the session right now after database insertion
-    		req.session.userId = name;
 
-    	}).catch(err => console.log(`Error while inserting into the data ${err}`));
+		// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+		// UNNECESSARILY ADDING TO THE DB
+		userModel.findOne({name, password}, function(err, user) {
+	        if (err) {
+	        	return res(err);
+	        }
+	        if (!user) {
+	        	user.save().then(() => {
+	        		// Set the session right now after database insertion
+	        		req.session.userId = name;
+
+	        	}).catch(err => console.log(`Error while inserting into the data ${err}`));
+
+	        }
+	    });
 
 		// THEN SAVE TO LOGIN DATABASE (esp.the location details)
-		const login = new loginModel(newUserLocDetails);
+		const login = new loginModel(newUserLocDetails);	// 'new' is only used for saving, not finding
 
-		login.save().then(() => {
+		// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+		// UNNECESSARILY ADDING TO THE DB
+		loginModel.findOne({name, password}, function(err, user) {
+	        if (err) {
+	        	return res(err);
+	        }
+	        if (!user) {
+	        	login.save().then(() => {
+	        		console.log('Record Saved');
+	        	});
+	        }
+	    });
 
-			/*console.log ("user :" + user);
-			console.log("origin :" + origin);*/
-
-		});
 
 		// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
 
@@ -335,7 +370,6 @@ router.post("/login", (req, res) => {
 	// Fetch the details
 	const name = ((req.body.name).trim()).toLowerCase();
 	const password = req.body.password;
-	let insertedRec = false;
 
 	// Create object to hold errors
 	let errors = {
@@ -369,7 +403,6 @@ router.post("/login", (req, res) => {
      else {
 
     	/*REQUIREMENTS:
-
 			Name, sex and origin for user
 			Name, sex, origin, and location details for other loggedin users
     	*/
@@ -377,8 +410,6 @@ router.post("/login", (req, res) => {
      	// Check if login details exist in DB
 
      	userModel.findOne({name, password}).then(login => {
-
-     		console.log (login);
 
      		if (login) {
 
@@ -396,12 +427,12 @@ router.post("/login", (req, res) => {
 	 				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
 	 				const newUserLocDetails = {
 	 					name : name,
-	 					origin : origin,
+	 					origin : (origin).toLowerCase(),
 	 					sex : sex,
-	   					countryLoc: req.body["location-country"],
-	   					stateLoc : req.body["location-state"],
-	   					districtLoc : req.body["location-district"],
-	   					roadLoc : req.body["location-road"]
+	   					countryLoc: lowerCaseNoSpaces(req.body["location-country"]),
+	   					stateLoc : lowerCaseNoSpaces(req.body["location-state"]),
+	   					districtLoc : lowerCaseNoSpaces(req.body["location-district"]),
+	   					roadLoc : lowerCaseNoSpaces(req.body["location-road"])
 	 				}	
 
 	 				console.log(newUserLocDetails);
@@ -409,15 +440,21 @@ router.post("/login", (req, res) => {
 	 				// Unpack this, for use in fetching users from the same district.
 	 				const districtLoc = newUserLocDetails.districtLoc;
 
-	 				const loginDB = loginModel(newUserLocDetails);
-	 				
-					if (!insertedRec) {
-						loginDB.save().then(() => {
-							console.log('Record Saved');
-						});
-					}
+	 				const loginDB = new loginModel(newUserLocDetails);	// the 'new' keyword when its time to save
 
-
+ 					// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+ 					// UNNECESSARILY ADDING TO THE DB
+ 					loginModel.findOne({name, password}).then(login =>  {
+ 				        if (user) {
+ 				        	console.log("WON'T SAVE LOGIN BECAUSE IT EXISTS");
+ 				        }
+ 				        if (!user) {
+ 				        	loginDB.save().then(() => {
+ 				        		console.log('Record Saved');
+ 				        	});
+ 				        }
+ 				    });
+					
 					// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
 
 				    // The login form has no input for origin and it makes no sense since the 
@@ -429,9 +466,9 @@ router.post("/login", (req, res) => {
 				    // login details to his registration details to retrieve his 'origin'
 
 				    
-			    	// Fetch 10 loggedin users from same origin
+			    	// Fetch 10 loggedin users from same origin AND in the same district
 
-			    	// console.log(origin);
+			    	console.log("ORIGIN & DISTRICT BEFORE FETCHING 10 USERS FROM SAME ORIGIN & DISTRICT", origin, districtLoc);
 
 			    	loginModel.find({origin : origin, districtLoc : districtLoc}).limit(10).then((logins) => {
 
@@ -448,7 +485,7 @@ router.post("/login", (req, res) => {
 							}
 						});
 
-						// console.log(filteredOrigin);
+						console.log("LIST OF USERS FROM THE SAME ORIGIN", filteredOrigin);
 
 						// Fetch 10 loggedin users from same district
 
@@ -485,6 +522,8 @@ router.post("/login", (req, res) => {
 
 
      		} else {
+     			// If user's credientials do not exist in database, 
+     			// respond with error
      			console.log("Not in DB");
      			res.render('User/login', {
      			    errors : errors,
@@ -498,8 +537,5 @@ router.post("/login", (req, res) => {
     }
 
 });
-
-
-
 
 module.exports = router;

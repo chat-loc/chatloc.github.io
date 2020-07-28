@@ -1,3 +1,22 @@
+.index-link {
+	position: relative;
+	order: 0;
+	font-size: 2em;
+	margin-left: 30px;
+}
+.page-header .header-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: center;
+}
+.page-header h1 {
+    order: 1;
+    flex-grow: 1;
+    margin-left: -85px;
+    text-align: center;
+    animation: glow 3s infinite ease-in both alternate;
+}
 .roomlist-area {
 	position: relative;
 	overflow: hidden;
