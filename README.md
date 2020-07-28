@@ -13,19 +13,19 @@ As for district, Etobicoke North is the viable one for now, with others to follo
 If user feels not to put in credentials, below are 3 different credentials for the aforementioned countries: 👈
  
 
-*Nigeria: 
+**Nigeria:**
 
-Username: Enitan
+Username: Enitan<br>
 Password: Enitan123
 
-*India:
+**India:**
 
-Username: Drishti
+Username: Drishti<br>
 Password: Drishti123
 
-*Italy: 
+**Italy:**
 
-Username: Anna
+Username: Anna<br>
 Password: Anna123
 
 # Community Application
@@ -43,7 +43,7 @@ After using slack application for a while, my idea is to create a collabrative a
 1. All the user can chat
 2. Share the files. 
 3. Having a to-do list feature will be a great addition to that. 
-  - In the to-do list we can assign task by selecting a person name and can assign deadline for the same.
+       In the to-do list we can assign task by selecting a person name and can assign deadline for the same.
 4. Link with google calender or apple reminders to have reminer set for upcoming meetings or other important stuff
 
 My ides is very simple yet have all the necessary features that a collaborative application should have with a clear and easy to understand, user friendly layout.
