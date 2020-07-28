@@ -10,8 +10,8 @@ At this stage of the application, 3 countries offer the richest experience for p
 
 As for district, Etobicoke North is the viable one for now, with others to follow.
 
-If user feels not to put in credentials, below are 3 different credentials for the aforementioned countries: 👈
- 
+If user feels not to put in credentials, below are 3 different credentials for the aforementioned countries: <br>
+👇 
 
 **Nigeria:**
 
