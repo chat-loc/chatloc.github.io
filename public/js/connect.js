@@ -116,13 +116,13 @@ window.onload = () => {
 		// Send details to server first,
 		socket.emit('join', {name, room});
 
-		// 1b. Coming back from server: 'user-connected' an exposed function coming from BROADCAST.EMIT in server.
+		// 1b. Coming back from server: 'user-connected' is an exposed function coming from BROADCAST.EMIT in server.
 		// Thus, when user makes connection, display a welcome message to the others
 		socket.on('user-connected', data => {
 			logged({
-				'msgList' : $msgList,
-				'state' : 'online',
-				'name' : data.name
+				'msgList' : $msgList,	// HTML <ol> element
+				'state' : 'online',		// Simple string
+				'name' : data.name    	// The only response really needed from server
 			});
 		});
 
@@ -205,9 +205,9 @@ window.onload = () => {
 		$textbox.value = '';	// clear textbox
 
 		// let isTyping = document.querySelector('.is-typing');
-		/*if (isTyping !== null) {
+		if (isTyping !== null) {
 			isTyping.remove();	// remove any notorious lingering '.is-typing'
-		}*/
+		}
 
 	});
 

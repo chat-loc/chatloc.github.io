@@ -144,12 +144,12 @@ tech.on('connection', function (socket) {
             // 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
             // the others because the code will be personalised for them too. Thus, as you're the
             // user now, so they are on their machine. 
-            // NOTE that function chatsDB lives in this server script
 
             mongoChat.find({room : data.room}, function(err, docs) {
                 if (err) {
                     throw err;
                 }
+                console.log(data.room);
                 console.log("Load old messages for newly joined user");
                 socket.emit("load-chats", docs);
                 console.log("THE DOCS : ", docs);
