@@ -6,12 +6,15 @@ This app aims to solve the need of connecting users, who share the same national
 ***
 
 
-At this stage of the application, 3 countries offer the richest experience for perusal as their routes have been handled fully.
+UPDATE: All countries and districts routed programatically! 
 
-As for district, Etobicoke North is the viable one for now, with others to follow.
+If user feels not to put in credentials, below are 3 different credentials for three random countries: <br>
+👇 (Take note of the case)
 
-If user feels not to put in credentials, below are 3 different credentials for the aforementioned countries: <br>
-👇 
+**Italy:**
+
+Username: Anna<br>
+Password: Anna123
 
 **Nigeria:**
 
@@ -23,10 +26,6 @@ Password: Enitan123
 Username: Drishti<br>
 Password: Drishti123
 
-**Italy:**
-
-Username: Anna<br>
-Password: Anna123
 
 # Community Application
 
