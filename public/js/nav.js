@@ -7,11 +7,3 @@
 		center: [-79.5132, 43.6205], // starting position
 		zoom: 13 // starting zoom
 	});
-
-	/*const lowercaseHref = (element) => {
-		const $elm = document.getElementById(element);
-		$elm.href = (($elm.href).toLowerCase()).replace("%20", "-");
-	}
-
-	lowercaseHref ("districtLink");
-	lowercaseHref ("chatroomLink");*/

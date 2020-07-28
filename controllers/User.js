@@ -248,7 +248,7 @@ router.post("/registration", redirectHome, (req, res) => {
     		name : ((req.body.name).trim()).toLowerCase(), 
     		email : (req.body.email).trim(),
     		password : req.body.password,
-    		origin : req.body.origin,
+    		origin : (req.body.origin).toLowerCase(),
     		sex : req.body.sex
     	}
 
@@ -262,26 +262,44 @@ router.post("/registration", redirectHome, (req, res) => {
     		roadLoc : lowerCaseNoSpaces(req.body["location-road"])
     	}
 
-    	const { name, sex, origin } = newUser;
+    	const { name, sex, origin, password } = newUser;
     	const districtLoc = newUserLocDetails.districtLoc;
 
     	// FIRST SAVE ONLY MINIMUM DATA TO USERS DATABASE (WITHOUT THE LOC DETAILS)
     	const user = new userModel(newUser);
-    	user.save().then(() => {
-    		// Set the session right now after database insertion
-    		req.session.userId = name;
 
-    	}).catch(err => console.log(`Error while inserting into the data ${err}`));
+		// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+		// UNNECESSARILY ADDING TO THE DB
+		userModel.findOne({name, password}, function(err, user) {
+	        if (err) {
+	        	return res(err);
+	        }
+	        if (!user) {
+	        	user.save().then(() => {
+	        		// Set the session right now after database insertion
+	        		req.session.userId = name;
+
+	        	}).catch(err => console.log(`Error while inserting into the data ${err}`));
+
+	        }
+	    });
 
 		// THEN SAVE TO LOGIN DATABASE (esp.the location details)
-		const login = new loginModel(newUserLocDetails);
+		const login = new loginModel(newUserLocDetails);	// 'new' is only used for saving, not finding
 
-		login.save().then(() => {
+		// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+		// UNNECESSARILY ADDING TO THE DB
+		loginModel.findOne({name, password}, function(err, user) {
+	        if (err) {
+	        	return res(err);
+	        }
+	        if (!user) {
+	        	login.save().then(() => {
+	        		console.log('Record Saved');
+	        	});
+	        }
+	    });
 
-			/*console.log ("user :" + user);
-			console.log("origin :" + origin);*/
-
-		});
 
 		// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
 
@@ -409,7 +427,7 @@ router.post("/login", (req, res) => {
 	 				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
 	 				const newUserLocDetails = {
 	 					name : name,
-	 					origin : origin,
+	 					origin : (origin).toLowerCase(),
 	 					sex : sex,
 	   					countryLoc: lowerCaseNoSpaces(req.body["location-country"]),
 	   					stateLoc : lowerCaseNoSpaces(req.body["location-state"]),
@@ -422,13 +440,21 @@ router.post("/login", (req, res) => {
 	 				// Unpack this, for use in fetching users from the same district.
 	 				const districtLoc = newUserLocDetails.districtLoc;
 
-	 				const loginDB = loginModel(newUserLocDetails);
-	 				
-					loginDB.save().then(() => {
-						console.log('Record Saved');
-					});
-					
+	 				const loginDB = new loginModel(newUserLocDetails);	// the 'new' keyword when its time to save
 
+ 					// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+ 					// UNNECESSARILY ADDING TO THE DB
+ 					loginModel.findOne({name, password}).then(login =>  {
+ 				        if (user) {
+ 				        	console.log("WON'T SAVE LOGIN BECAUSE IT EXISTS");
+ 				        }
+ 				        if (!user) {
+ 				        	loginDB.save().then(() => {
+ 				        		console.log('Record Saved');
+ 				        	});
+ 				        }
+ 				    });
+					
 					// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
 
 				    // The login form has no input for origin and it makes no sense since the 
@@ -440,9 +466,9 @@ router.post("/login", (req, res) => {
 				    // login details to his registration details to retrieve his 'origin'
 
 				    
-			    	// Fetch 10 loggedin users from same origin
+			    	// Fetch 10 loggedin users from same origin AND in the same district
 
-			    	// console.log(origin);
+			    	console.log("ORIGIN & DISTRICT BEFORE FETCHING 10 USERS FROM SAME ORIGIN & DISTRICT", origin, districtLoc);
 
 			    	loginModel.find({origin : origin, districtLoc : districtLoc}).limit(10).then((logins) => {
 
@@ -459,7 +485,7 @@ router.post("/login", (req, res) => {
 							}
 						});
 
-						// console.log(filteredOrigin);
+						console.log("LIST OF USERS FROM THE SAME ORIGIN", filteredOrigin);
 
 						// Fetch 10 loggedin users from same district
 
@@ -496,6 +522,8 @@ router.post("/login", (req, res) => {
 
 
      		} else {
+     			// If user's credientials do not exist in database, 
+     			// respond with error
      			console.log("Not in DB");
      			res.render('User/login', {
      			    errors : errors,

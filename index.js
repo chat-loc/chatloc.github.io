@@ -145,15 +145,14 @@ tech.on('connection', function (socket) {
             // the others because the code will be personalised for them too. Thus, as you're the
             // user now, so they are on their machine. 
 
-            mongoChat.find({room : data.room}, function(err, docs) {
+            mongoChat.find({room : `${data.room}-room`}, function(err, docs) {
+                console.log("FETCH FROM THIS ROOM IN DB: ", data.room);
                 if (err) {
                     throw err;
                 }
-                console.log(data.room);
                 console.log("Load old messages for newly joined user");
                 socket.emit("load-chats", docs);
-                console.log("THE DOCS : ", docs);
-                //tech.in(data.room).emit("load-old-msgs", docs);
+                // console.log("THE DOCS : ", docs);
             })
 
             // console.log(users[socket.id]);
