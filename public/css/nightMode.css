@@ -1,0 +1,40 @@
+/* REFERNCE
+https://codepen.io/FlorinPop17/pen/XWWZYYG
+*/
+body {
+	background-color: #fafafa;
+	transition: background 0.2s linear;
+}
+
+body.dark {
+	background:  #000000;
+}
+/*chat-messges green colored layout*/
+.dark-mode-bg-color li div{ 
+	background-color: #292C35 !important;
+	color:#ffffff !important;
+}
+
+
+
+/*type message input box*/
+.msgTextbox-dark-mode{
+	border: 1px solid #ffffff !important;
+	color:#ffffff !important;
+}
+.button-send-message-dark-mode{
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    transition: all .2s;
+}
+
+.hidden{
+	display: none;
+}
+.displaysun{
+	display: block;
+}
+.night-mode-image{
+	max-width: 2em;
+	margin: 1em;
+}
