@@ -1,4 +1,4 @@
-LINK : https://chatloc.herokuapp.com/
+LINK : https://chatloc.herokuapp.com/  
 LINK FOR REACT INTERFACE : https://github.com/amnsworld/chatapp-react
 
 # chat-loc.github.io
