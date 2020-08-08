@@ -23,7 +23,7 @@ const Login = () => {
 		            <p>Connect with People Close By</p>
 		            
 		            <div className="toronto-map">
-		                <img src="/images/toronto-map.png" alt="toronto map">
+		                <img src="/images/toronto-map.png" alt="toronto map"/>
 		            </div>
 		            
 		        </section>
