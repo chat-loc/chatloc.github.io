@@ -1,0 +1,18 @@
+/* CSS Document */
+
+
+@font-face {
+    font-family: "Futura-bold";
+    src: url("../fonts/futura/Futura Bold font.ttf");
+    font-weight: 700;
+}
+@font-face {
+    font-family: "futura-medium";
+    src: url("../fonts/futura/futura medium bt.ttf");
+    font-weight: 500;
+}
+@font-face {
+    font-family: "Futura-light";
+    src: url("../fonts/futura/Futura Light font.ttf");
+    font-weight: 200;
+}
