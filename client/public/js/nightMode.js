@@ -1,4 +1,4 @@
-// storing element into variable
+/*// storing element into variable
 let $moon = window.document.querySelector('#moon');
 let $sun = window.document.querySelector('#sun');
 
@@ -23,4 +23,4 @@ function checkclick(){
     $moon.classList.toggle('hidden');
 }
 $moon.addEventListener('click', checkclick)
-$sun.addEventListener('click', checkclick)
+$sun.addEventListener('click', checkclick)*/

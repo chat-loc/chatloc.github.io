@@ -20,16 +20,64 @@ import torontoMap from '../../images/torontoMap.png';
 
 const Login = ({location}) => {
 
+	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+
 	const [name, setName] = useState('');
 	const [room, setRoom] = useState('');
 
 	const [active, setActive] = useState(false);	// For button
-	const [hideApp, setHideApp] = useState(false);	// For button
-	const [hideModal, setHideModal] = useState(false);	// For button
+	const [hideApp, setHideApp] = useState(false);	// For entire app
+	const [hideModal, setHideModal] = useState(false);	// For modal
 
+	// Form Validation
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
 
-	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+	const [nullFields, setNullFields] = useState({
+											name : false,
+											password : false
+										});
 
+	const handleSubmit = e => {
+		e.preventDefault();
+	}
+
+	// Listen to onKeyup event , fetch name and value of field and provide error if empty
+	// (will not show because the moment the user begins typing, the field is no longer
+	// empty but no qualms anyway)
+
+	const handleChange = e => {
+
+		e.preventDefault();
+
+		let { name, value } = e.target;	// deconstruct name and value from event target
+
+		name = name.trim();
+		value = value.trim();
+
+		switch (name) {
+
+		  	case "name":
+	      		if (value.length == 0 ) {
+	      			setNullFields({...nullFields, name : true})
+	      		} else {
+	      			setNullFields({...nullFields, name : false})
+	      		}
+		    break;
+
+		  	case "password":
+			  	if (value.length == 0 ) {
+			  		setNullFields({...nullFields, password : true})
+			  	} else {
+			  		setNullFields({...nullFields, password : false})
+			  	}
+		    break;
+
+		  	default:
+		    	break;
+		}	
+
+	}
 
 	function geocode (lat, long) {
 
@@ -117,7 +165,6 @@ const Login = ({location}) => {
 
 	}
 
-
 	// User accepts to share location
 	const successCallback = (position) => {
 
@@ -164,12 +211,10 @@ const Login = ({location}) => {
 		setHideModal(true);		
 	}
 
-
 	// Header text
-
 	const HeaderTxt = () => {
 	    const html = <div className="header-inner">
-				        <h1>Welcome To Chat<span class="fa fa-link loc"></span>Loc</h1>
+				        <h1>Welcome To Chat<span className="fa fa-link loc"></span>Loc</h1>
 				    </div>;
 		return html;
 
@@ -181,6 +226,8 @@ const Login = ({location}) => {
 
 		// Modal must only appear on login page to avoid error
 		// geolocate().then(closeModal(true));
+
+		console.log (nullFields);
 
 	}, [ENDPOINT, location.search]);
 
@@ -212,15 +259,27 @@ const Login = ({location}) => {
 
 		        <section className="registration">
 
-		            <form action="/user/login" method="POST" className="register">
+		            <form action="/user/login" method="POST" className="register" 
+		            	onSubmit={(event) => handleSubmit(event)}>
+
 		                <div className="form-group">
 		                    <label htmlFor="name">Username</label>
-		                    <input type="text" name="name" id="name" className="register-input" required/>
+		                    <input type="text" name="name" id="name" className="register-input"  
+		                    	onChange={(event) => handleChange(event)}/>
+
+		                    {nullFields.name == true && (
+		                    	<span class="error">Username should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+		                                  )}
 		                </div>
 
 		                <div className="form-group">
 		                    <label htmlFor="password">Password</label>
-		                    <input type="password" name="password" id="password" className="register-input" required/>
+		                    <input type="password" name="password" id="password" className="register-input" 
+		                    	onChange={(event) => handleChange(event)}/>
+
+		                    {nullFields.password == true && (
+		                    	<span class="error">Password should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+		                                  )}
 		                </div>
 
 		                <div className="form-group">
