@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 /* Helps retrieve data from URL*/
-
 import queryString from 'query-string';
-// Import script files here;
 
+// Import script files here;
 import Script from 'react-script-tag';
+
+// Import Header 
+import Header from '../Header/Header';
 
 // Import css
 import '../form.css';
@@ -163,6 +165,16 @@ const Login = ({location}) => {
 	}
 
 
+	// Header text
+
+	const HeaderTxt = () => {
+	    const html = <div className="header-inner">
+				        <h1>Welcome To Chat<span class="fa fa-link loc"></span>Loc</h1>
+				    </div>;
+		return html;
+
+	}
+
 	useEffect (() => {
 
 		// geocode("43.6205", "-79.5132");
@@ -180,7 +192,8 @@ const Login = ({location}) => {
 		{/*class 'hideApp' is responsible for hiding the entire app if user declines putting his location 
 		   class 'hide' is responsible for simply sliding up modal when user accepts location use
 		*/}
-		        
+		<Header headerTxt={HeaderTxt()} /> 
+
 		<main className={`login-main ${hideApp == true ? ' hide-app' : ''}`}>
 		    
 		    <div className="main-wrapper">
