@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-/*helps retrieve data from URL*/
+/* Helps retrieve data from URL*/
+
 import queryString from 'query-string';
 // Import script files here;
 
 import Script from 'react-script-tag';
+
+// Import css
+import '../form.css';
+
+// Images
+import torontoMap from '../../images/torontoMap.png';
+
 
 
 const Login = ({location}) => {
@@ -15,9 +23,10 @@ const Login = ({location}) => {
 
 	const [active, setActive] = useState(false);	// For button
 	const [hideApp, setHideApp] = useState(false);	// For button
+	const [hideModal, setHideModal] = useState(false);	// For button
 
 
-	const ENDPOINT = "localhost:5004";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
 
 
 	function geocode (lat, long) {
@@ -54,7 +63,7 @@ const Login = ({location}) => {
 		        console.log (data);
 
 		        let components = data.results[0].components;
-		        // console.log(components);
+		        console.log(components);
 
 		        /*
 		        ISO_3166-1_alpha-2: "CA"
@@ -74,7 +83,7 @@ const Login = ({location}) => {
 				_type: "building"
 				*/
 
-		        //const {country, state, city_district, road} = components;
+		        const {country, state, city_district, road} = components;
 
 		    } else if (request.status <= 500){ 
 
@@ -149,13 +158,8 @@ const Login = ({location}) => {
 		});	
 	}
 
-	function closeModal (state=false) {
-
-		if (state) {
-			/*$appClose.addEventListener('click', () => {
-				$dialogModal.classList.add('hide');
-			});*/
-		}
+	const closeModal = () => {
+		setHideModal(true);		
 	}
 
 
@@ -164,7 +168,7 @@ const Login = ({location}) => {
 		// geocode("43.6205", "-79.5132");
 
 		// Modal must only appear on login page to avoid error
-		geolocate()/*.then(closeModal(true))*/;
+		// geolocate().then(closeModal(true));
 
 	}, [ENDPOINT, location.search]);
 
@@ -172,8 +176,12 @@ const Login = ({location}) => {
 	return (
 
 		<>
+
+		{/*class 'hideApp' is responsible for hiding the entire app if user declines putting his location 
+		   class 'hide' is responsible for simply sliding up modal when user accepts location use
+		*/}
 		        
-		<main className="login-main" className={`${hideApp == true ? ' hide-app' : ''}`}>
+		<main className={`login-main ${hideApp == true ? ' hide-app' : ''}`}>
 		    
 		    <div className="main-wrapper">
 		    
@@ -184,7 +192,7 @@ const Login = ({location}) => {
 		            <p>Connect with People Close By</p>
 		            
 		            <div className="toronto-map">
-		                <img src="/images/toronto-map.png" alt="toronto map"/>
+		                <img src={torontoMap} alt="toronto map"/>
 		            </div>
 		            
 		        </section>
@@ -223,7 +231,7 @@ const Login = ({location}) => {
 		
 		</main>
 
-		<section className={`dialog-app-modal ${hideApp == true ? ' hide-app' : ''}`} id="dialog-app-modal">
+		<section className={`hide dialog-app-modal ${hideApp == true ? ' hide-app' : ''} ${hideModal == true ? ' hide' : ''}`} id="dialog-app-modal">
 		    <div className="modal-app-alert">
 		        <h3 className="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
 
@@ -231,8 +239,6 @@ const Login = ({location}) => {
 
 		    </div>
 		</section>
-
-		<Script type="text/javascript" async defer src=""/>
 
 		</>
 		
