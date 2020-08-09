@@ -303,10 +303,13 @@ label {
     font-weight: bolder;
 }
 .fa.loc {
-    font-size: .8em;
-    transform: rotate(-45deg);
+    position: relative;
+    top: -3px;
+    font-size: .6em;
+    transform: rotate(45deg);
     color: var(--red);
 }
+
 
 
 /*MAIN*/

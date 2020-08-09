@@ -33,14 +33,41 @@ const Login = ({location}) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
+	// Set states for the form fields on keyup
 	const [nullFields, setNullFields] = useState({
 											name : false,
 											password : false
 										});
 
+	// Set state for determining logic on form submit.
+	// This is important because you want to show the errors on form submit
+	// but then, you dont want to show the errors on page load. Thus this state
+	// is necessary to be switched when user clicks submit button and then set
+	// on the input fields as well as the previous nullFields state to determine
+	// when to display errors which are on input and on form submit but not on 
+	// page load 
+
+	const [errorDisplay, setErrorDisplay] = useState(false);
+
+
+	// On form submit
 	const handleSubmit = e => {
-		e.preventDefault();
-	}
+
+	    const fields = Object.values(nullFields);	// Fetch form field state
+	    // console.log(fields);
+
+	    const errors = fields.some(field => field == false);	// any empty field?
+	    // console.log (errors);
+
+	    if (errors) {
+	    	setErrorDisplay(true);	// state to display error on form submit
+	    	console.log(errorDisplay);
+	    	e.preventDefault();		// form goes no where
+	    } else {
+	    	console.log("no errors");
+	    }
+
+	};
 
 	// Listen to onKeyup event , fetch name and value of field and provide error if empty
 	// (will not show because the moment the user begins typing, the field is no longer
@@ -58,18 +85,18 @@ const Login = ({location}) => {
 		switch (name) {
 
 		  	case "name":
-	      		if (value.length == 0 ) {
-	      			setNullFields({...nullFields, name : true})
-	      		} else {
+	      		if (value.length == 0 ) {	// null fields not allowed
 	      			setNullFields({...nullFields, name : false})
+	      		} else {
+	      			setNullFields({...nullFields, name : true})
 	      		}
 		    break;
 
 		  	case "password":
-			  	if (value.length == 0 ) {
-			  		setNullFields({...nullFields, password : true})
-			  	} else {
+			  	if (value.length == 0 ) {	// null fields not allowed
 			  		setNullFields({...nullFields, password : false})
+			  	} else {
+			  		setNullFields({...nullFields, password : true})
 			  	}
 		    break;
 
@@ -267,8 +294,8 @@ const Login = ({location}) => {
 		                    <input type="text" name="name" id="name" className="register-input"  
 		                    	onChange={(event) => handleChange(event)}/>
 
-		                    {nullFields.name == true && (
-		                    	<span class="error">Username should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+		                    {((nullFields.name == false) && (errorDisplay == true)) && (
+		                    	<span className="error">Username should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                                  )}
 		                </div>
 
@@ -277,19 +304,20 @@ const Login = ({location}) => {
 		                    <input type="password" name="password" id="password" className="register-input" 
 		                    	onChange={(event) => handleChange(event)}/>
 
-		                    {nullFields.password == true && (
-		                    	<span class="error">Password should not be empty <span class="fa fa-exclamation-triangle"></span></span>
+		                    {((nullFields.password == false) && (errorDisplay == true)) && (
+		                    	<span className="error">Password should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                                  )}
-		                </div>
-
-		                <div className="form-group">
-		                    <input type="submit" name="submit-btn" value="Log In" id="submit-btn" className="register-button"/>
 		                </div>
 
 		                <input type="hidden" id="location-country" name="location-country" value=""/> 
 		                <input type="hidden" id="location-state" name="location-state" value=""/>
 		                <input type="hidden" id="location-district" name="location-district" value=""/>
 		                <input type="hidden" id="location-road" name="location-road" value=""/>
+
+		                <div className="form-group">
+		                    <input type="submit" name="submit-btn" value="Log In" id="submit-btn" className="register-button"
+		                    	onSubmit={(event) => handleSubmit(event)}/>
+		                </div>
 
 		            </form>
 
