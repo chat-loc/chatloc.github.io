@@ -394,3 +394,6 @@ main {
 .app-alert {
     opacity: .8;
 }
+.hide-app {
+    display: none !important;
+}
