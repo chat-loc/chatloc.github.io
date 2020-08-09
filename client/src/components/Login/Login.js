@@ -321,7 +321,9 @@ const Login = ({location}) => {
 
 		            </form>
 
-		            <p className="have-account">Already have an account? <a href="registration">Register instead</a></p>
+		            <p className="have-account">Already have an account?
+		           		<Link to={"/registration"}>Register Instead</Link>
+		            </p>
 
 		        </section>
 		            
