@@ -21,6 +21,7 @@ import torontoMap from '../../images/torontoMap.png';
 const Registration = ({location}) => {
 
 	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+	const mailPattern = new RegExp(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9-.]+/);  // kodesektor@rocketmail.com
 
 	const [name, setName] = useState('');
 	const [room, setRoom] = useState('');
@@ -54,6 +55,8 @@ const Registration = ({location}) => {
 
 	// On form submit
 	const handleSubmit = e => {
+
+		e.preventDefault();
 
 	    const fields = Object.values(nullFields);	// Fetch form field state
 	    // console.log(fields);
@@ -94,12 +97,19 @@ const Registration = ({location}) => {
 	      		}
 		    break;
 
-		  	case "password":
+		  	case "email":
+		  		if (!mailPattern.test(value)) {
+		  			setRegexMail(false);
+				} else {
+					setRegexMail(true);
+				}
+
 			  	if (value.length == 0 ) {	// null fields not allowed
 			  		setNullFields({...nullFields, password : false})
 			  	} else {
 			  		setNullFields({...nullFields, password : true})
 			  	}
+
 		    break;
 
 		  	default:
@@ -290,19 +300,39 @@ const Registration = ({location}) => {
 
 		        <section className="registration">
 
-		            <form action="/user/registration" method="POST" className="register">
+		            <form action="/user/registration" method="POST" className="register"
+		            	onSubmit={(event) => handleSubmit(event)}>
+
 		                <div className="form-group">
 		                    <label htmlFor="name">Username</label>
-		                    <input type="text" name="name" id="name" className="register-input" required/>
+		                    <input type="text" name="name" id="name" className="register-input"
+		                    	onChange={(event) => handleChange(event)}/>
+
+	                    	{((nullFields.name == false) && (errorDisplay == true)) && (
+	                    		<span className="error">Username should not be empty <span className="fa fa-exclamation-triangle"></span></span>
+	                    	              )}
 		                </div>
 		                <div className="form-group">
 		                    <label htmlFor="email">Email</label>
 		                    <input type="email" name="email" id="email" className="register-input" pattern="^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,6})$"/>
+
+		                    {((nullFields.email == false) && (errorDisplay == true)) && (
+		                    	<span className="error">Email should not be empty <span className="fa fa-exclamation-triangle"></span></span>
+		                                  )}
+
+		                    {((nullFields.email == true) && (regexMail == false) && (errorDisplay == true)) && (
+		                    	<span className="error">Email does not match pattern <span className="fa fa-exclamation-triangle"></span></span>
+		                                  )}
 		                </div>
 		                <div className="form-group">
 		                    <label htmlFor="password">Password</label>
-		                    <input type="password" name="password" id="password" className="register-input" required/>
+		                    <input type="password" name="password" id="password" className="register-input"/>
 		                </div>
+
+		                	{((nullFields.email == false) && (errorDisplay == true)) && (
+		                		<span className="error">Password should not be empty <span className="fa fa-exclamation-triangle"></span></span>
+		                	              )}
+
 		                <div className="form-group">
 		                    <label htmlFor="origin">Country of Origin</label>
 		                    <select id="origin" name="origin" className="register-input" required>
@@ -555,20 +585,21 @@ const Registration = ({location}) => {
 		                    </select>
 		                </div>
 		                <div className="form-group register-switch">
-		                    <input type="radio" name="sex" id="female" value="female" className="register-switch-input" checked/>
+		                    <input type="radio" name="sex" id="female" value="female" className="register-switch-input" />
 		                    <label htmlFor="female" className="register-switch-label">Female</label>
 
-		                    <input type="radio" name="sex" id="male" value="male" className="register-switch-input"/>
+		                    <input type="radio" name="sex" id="male" value="male" className="register-switch-input" defaultChecked/>
 		                    <label htmlFor="male" className="register-switch-label">Male</label>
-		                </div>
-		                <div className="form-group">
-		                    <input type="submit" name="submit-btn" id="submit-btn" value="Get Started" className="register-button"/>
 		                </div>
 
 		                <input type="hidden" id="location-country" name="location-country" value=""/> 
 		                <input type="hidden" id="location-state" name="location-state" value=""/>
 		                <input type="hidden" id="location-district" name="location-district" value=""/>
 		                <input type="hidden" id="location-road" name="location-road" value=""/>
+
+		                <div className="form-group">
+		                    <input type="submit" name="submit-btn" id="submit-btn" value="Get Started" className="register-button"/>
+		                </div>
 
 		            </form>
 

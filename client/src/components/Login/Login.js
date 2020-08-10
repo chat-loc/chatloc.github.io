@@ -222,6 +222,7 @@ const Login = ({location}) => {
 	// If user declines to share location, interrupt app
 	const errorCallback = (error) => {
 		console.log(error);
+		alert("You have decided not to use Chat-Loc.")
 		/*$page.style.display = 'none';
 		$dialogModal.style.display = 'none';*/
 	}
@@ -292,7 +293,7 @@ const Login = ({location}) => {
 		                <div className="form-group">
 		                    <label htmlFor="name">Username</label>
 		                    <input type="text" name="name" id="name" className="register-input"  
-		                    	onChange={(event) => handleChange(event)}/>
+		                    	onChange={(event) => handleChange(event)} required/>
 
 		                    {((nullFields.name == false) && (errorDisplay == true)) && (
 		                    	<span className="error">Username should not be empty <span className="fa fa-exclamation-triangle"></span></span>
@@ -302,7 +303,7 @@ const Login = ({location}) => {
 		                <div className="form-group">
 		                    <label htmlFor="password">Password</label>
 		                    <input type="password" name="password" id="password" className="register-input" 
-		                    	onChange={(event) => handleChange(event)}/>
+		                    	onChange={(event) => handleChange(event)} required/>
 
 		                    {((nullFields.password == false) && (errorDisplay == true)) && (
 		                    	<span className="error">Password should not be empty <span className="fa fa-exclamation-triangle"></span></span>
