@@ -12,7 +12,7 @@ import queryString from 'query-string';
 import Header from '../Header/Header';
 
 // Import css
-import '../form.css';
+import './Roomlist.css';
 
 
 const roomlist = () => {
