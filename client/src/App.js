@@ -10,12 +10,14 @@ import "./styles/nightMode.css";
 
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
+import Chatroom from './components/Chatroom/Chatroom';
 
 
 const App = () => (
 	<Router>
 		<Route path="/" exact component={Login} />	{/*Login Page*/}
 		<Route path="/registration" exact component={Registration} />	{/*Chat Page*/}
+		<Route path="/chatroom" exact component={Chatroom} />	
 	</Router>
 );
 

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
+import { useHistory } from "react-router";
+
+
 import axios from 'axios';
 
 /* Helps retrieve data from URL*/
@@ -22,6 +26,8 @@ import torontoMap from '../../images/torontoMap.png';
 const Login = ({location}) => {
 
 	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+	let history = useHistory();
+	const [chatroomRedir, setChatroomRedir] = useState(false);
 
 	const [name, setName] = useState('');
 	const [room, setRoom] = useState('');
@@ -33,6 +39,11 @@ const Login = ({location}) => {
 	// Form Validation
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+
+	const [countryLoc, setCountryLoc] = useState('');
+	const [stateLoc, setStateLoc] = useState('');
+	const [districtLoc, setDistrictLoc] = useState('');
+	const [roadLoc, setRoadLoc] = useState('');
 
 	// Set states for the form fields on keyup
 	const [nullFields, setNullFields] = useState({
@@ -51,9 +62,23 @@ const Login = ({location}) => {
 	const [errorDisplay, setErrorDisplay] = useState(false);
 
 	// SERVER
-	const [userDetails, setUserDetails] = useState({});
+	const [resUserDetails, setResUserDetails] = useState([]);
+	const [resFilteredOrigin, setResFilteredOrigin] = useState([]);
+	const [resFilteredDistrict, setResfilteredDistrict] = useState([]);
+
+
+	useEffect (() => {
+		console.log(resUserDetails);
+    	console.log(resUserDetails, resFilteredOrigin, resFilteredDistrict);
+
+    	if (chatroomRedir) {
+    		history.push("/chatroom");
+    	}
+
+	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);
 
 	// On form submit
+
 	const handleSubmit = e => {
 
 	    const fields = Object.values(nullFields);	// Fetch form field state
@@ -69,18 +94,39 @@ const Login = ({location}) => {
 	    } else {
 
 	    	e.preventDefault();
+	    	console.log (countryLoc, stateLoc);
 	    	// If no errors, check login details. If right, fetch details of the user
 	    	axios.post("http://localhost:5003/user/login", {
     			params : {
     				name : username,
-    				password : password
+    				password : password,
+
+    				countryLoc,
+    				stateLoc,
+    				districtLoc,
+    				roadLoc
     			}
     		})
 	        .then(response => {
 	        	console.log(response);
+
+	        	if (response.data) {
+	        		let jsonUserDetails = (response.data.jsonUserDetails);
+	        		let jsonFilteredOrigin = (response.data.jsonFilteredOrigin);
+	        		let jsonFilteredDistrict = (response.data.jsonFilteredDistrict);
+
+	        		setResUserDetails([jsonUserDetails]);
+	        		setResFilteredOrigin([jsonFilteredOrigin]);
+	        		setResfilteredDistrict([jsonFilteredDistrict]);
+
+	        		setChatroomRedir(true);
+    	        }
+
+    	        console.log(resUserDetails);
 	        })
 	        .catch(function (error) {
 	        	console.log(error);
+	        	alert("There's a server error. Try again later");
 	        })
 
     		console.log("no errors");
@@ -101,11 +147,6 @@ const Login = ({location}) => {
 		name = name.trim();
 		value = value.trim();
 
-		console.log(name);
-
-		//setUsername(name);
-
-
 		switch (name) {
 
 		  	case "name":
@@ -120,6 +161,7 @@ const Login = ({location}) => {
 
 		  	case "password":
 		  		setPassword(value);
+
 			  	if (value.length == 0 ) {	// null fields not allowed
 			  		setNullFields({...nullFields, password : false})
 			  	} else {
@@ -163,7 +205,7 @@ const Login = ({location}) => {
 		    if (request.status == 200) { 
 		        // Success!
 		        let data = JSON.parse(request.responseText);
-		        alert("Response went");
+
 		        console.log (data);
 
 		        let components = data.results[0].components;
@@ -189,6 +231,13 @@ const Login = ({location}) => {
 
 		        const {country, state, city_district, road} = components;
 
+		        setCountryLoc(country);
+		        setStateLoc(state);
+		        setDistrictLoc(city_district);
+		        setRoadLoc(road);
+
+		        // console.log (countryLoc, stateLoc, districtLoc, roadLoc); won't show here; not sure why
+
 		    } else if (request.status <= 500){ 
 
 		    	console.log("Error reaching server");
@@ -211,7 +260,8 @@ const Login = ({location}) => {
 
 		request.onerror = function() {
 		    // There was a connection error of some sort
-		    console.log("Unable to connect to server");       
+		    console.log("Unable to connect to server"); 
+		    setHideApp(true);
 		    alert ("Unable to connect to server") ;
 		};
 
@@ -249,14 +299,16 @@ const Login = ({location}) => {
 	// If user declines to share location, interrupt app
 	const errorCallback = (error) => {
 		console.log(error);
-		alert("You have decided not to use Chat-Loc.")
-		/*$page.style.display = 'none';
-		$dialogModal.style.display = 'none';*/
+		alert("You have decided not to use Chat-Loc.");
+		setHideApp(true);
 	}
 
 	// Get location. 
 	async function geolocate () {
-		const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+		//const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+
+		// Use getCurrentPosition for now to limit no of fetches and not surpass daily limit
+		const watchId = navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
 			enableHighAccuracy : true, 	//try best to provide with a high accurate location
 			timeout: 5000
 		});	
@@ -280,9 +332,8 @@ const Login = ({location}) => {
 		// geocode("43.6205", "-79.5132");
 
 		// Modal must only appear on login page to avoid error
-		// geolocate().then(closeModal(true));
-
-		console.log (nullFields);
+		
+		geolocate().then(closeModal(true));
 
 	}, [ENDPOINT, location.search]);
 

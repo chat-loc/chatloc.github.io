@@ -318,18 +318,18 @@ router.post("/login", (req, res) => {
 
  				const { origin, sex } = user;
 
- 				/*console.log("origin: " + origin);
- 				console.log("user: " + user);
-*/
- 				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
+ 				// console.log("origin: " + origin);
+ 				// console.log("USER'S SEX, ORIGIN: " + user);
+
+				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
  				const newUserLocDetails = {
  					name : name,
  					origin : (origin).toLowerCase(),
  					sex : sex,
-   					countryLoc: lowerCaseNoSpaces(req.body["location-country"]),
-   					stateLoc : lowerCaseNoSpaces(req.body["location-state"]),
-   					districtLoc : lowerCaseNoSpaces(req.body["location-district"]),
-   					roadLoc : lowerCaseNoSpaces(req.body["location-road"])
+   					countryLoc: lowerCaseNoSpaces(req.body.params.countryLoc),
+   					stateLoc : lowerCaseNoSpaces(req.body.params.stateLoc),
+   					districtLoc : lowerCaseNoSpaces(req.body.params.districtLoc),
+   					roadLoc : lowerCaseNoSpaces(req.body.params.roadLoc)
  				}	
 
  				console.log(newUserLocDetails);
@@ -405,18 +405,18 @@ router.post("/login", (req, res) => {
 						
 						// Fetch 10 loggedin users from same district
 
-						req.session.userDetails = { name, sex, origin, districtLoc };	// User Details
-						req.session.filteredOrigin = filteredOrigin;		// 10 users in same origin
-						req.session.filteredDistrict = filteredDistrict;	// 10 users in same district
+						const jsonUserDetails = { name, sex, origin, districtLoc };	// User Details
+						const jsonFilteredOrigin = filteredOrigin;		// 10 users in same origin
+						const jsonFilteredDistrict = filteredDistrict;	// 10 users in same district
 
-						// return res.redirect('/user/roomlist');
-
-						res.json()
+						res.json({
+							jsonUserDetails,
+							jsonFilteredOrigin,
+							jsonFilteredDistrict
+						});
 
 					});
-
 				});
- 			
 			});
 
 
