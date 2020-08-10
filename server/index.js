@@ -10,12 +10,19 @@ app.use(express.json());
 
 // BodyParser middleware
 app.use(bodyParser.urlencoded({extended:false}));
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 
+// Import router objects
+const userRoutes = require("./controllers/User");
+const generalRoutes = require("./controllers/General");
 
 const chatRouter = require('./routes/chat');
 
-app.use('/chat', chatRouter);
+// User Routes
+app.use("/", generalRoutes);
+app.use("/user", userRoutes);
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true}
