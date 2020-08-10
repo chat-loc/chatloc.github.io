@@ -9,9 +9,6 @@ import axios from 'axios';
 /* Helps retrieve data from URL*/
 import queryString from 'query-string';
 
-// Import script files here;
-import Script from 'react-script-tag';
-
 // Import Header 
 import Header from '../Header/Header';
 
@@ -40,6 +37,7 @@ const Login = ({location}) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
+	// Chat Data
 	const [countryLoc, setCountryLoc] = useState('');
 	const [stateLoc, setStateLoc] = useState('');
 	const [districtLoc, setDistrictLoc] = useState('');
@@ -61,7 +59,7 @@ const Login = ({location}) => {
 
 	const [errorDisplay, setErrorDisplay] = useState(false);
 
-	// SERVER
+	// SERVER 
 	const [resUserDetails, setResUserDetails] = useState([]);
 	const [resFilteredOrigin, setResFilteredOrigin] = useState([]);
 	const [resFilteredDistrict, setResfilteredDistrict] = useState([]);
@@ -71,8 +69,13 @@ const Login = ({location}) => {
 		console.log(resUserDetails);
     	console.log(resUserDetails, resFilteredOrigin, resFilteredDistrict);
 
-    	if (chatroomRedir) {
-    		history.push("/chatroom");
+    	if (chatroomRedir) {	// Protect from firing upon page load
+    		history.push({
+						  pathname: "/roomlist",
+						  resUserDetails,
+						  resFilteredOrigin,
+						  resFilteredDistrict
+						});
     	}
 
 	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);
@@ -119,7 +122,7 @@ const Login = ({location}) => {
 	        		setResFilteredOrigin([jsonFilteredOrigin]);
 	        		setResfilteredDistrict([jsonFilteredDistrict]);
 
-	        		setChatroomRedir(true);
+	        		setChatroomRedir(true);	// Time to redirect
     	        }
 
     	        console.log(resUserDetails);
