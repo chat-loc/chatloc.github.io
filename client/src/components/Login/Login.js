@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 /* Helps retrieve data from URL*/
 import queryString from 'query-string';
@@ -49,6 +50,8 @@ const Login = ({location}) => {
 
 	const [errorDisplay, setErrorDisplay] = useState(false);
 
+	// SERVER
+	const [userDetails, setUserDetails] = useState({});
 
 	// On form submit
 	const handleSubmit = e => {
@@ -56,7 +59,7 @@ const Login = ({location}) => {
 	    const fields = Object.values(nullFields);	// Fetch form field state
 	    // console.log(fields);
 
-	    const errors = fields.some(field => field == false);	// any empty field?
+	    const errors = fields.some(field => field === false);	// any empty field?
 	    // console.log (errors);
 
 	    if (errors) {
@@ -64,7 +67,23 @@ const Login = ({location}) => {
 	    	console.log(errorDisplay);
 	    	e.preventDefault();		// form goes no where
 	    } else {
-	    	console.log("no errors");
+
+	    	e.preventDefault();
+	    	// If no errors, check login details. If right, fetch details of the user
+	    	axios.post("http://localhost:5003/user/login", {
+    			params : {
+    				name : username,
+    				password : password
+    			}
+    		})
+	        .then(response => {
+	        	console.log(response);
+	        })
+	        .catch(function (error) {
+	        	console.log(error);
+	        })
+
+    		console.log("no errors");
 	    }
 
 	};
@@ -82,9 +101,16 @@ const Login = ({location}) => {
 		name = name.trim();
 		value = value.trim();
 
+		console.log(name);
+
+		//setUsername(name);
+
+
 		switch (name) {
 
 		  	case "name":
+		  		setUsername(value);
+
 	      		if (value.length == 0 ) {	// null fields not allowed
 	      			setNullFields({...nullFields, name : false})
 	      		} else {
@@ -93,6 +119,7 @@ const Login = ({location}) => {
 		    break;
 
 		  	case "password":
+		  		setPassword(value);
 			  	if (value.length == 0 ) {	// null fields not allowed
 			  		setNullFields({...nullFields, password : false})
 			  	} else {
