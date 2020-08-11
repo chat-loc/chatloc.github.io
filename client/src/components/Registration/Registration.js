@@ -69,6 +69,23 @@ const Registration = ({location}) => {
 	const [resFilteredOrigin, setResFilteredOrigin] = useState([]);
 	const [resFilteredDistrict, setResfilteredDistrict] = useState([]);
 
+	useEffect (() => {
+		console.log(resUserDetails);
+    	console.log(resUserDetails, resFilteredOrigin, resFilteredDistrict);
+
+    	if (chatroomRedir) {	// Protect from firing upon page load
+    		const localObj = {
+    			resUserDetails,
+    			resFilteredOrigin,
+    			resFilteredDistrict
+    		}
+    		localStorage.setItem("chat-loc", JSON.stringify(localObj));
+
+    		history.push("/roomlist");
+    	}
+
+	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);
+
 
 	// On form submit
 	const handleSubmit = e => {
