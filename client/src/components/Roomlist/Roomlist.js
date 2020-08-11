@@ -14,6 +14,10 @@ import Header from '../Header/Header';
 // Import css
 import './Roomlist.css';
 
+// Import images
+import ontario from '../../images/toronto.png';
+
+
 
 const Roomlist = ({location}) => {
 
@@ -52,7 +56,7 @@ const Roomlist = ({location}) => {
 
         console.log(chatLoc);
         console.log (resUserDetails);
-       
+
     },[chatParams]);    // Using objects may set off infinite loop here
 
       // Header text
@@ -81,6 +85,7 @@ const Roomlist = ({location}) => {
         return val.join(" ");
     }
 
+
     return (
 
         <>
@@ -89,7 +94,9 @@ const Roomlist = ({location}) => {
 
         <main className="roomlist-area">
 
-            <div id="map" className="map-canvas"></div>
+            <div id="map" className="map-canvas">
+                <img src={ontario} alt="Ontario" />
+            </div>
 
             <section className="roomlist">
 
@@ -97,7 +104,7 @@ const Roomlist = ({location}) => {
                     <a id="districtLink" className="room-btn btn" href={`${userDistrict}-district-room`}>
                           {upperCaseSomeSpaces(userDistrict)} chatroom</a>
                           <hr/>
-                    <a id="chatroomLink" className="room-btn btn" href={`${userOrigin}`}>
+                    <a id="chatroomLink" className="room-btn btn" href={`${userOrigin}-origin-room`}>
                           {upperCaseSomeSpaces(userOrigin)} chatroom
                     </a>
                 </section>
@@ -112,8 +119,8 @@ const Roomlist = ({location}) => {
                                     <li key={i}>
                                         <b className="origin-name">{origin.name} ({origin.sex})</b>
                                         <span className="current-loc">
-                                            <em>Currently at</em>: 
-                                            <span className="origin-road">{origin.roadLoc}</span>
+                                            <em>Currently at</em> :  
+                                            <span className="origin-road"> {origin.roadLoc}</span>
                                         </span>
                                     </li>
                                 )}
@@ -128,8 +135,8 @@ const Roomlist = ({location}) => {
                                 <li key={i}>
                                       <b className="district-name">{district.name} ({district.sex}) </b>
                                       <span className="current-loc">
-                                      <em>Currently at</em>: 
-                                      <span className="district-road">{district.roadLoc}</span>
+                                      <em>Currently at</em> :  
+                                      <span className="district-road"> {district.roadLoc}</span>
                                       </span>
                                 </li>
                             )}

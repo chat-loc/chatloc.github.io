@@ -9,6 +9,7 @@
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "localstorage": "^1.0.1",
+    "mapbox-gl": "^1.11.1",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
