@@ -81,12 +81,17 @@ const Registration = ({location}) => {
 	    const errors = fields.some(field => field == false);	// any empty field?
 	    // console.log (errors);
 
-	    if (errors) {
+	    if (errors || !regexMail) {
+
 	    	setErrorDisplay(true);	// state to display error on form submit
 	    	console.log(errorDisplay);
-	    	e.preventDefault();		// form goes no where
 
-	    } else {e.preventDefault();
+	    	e.preventDefault();		// form goes no where
+	    	console.log(email, nullFields)
+
+	    } else {
+
+	    	e.preventDefault();
 
 	    	console.log (countryLoc, stateLoc);
 	    	// If no errors, check login details. If right, fetch details of the user
@@ -105,7 +110,7 @@ const Registration = ({location}) => {
     			}
     		})
 	        .then(response => {
-	        	console.log(response);
+	        	console.log(response.data);
 
 	        	if (response.data) {
 	        		let jsonUserDetails = (response.data.jsonUserDetails);
@@ -116,7 +121,11 @@ const Registration = ({location}) => {
 	        		setResFilteredOrigin([jsonFilteredOrigin]);
 	        		setResfilteredDistrict([jsonFilteredDistrict]);
 
-	        		setChatroomRedir(true);	// Time to redirect
+	        		if (response.data.userExists) {
+	        			alert ("User already registered. Try again or proceed to Login");
+	        		} else {
+	        			setChatroomRedir(true);	// Time to redirect
+	        		}
     	        }
 
     	        console.log(resUserDetails);
@@ -144,7 +153,8 @@ const Registration = ({location}) => {
 		name = name.trim();
 		value = value.trim();
 
-		console.log(value);
+		// console.log (name)
+		// console.log(value);
 
 		switch (name) {
 
@@ -173,6 +183,8 @@ const Registration = ({location}) => {
 			  		setNullFields({...nullFields, email : true})
 			  	}
 
+			break;
+
 			case "password" : 
 				setPassword(value);
 
@@ -182,8 +194,12 @@ const Registration = ({location}) => {
 					setNullFields({...nullFields, password : true})
 				}
 
+			break;
+
 			case "origin" : 
 				setOrigin(value);
+
+			break;
 
 			case "sex":
 				setSex(value);
@@ -397,7 +413,8 @@ const Registration = ({location}) => {
 		                </div>
 		                <div className="form-group">
 		                    <label htmlFor="email">Email</label>
-		                    <input type="email" name="email" id="email" className="register-input" pattern="^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,6})$"/>
+		                    <input type="email" name="email" id="email" className="register-input" pattern="^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,6})$"
+		                    	onChange={(event) => handleChange(event)}/>
 
 		                    {((nullFields.email == false) && (errorDisplay == true)) && (
 		                    	<span className="error">Email should not be empty <span className="fa fa-exclamation-triangle"></span></span>
@@ -413,7 +430,7 @@ const Registration = ({location}) => {
 		                    	onChange={(event) => handleChange(event)}/>
 		                </div>
 
-		                	{((nullFields.email == false) && (errorDisplay == true)) && (
+		                	{((nullFields.password == false) && (errorDisplay == true)) && (
 		                		<span className="error">Password should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                	              )}
 

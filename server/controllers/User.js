@@ -78,44 +78,32 @@ router.get("/[A-Za-z-.]+-origin-room$/", (req, res) => {
 //Route to process user's request and data when user submits registration form
 router.post("/registration", (req, res) => {
 
-
-	// Check if login details exist in DB
-	const name = req.body.params.name;
-	const password = req.body.params.password;
-	const email = req.body.params.email;
-	const origin = req.body.params.origin;
-	const sex = req.body.params.sex;
-	const countryLoc = req.body.params.countryLoc;
-	const stateLoc = req.body.params.stateLoc;
-	const districtLoc = req.body.params.districtLoc;
-	const roadLoc = req.body.params.roadLoc;
-
-
 	/*REQUIREMENTS:
-
 		Name, sex and origin for user
 		Name, sex, origin, and location details for other loggedin users
 	*/
 
-	// console.log(req.body);
+	console.log("REQ BODY PARAMS: ", req.body.params);
+
+	let loginID = "";
 
 	// Fetch user details from body object
 	const newUser = {
-		name : ((req.body.name).trim()).toLowerCase(), 
-		email : (req.body.email).trim(),
-		password : req.body.password,
-		origin : (req.body.origin).toLowerCase(),
-		sex : req.body.sex
+		name : ((req.body.params.name).trim()).toLowerCase(),
+		password : (req.body.params.password).trim(),
+		email : (req.body.params.email).trim(),
+		origin : ((req.body.params.origin).trim()).toLowerCase(),
+		sex : (req.body.params.sex).trim()
 	}
 
 	const newUserLocDetails = {
-		name : ((req.body.name).trim()).toLowerCase(), 
-		origin : (req.body.origin).toLowerCase(),
-		sex : req.body.sex,
-		countryLoc: lowerCaseNoSpaces(req.body["location-country"]),
-		stateLoc : lowerCaseNoSpaces(req.body["location-state"]),
-		districtLoc : lowerCaseNoSpaces(req.body["location-district"]),
-		roadLoc : lowerCaseNoSpaces(req.body["location-road"])
+		name : ((req.body.params.name).trim()).toLowerCase(),
+		origin : ((req.body.params.origin).trim()).toLowerCase(),
+		sex :(req.body.params.sex).trim(),
+		countryLoc: lowerCaseNoSpaces(req.body.params.countryLoc),
+		stateLoc : lowerCaseNoSpaces(req.body.params.stateLoc),
+		districtLoc : lowerCaseNoSpaces(req.body.params.districtLoc),
+		roadLoc : lowerCaseNoSpaces(req.body.params.roadLoc)
 	}
 
 	const { name, sex, origin, password } = newUser;
@@ -126,17 +114,26 @@ router.post("/registration", (req, res) => {
 
 	// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
 	// UNNECESSARILY ADDING TO THE DB
-	userModel.findOne({name, password}, function(err, user) {
+	userModel.findOne({name, password}, function(err, userDoc) {
         if (err) {
         	return res(err);
         }
-        if (!user) {
-        	user.save().then(() => {
+        if (!userDoc) {
+        	user.save().then((savedUser) => {
+
+        		loginID = savedUser._id;
+
+        		console.log("LOGIN ID : ", loginID);
+
         		// Set the session right now after database insertion
         		//req.session.userId = name;
 
         	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 
+        } else {
+        	console.log("User already in DB");
+
+        	res.json({userExists : "User already in database"});
         }
     });
 
@@ -145,11 +142,11 @@ router.post("/registration", (req, res) => {
 
 	// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
 	// UNNECESSARILY ADDING TO THE DB
-	loginModel.findOne({name, password}, function(err, user) {
+	loginModel.findOne({name, password}, function(err, userDoc) {
         if (err) {
         	return res(err);
         }
-        if (!user) {
+        if (!userDoc) {
         	login.save().then(() => {
         		console.log('Record Saved');
         	});
@@ -193,7 +190,7 @@ router.post("/registration", (req, res) => {
 
     	loginModel.find({districtLoc : districtLoc}).limit(10).then((logins) => {
 
-			const filterDistrict = logins.map(login => {
+			const filteredDistrict = logins.map(login => {
 				return {
 					id : login._id,
 					name: login.name,
@@ -206,18 +203,19 @@ router.post("/registration", (req, res) => {
 				}
 			});
 
-			const userDetails = { name, sex, origin, districtLoc };	// User Details
-			const filteredOrigin = filteredOrigin;		// 10 users in same origin
-			const filteredDistrict = filterDistrict;	// 10 users in same district
+			const jsonUserDetails = { name, sex, origin, districtLoc, loginID };	// User Details
+			const jsonFilteredOrigin = filteredOrigin;		// 10 users in same origin
+			const jsonFilteredDistrict = filteredDistrict;	// 10 users in same district
 
-			// return res.redirect('/user/roomlist');
-			res.json(userDetails);
+			res.json({
+				jsonUserDetails,
+				jsonFilteredOrigin,
+				jsonFilteredDistrict
+			});
 		});
 
 	});
 
-
- 
 });
 
 // Coming from login form
