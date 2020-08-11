@@ -65,8 +65,9 @@ const Login = ({location}) => {
 
 
 	useEffect (() => {
-		console.log(resUserDetails);
-    	console.log(resUserDetails, resFilteredOrigin, resFilteredDistrict);
+		
+		// console.log(resUserDetails);
+    	// console.log(resUserDetails, resFilteredOrigin, resFilteredDistrict);
 
     	if (chatroomRedir) {	// Protect from firing upon page load
     		const localObj = {

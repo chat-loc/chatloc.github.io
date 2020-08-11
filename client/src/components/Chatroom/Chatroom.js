@@ -18,9 +18,11 @@ import './Chatroom.css';
 import moon from '../../images/moon.svg';
 import sun from '../../images/sun.svg';
 
+
 const Chatroom = ({location}) => {
 
-    const [chatData, setChatData] = useState();
+    const [district, setDistrict] = useState('');
+    const [chatData, setChatData] = useState('');
 
     // SERVER 
     const [resUserDetails, setResUserDetails] = useState([]);
@@ -33,9 +35,25 @@ const Chatroom = ({location}) => {
         let userDetails = ChatData.resUserDetails[0];
         setResUserDetails(userDetails);
 
-        console.log(resUserDetails);
+        let page;
+        let loc = window.location.pathname; // etobicoke-north-district-room
+        let districtLoc = new RegExp(/[A-Za-z-.]+-district-room$/); // regex for district room
 
-    }, []);
+        page = (districtLoc.test(loc)) ? 'districtLoc' : 'origin' ;
+        console.log(page);
+
+        if (page == "districtLoc") {
+            setDistrict(userDetails.districtLoc);  
+        } else {
+            setDistrict(userDetails.origin);
+        }
+        console.log(resUserDetails);
+        console.log(district);
+
+    }, [district, chatData]); // On load event set the data (meaning of empty brackets)
+
+    // Determine if chatroom is for district or origin
+
 
     const capitalise = (word) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
@@ -56,8 +74,8 @@ const Chatroom = ({location}) => {
         <>
 
         <header className="page-header-chat">     
-            <h1>Welcome to {resUserDetails.districtLoc} room</h1>
-            <a class="index-link" href="/"><span class="fa fa-home"></span></a>
+            <h1>Welcome to {district} room</h1>
+            <a className="index-link" href="/"><span className="fa fa-home"></span></a>
         </header>
 
         <section id="chat-pane" className="chat-pane">
