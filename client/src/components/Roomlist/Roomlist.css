@@ -165,7 +165,7 @@ same-origin em {
 		height: 1000px;
 	}
 	100% {
-		transform: scale(1.1) rotate(-2deg);
+		transform: scale(1.2) rotate(-1deg);
 		height: 600px;
 	}
 

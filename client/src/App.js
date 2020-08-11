@@ -11,6 +11,7 @@ import "./styles/nightMode.css";
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import Roomlist from './components/Roomlist/Roomlist';
+import Chatroom from './components/Chatroom/Chatroom';
 
 
 const App = () => (
@@ -18,6 +19,7 @@ const App = () => (
 		<Route path="/" exact component={Login} />	{/*Login Page*/}
 		<Route path="/registration" exact component={Registration} />	{/*Chat Page*/}
 		<Route path="/roomlist" exact component={Roomlist} />	
+		<Route path="/[A-Za-z-.]+-district-room$/" exact component={Chatroom} />	
 	</Router>
 );
 

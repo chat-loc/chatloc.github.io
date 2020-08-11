@@ -83,7 +83,7 @@ router.post("/registration", (req, res) => {
 		Name, sex, origin, and location details for other loggedin users
 	*/
 
-	console.log("REQ BODY PARAMS: ", req.body.params);
+	// console.log("REQ BODY PARAMS: ", req.body.params);
 
 	let loginID = "";
 
@@ -123,7 +123,7 @@ router.post("/registration", (req, res) => {
 
         		loginID = savedUser._id;
 
-        		console.log("LOGIN ID : ", loginID);
+        		// console.log("LOGIN ID : ", loginID);
 
         		// Set the session right now after database insertion
         		//req.session.userId = name;
@@ -131,7 +131,7 @@ router.post("/registration", (req, res) => {
         	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 
         } else {
-        	console.log("User already in DB");
+        	// console.log("User already in DB");
 
         	res.json({userExists : "User already in database"});
         }
@@ -142,14 +142,18 @@ router.post("/registration", (req, res) => {
 
 	// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
 	// UNNECESSARILY ADDING TO THE DB
-	loginModel.findOne({name, password}, function(err, userDoc) {
+	loginModel.findOne({name, origin}, function(err, userDoc) {
+		// console.log("LOGIN MODEL WAS FOUND : ", userDoc);
         if (err) {
         	return res(err);
         }
         if (!userDoc) {
+        	// console.log("NAME AND ORIGIN DO NOT EXIST; GO AHEAD TO SAVE");
         	login.save().then(() => {
         		console.log('Record Saved');
         	});
+        } else {
+        	// console.log("NAME AND ORIGIN EXIST ALREADY");
         }
     });
 
