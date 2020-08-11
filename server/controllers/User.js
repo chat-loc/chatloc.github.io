@@ -78,176 +78,122 @@ router.get("/[A-Za-z-.]+-origin-room$/", (req, res) => {
 //Route to process user's request and data when user submits registration form
 router.post("/registration", (req, res) => {
 
-	// Create object to hold errors
-	/*
-	What errors object will eventual ly look like: 
-	errors = {
-	    noll : {name : true, lastName : true}
-	    regex : {password : 'Should be more than 0 character long'}
-	}
+
+	// Check if login details exist in DB
+	const name = req.body.params.name;
+	const password = req.body.params.password;
+	const email = req.body.params.email;
+	const origin = req.body.params.origin;
+	const sex = req.body.params.sex;
+	const countryLoc = req.body.params.countryLoc;
+	const stateLoc = req.body.params.stateLoc;
+	const districtLoc = req.body.params.districtLoc;
+	const roadLoc = req.body.params.roadLoc;
+
+
+	/*REQUIREMENTS:
+
+		Name, sex and origin for user
+		Name, sex, origin, and location details for other loggedin users
 	*/
-	let errors = {
-	    noll : {},
-	    regex : {}
-	};
-	let loginVals = {};
-	let formValid = true;
 
 	// console.log(req.body);
 
-	let name = ((req.body.name).trim()).toLowerCase();
-	let email = (req.body["email"]).trim();
-	let password = (req.body["password"]);
-	let sex = (req.body["sex"]);
-
-	const regexMail = new RegExp(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9-.]+/);  // kodesektor@rocketmail.com
-	const regexLettersNos = new RegExp(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/); 
-
-	// Stage 1: Check for nulls
-	const checkLength = (key, field, msg) => {
-	    if (field.length < 1 || field.length > 20) {
-	        errors.regex[`${key}`] = msg;
-	    }
-	}  
-
-	const checkRegexLettersNos = (key, field, pattern, msg) => {
-	    if (!pattern.test(field)) {
-	        errors.regex[`${key}`] = msg;
-	    }
+	// Fetch user details from body object
+	const newUser = {
+		name : ((req.body.name).trim()).toLowerCase(), 
+		email : (req.body.email).trim(),
+		password : req.body.password,
+		origin : (req.body.origin).toLowerCase(),
+		sex : req.body.sex
 	}
 
-	checkNull ("name", name, errors, loginVals);
-	checkNull ("email", email, errors, loginVals);
-	checkNull ("password", password, errors, loginVals);
-	checkNull ("sex", sex, errors, loginVals);
-
-	// Check for mail regex
-	const checkRegexMail = (key, field, pattern, msg) => {
-	    if (!pattern.test(field)) {
-	        errors.regex[`${key}`] = msg;
-	    }
+	const newUserLocDetails = {
+		name : ((req.body.name).trim()).toLowerCase(), 
+		origin : (req.body.origin).toLowerCase(),
+		sex : req.body.sex,
+		countryLoc: lowerCaseNoSpaces(req.body["location-country"]),
+		stateLoc : lowerCaseNoSpaces(req.body["location-state"]),
+		districtLoc : lowerCaseNoSpaces(req.body["location-district"]),
+		roadLoc : lowerCaseNoSpaces(req.body["location-road"])
 	}
 
-	// If errors for invalid patterns exist, re-render route to referring page and export errors object
-	if (Object.keys(errors.noll).length > 0) {
-	    formValid = false;
+	const { name, sex, origin, password } = newUser;
+	const districtLoc = newUserLocDetails.districtLoc;
 
-	    res.render('User/registration', {
-	        errors : errors.noll,
-	        loginVals,
-	        page : "form"
-	    });
+	// FIRST SAVE ONLY MINIMUM DATA TO USERS DATABASE (WITHOUT THE LOC DETAILS)
+	const user = new userModel(newUser);
 
-	} else {
+	// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+	// UNNECESSARILY ADDING TO THE DB
+	userModel.findOne({name, password}, function(err, user) {
+        if (err) {
+        	return res(err);
+        }
+        if (!user) {
+        	user.save().then(() => {
+        		// Set the session right now after database insertion
+        		//req.session.userId = name;
 
-        // STAGE 2:
+        	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 
-        // Check password length and pattern
-        checkLength ("passwordLength", password, "Password should be between 6 and 12 characters");
+        }
+    });
 
-        // Check for valid mail
-        checkRegexMail ("mailRegex", email, regexMail, "Mail address is invalid");
+	// THEN SAVE TO LOGIN DATABASE (esp.the location details)
+	const login = new loginModel(newUserLocDetails);	// 'new' is only used for saving, not finding
 
-        // Check for combination of uppercase, lowercase and required nos
-        checkRegexLettersNos ("accountPasswordMix", password, regexLettersNos, "Mix of uppercase, lowercase and numbers required");
-
-        // If errors for invalid patterns exist, re-render route to referring page and export errors object
-        if (Object.keys(errors.regex).length > 0) {
-            formValid = false;
-            res.render("User/registration", {
-                errors : errors.regex,
-                loginVals,
-                page : "form"
-            });
-        } 
-    }
-
-    if (formValid) {
-
-    	/*REQUIREMENTS:
-
-			Name, sex and origin for user
-			Name, sex, origin, and location details for other loggedin users
-    	*/
-
-    	// console.log(req.body);
-
-    	// Fetch user details from body object
-    	const newUser = {
-    		name : ((req.body.name).trim()).toLowerCase(), 
-    		email : (req.body.email).trim(),
-    		password : req.body.password,
-    		origin : (req.body.origin).toLowerCase(),
-    		sex : req.body.sex
-    	}
-
-    	const newUserLocDetails = {
-    		name : ((req.body.name).trim()).toLowerCase(), 
-    		origin : (req.body.origin).toLowerCase(),
-    		sex : req.body.sex,
-    		countryLoc: lowerCaseNoSpaces(req.body["location-country"]),
-    		stateLoc : lowerCaseNoSpaces(req.body["location-state"]),
-    		districtLoc : lowerCaseNoSpaces(req.body["location-district"]),
-    		roadLoc : lowerCaseNoSpaces(req.body["location-road"])
-    	}
-
-    	const { name, sex, origin, password } = newUser;
-    	const districtLoc = newUserLocDetails.districtLoc;
-
-    	// FIRST SAVE ONLY MINIMUM DATA TO USERS DATABASE (WITHOUT THE LOC DETAILS)
-    	const user = new userModel(newUser);
-
-		// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
-		// UNNECESSARILY ADDING TO THE DB
-		userModel.findOne({name, password}, function(err, user) {
-	        if (err) {
-	        	return res(err);
-	        }
-	        if (!user) {
-	        	user.save().then(() => {
-	        		// Set the session right now after database insertion
-	        		req.session.userId = name;
-
-	        	}).catch(err => console.log(`Error while inserting into the data ${err}`));
-
-	        }
-	    });
-
-		// THEN SAVE TO LOGIN DATABASE (esp.the location details)
-		const login = new loginModel(newUserLocDetails);	// 'new' is only used for saving, not finding
-
-		// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
-		// UNNECESSARILY ADDING TO THE DB
-		loginModel.findOne({name, password}, function(err, user) {
-	        if (err) {
-	        	return res(err);
-	        }
-	        if (!user) {
-	        	login.save().then(() => {
-	        		console.log('Record Saved');
-	        	});
-	        }
-	    });
+	// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
+	// UNNECESSARILY ADDING TO THE DB
+	loginModel.findOne({name, password}, function(err, user) {
+        if (err) {
+        	return res(err);
+        }
+        if (!user) {
+        	login.save().then(() => {
+        		console.log('Record Saved');
+        	});
+        }
+    });
 
 
-		// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
+	// NOW LOOP THROUGH ALL USERS FROM THE SAME ORIGIN AND SEND TO ROOMLIST PAGE
 
-	    // The login form has no input for origin and it makes no sense since the 
-	    // user has once filled it in the registration form. However, the 
-	    // origin value is paramount as it is necessary to send the user to the 
-	    // right room. 
+    // The login form has no input for origin and it makes no sense since the 
+    // user has once filled it in the registration form. However, the 
+    // origin value is paramount as it is necessary to send the user to the 
+    // right room. 
 
-	    // If the user is trying to log in, he must have registered. Compare his 
-	    // login details to his registration details to retrieve his 'origin'
+    // If the user is trying to log in, he must have registered. Compare his 
+    // login details to his registration details to retrieve his 'origin'
 
-	    
-    	// Fetch 10 loggedin users from same origin
+    
+	// Fetch 10 loggedin users from same origin
 
-    	console.log(origin);
+	console.log(origin);
 
-    	loginModel.find({origin : origin}).limit(10).then((logins) => {
+	loginModel.find({origin : origin}).limit(10).then((logins) => {
 
-			const filteredOrigin = logins.map(login => {
+		const filteredOrigin = logins.map(login => {
+			return {
+				id : login._id,
+				name: login.name,
+				origin : login.origin, 
+				sex : login.sex.charAt(0),
+				countryLoc : login.countryLoc,
+				stateLoc  : login.stateLoc,
+				districtLoc : login.districtLoc,
+				roadLoc : login.roadLoc
+			}
+		});
+
+		// console.log(filteredOrigin);
+
+		// Fetch 10 loggedin users from same district
+
+    	loginModel.find({districtLoc : districtLoc}).limit(10).then((logins) => {
+
+			const filterDistrict = logins.map(login => {
 				return {
 					id : login._id,
 					name: login.name,
@@ -260,36 +206,17 @@ router.post("/registration", (req, res) => {
 				}
 			});
 
-			// console.log(filteredOrigin);
+			const userDetails = { name, sex, origin, districtLoc };	// User Details
+			const filteredOrigin = filteredOrigin;		// 10 users in same origin
+			const filteredDistrict = filterDistrict;	// 10 users in same district
 
-			// Fetch 10 loggedin users from same district
-
-	    	loginModel.find({districtLoc : districtLoc}).limit(10).then((logins) => {
-
-				const filterDistrict = logins.map(login => {
-					return {
-						id : login._id,
-						name: login.name,
-						origin : login.origin, 
-						sex : login.sex.charAt(0),
-						countryLoc : login.countryLoc,
-						stateLoc  : login.stateLoc,
-						districtLoc : login.districtLoc,
-						roadLoc : login.roadLoc
-					}
-				});
-
-				const userDetails = { name, sex, origin, districtLoc };	// User Details
-				const filteredOrigin = filteredOrigin;		// 10 users in same origin
-				const filteredDistrict = filterDistrict;	// 10 users in same district
-
-				// return res.redirect('/user/roomlist');
-				res.json(userDetails);
-			});
-
+			// return res.redirect('/user/roomlist');
+			res.json(userDetails);
 		});
 
-	}
+	});
+
+
  
 });
 

@@ -330,17 +330,7 @@ const Login = ({location}) => {
 		return html;
 
 	}
-
-	useEffect (() => {
-
-		// geocode("43.6205", "-79.5132");
-
-		// Modal must only appear on login page to avoid error
-		
-		geolocate().then(closeModal(true));
-
-	}, [ENDPOINT, location.search]);
-
+	
 
 	return (
 

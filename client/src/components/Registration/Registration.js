@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { useHistory } from "react-router";
+
+import axios from 'axios';
+
 /* Helps retrieve data from URL*/
 import queryString from 'query-string';
-
-// Import script files here;
-import Script from 'react-script-tag';
 
 // Import Header 
 import Header from '../Header/Header';
@@ -17,11 +18,13 @@ import '../form.css';
 import torontoMap from '../../images/torontoMap.png';
 
 
-
 const Registration = ({location}) => {
 
 	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
 	const mailPattern = new RegExp(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9-.]+/);  // kodesektor@rocketmail.com
+
+	let history = useHistory();
+	const [chatroomRedir, setChatroomRedir] = useState(false);
 
 	const [name, setName] = useState('');
 	const [room, setRoom] = useState('');
@@ -33,6 +36,15 @@ const Registration = ({location}) => {
 	// Form Validation
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [email, setEmail] = useState('');
+	const [origin, setOrigin] = useState('Afghanistan');
+	const [sex, setSex] = useState('Male');
+
+	// Chat Data
+	const [countryLoc, setCountryLoc] = useState('');
+	const [stateLoc, setStateLoc] = useState('');
+	const [districtLoc, setDistrictLoc] = useState('');
+	const [roadLoc, setRoadLoc] = useState('');
 
 	// Set states for the form fields on keyup
 	const [nullFields, setNullFields] = useState({
@@ -52,6 +64,11 @@ const Registration = ({location}) => {
 
 	const [errorDisplay, setErrorDisplay] = useState(false);
 
+	// SERVER 
+	const [resUserDetails, setResUserDetails] = useState([]);
+	const [resFilteredOrigin, setResFilteredOrigin] = useState([]);
+	const [resFilteredDistrict, setResfilteredDistrict] = useState([]);
+
 
 	// On form submit
 	const handleSubmit = e => {
@@ -68,8 +85,48 @@ const Registration = ({location}) => {
 	    	setErrorDisplay(true);	// state to display error on form submit
 	    	console.log(errorDisplay);
 	    	e.preventDefault();		// form goes no where
-	    } else {
-	    	console.log("no errors");
+
+	    } else {e.preventDefault();
+
+	    	console.log (countryLoc, stateLoc);
+	    	// If no errors, check login details. If right, fetch details of the user
+	    	axios.post("http://localhost:5003/user/registration", {
+    			params : {
+    				name : username,
+    				password : password,
+    				email,
+    				origin,
+    				sex,
+
+    				countryLoc,
+    				stateLoc,
+    				districtLoc,
+    				roadLoc
+    			}
+    		})
+	        .then(response => {
+	        	console.log(response);
+
+	        	if (response.data) {
+	        		let jsonUserDetails = (response.data.jsonUserDetails);
+	        		let jsonFilteredOrigin = (response.data.jsonFilteredOrigin);
+	        		let jsonFilteredDistrict = (response.data.jsonFilteredDistrict);
+
+	        		setResUserDetails([jsonUserDetails]);
+	        		setResFilteredOrigin([jsonFilteredOrigin]);
+	        		setResfilteredDistrict([jsonFilteredDistrict]);
+
+	        		setChatroomRedir(true);	// Time to redirect
+    	        }
+
+    	        console.log(resUserDetails);
+	        })
+	        .catch(function (error) {
+	        	console.log(error);
+	        	alert("There's a server error. Try again later");
+	        })
+
+    		console.log("no errors");
 	    }
 
 	};
@@ -87,9 +144,13 @@ const Registration = ({location}) => {
 		name = name.trim();
 		value = value.trim();
 
+		console.log(value);
+
 		switch (name) {
 
 		  	case "name":
+		  		setUsername(value);
+
 	      		if (value.length == 0 ) {	// null fields not allowed
 	      			setNullFields({...nullFields, name : false})
 	      		} else {
@@ -98,6 +159,8 @@ const Registration = ({location}) => {
 		    break;
 
 		  	case "email":
+			  	setEmail(value);
+
 		  		if (!mailPattern.test(value)) {
 		  			setRegexMail(false);
 				} else {
@@ -105,10 +168,25 @@ const Registration = ({location}) => {
 				}
 
 			  	if (value.length == 0 ) {	// null fields not allowed
-			  		setNullFields({...nullFields, password : false})
+			  		setNullFields({...nullFields, email : false})
 			  	} else {
-			  		setNullFields({...nullFields, password : true})
+			  		setNullFields({...nullFields, email : true})
 			  	}
+
+			case "password" : 
+				setPassword(value);
+
+				if (value.length == 0 ) {	// null fields not allowed
+					setNullFields({...nullFields, password : false})
+				} else {
+					setNullFields({...nullFields, password : true})
+				}
+
+			case "origin" : 
+				setOrigin(value);
+
+			case "sex":
+				setSex(value);
 
 		    break;
 
@@ -148,7 +226,7 @@ const Registration = ({location}) => {
 		    if (request.status == 200) { 
 		        // Success!
 		        let data = JSON.parse(request.responseText);
-		        alert("Response went");
+
 		        console.log (data);
 
 		        let components = data.results[0].components;
@@ -174,6 +252,13 @@ const Registration = ({location}) => {
 
 		        const {country, state, city_district, road} = components;
 
+		        setCountryLoc(country);
+		        setStateLoc(state);
+		        setDistrictLoc(city_district);
+		        setRoadLoc(road);
+
+		        // console.log (countryLoc, stateLoc, districtLoc, roadLoc); won't show here; not sure why
+
 		    } else if (request.status <= 500){ 
 
 		    	console.log("Error reaching server");
@@ -196,7 +281,8 @@ const Registration = ({location}) => {
 
 		request.onerror = function() {
 		    // There was a connection error of some sort
-		    console.log("Unable to connect to server");       
+		    console.log("Unable to connect to server"); 
+		    setHideApp(true);
 		    alert ("Unable to connect to server") ;
 		};
 
@@ -220,7 +306,6 @@ const Registration = ({location}) => {
 		}
 		*/
 
-		// Only target for login page
 		setActive(true);
 		// $appClose.classList.add('allowed');	// enable button interaction if user accepts location sharing
 
@@ -228,20 +313,21 @@ const Registration = ({location}) => {
 		const {latitude, longitude} = position.coords;
 
 		geocode(latitude, longitude);
-		
 	}
 
 	// If user declines to share location, interrupt app
 	const errorCallback = (error) => {
 		console.log(error);
-		alert("You have decided not to use Chat-Loc.")
-		/*$page.style.display = 'none';
-		$dialogModal.style.display = 'none';*/
+		alert("You have decided not to use Chat-Loc.");
+		setHideApp(true);
 	}
 
 	// Get location. 
 	async function geolocate () {
-		const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+		//const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+
+		// Use getCurrentPosition for now to limit no of fetches and not surpass daily limit
+		const watchId = navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
 			enableHighAccuracy : true, 	//try best to provide with a high accurate location
 			timeout: 5000
 		});	
@@ -262,12 +348,9 @@ const Registration = ({location}) => {
 
 	useEffect (() => {
 
-		// geocode("43.6205", "-79.5132");
-
 		// Modal must only appear on login page to avoid error
-		// geolocate().then(closeModal(true));
-
-		console.log (nullFields);
+		
+		geolocate().then(closeModal(true));
 
 	}, [ENDPOINT, location.search]);
 
@@ -326,7 +409,8 @@ const Registration = ({location}) => {
 		                </div>
 		                <div className="form-group">
 		                    <label htmlFor="password">Password</label>
-		                    <input type="password" name="password" id="password" className="register-input"/>
+		                    <input type="password" name="password" id="password" className="register-input"
+		                    	onChange={(event) => handleChange(event)}/>
 		                </div>
 
 		                	{((nullFields.email == false) && (errorDisplay == true)) && (
@@ -335,7 +419,8 @@ const Registration = ({location}) => {
 
 		                <div className="form-group">
 		                    <label htmlFor="origin">Country of Origin</label>
-		                    <select id="origin" name="origin" className="register-input" required>
+		                    <select id="origin" name="origin" className="register-input" required
+		                    	onChange={(event) => handleChange(event)}>
 		                       <option value="Afganistan">Afghanistan</option>
 		                       <option value="Albania">Albania</option>
 		                       <option value="Algeria">Algeria</option>
@@ -584,11 +669,14 @@ const Registration = ({location}) => {
 		                       <option value="Zimbabwe">Zimbabwe</option>
 		                    </select>
 		                </div>
+
 		                <div className="form-group register-switch">
-		                    <input type="radio" name="sex" id="female" value="female" className="register-switch-input" />
+		                    <input type="radio" name="sex" id="female" value="female" className="register-switch-input" 
+		                    	onChange={(event) => handleChange(event)}/>
 		                    <label htmlFor="female" className="register-switch-label">Female</label>
 
-		                    <input type="radio" name="sex" id="male" value="male" className="register-switch-input" defaultChecked/>
+		                    <input type="radio" name="sex" id="male" value="male" className="register-switch-input" defaultChecked
+		                    	onChange={(event) => handleChange(event)}/>
 		                    <label htmlFor="male" className="register-switch-label">Male</label>
 		                </div>
 
