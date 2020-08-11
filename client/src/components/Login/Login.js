@@ -21,7 +21,7 @@ import torontoMap from '../../images/torontoMap.png';
 
 const Login = ({location}) => {
 
-	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+	
 	let history = useHistory();
 	const [chatroomRedir, setChatroomRedir] = useState(false);
 
@@ -343,7 +343,7 @@ const Login = ({location}) => {
 			
 			geolocate().then(closeModal(true));
 
-		}, [ENDPOINT, location.search]);
+		}, [location.search]);
 
 	return (
 

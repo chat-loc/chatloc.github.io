@@ -20,7 +20,6 @@ import torontoMap from '../../images/torontoMap.png';
 
 const Registration = ({location}) => {
 
-	const ENDPOINT = "localhost:3000";	// Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
 	const mailPattern = new RegExp(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9-.]+/);  // kodesektor@rocketmail.com
 
 	let history = useHistory();
@@ -88,7 +87,7 @@ const Registration = ({location}) => {
     	}
 
 	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);
-	
+
 
 	// On form submit
 	const handleSubmit = e => {
@@ -384,8 +383,6 @@ const Registration = ({location}) => {
 
 	}
 
-
-
 	useEffect (() => {
 
 		alert('working');
@@ -394,7 +391,7 @@ const Registration = ({location}) => {
 		
 		geolocate().then(closeModal(true));
 
-	}, [ENDPOINT, location.search]);
+	}, [location.search]);
 
 
 	return (

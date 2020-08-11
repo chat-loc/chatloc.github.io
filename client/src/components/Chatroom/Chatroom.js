@@ -21,7 +21,9 @@ import sun from '../../images/sun.svg';
 
 const Chatroom = ({location}) => {
 
-    const [district, setDistrict] = useState('');
+    const [room, setRoom] = useState('');
+    const [name, setName] = useState('');
+
     const [chatData, setChatData] = useState('');
 
     // SERVER 
@@ -29,6 +31,7 @@ const Chatroom = ({location}) => {
 
     useEffect(() => {
 
+        // 1. Fetch use details from local storage (which has been fetched from DB and stored in login / reg page)
         let ChatData = localStorage.getItem("chat-loc");
         ChatData = JSON.parse(ChatData);
 
@@ -39,21 +42,24 @@ const Chatroom = ({location}) => {
         let loc = window.location.pathname; // etobicoke-north-district-room
         let districtLoc = new RegExp(/[A-Za-z-.]+-district-room$/); // regex for district room
 
+        // 2. Determine the room
         page = (districtLoc.test(loc)) ? 'districtLoc' : 'origin' ;
         console.log(page);
 
         if (page == "districtLoc") {
-            setDistrict(userDetails.districtLoc);  
+            setRoom(userDetails.districtLoc);  
         } else {
-            setDistrict(userDetails.origin);
+            setRoom(userDetails.origin);
         }
-        console.log(resUserDetails);
-        console.log(district);
 
-    }, [district, chatData]); // On load event set the data (meaning of empty brackets)
+        setName(userDetails.name);
+
+        console.log(resUserDetails);
+        // console.log(room);
+
+    }, [room, chatData]); // On load event set the data (meaning of empty brackets)
 
     // Determine if chatroom is for district or origin
-
 
     const capitalise = (word) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
@@ -74,7 +80,7 @@ const Chatroom = ({location}) => {
         <>
 
         <header className="page-header-chat">     
-            <h1>Welcome to {district} room</h1>
+            <h1>Welcome to {room} room</h1>
             <a className="index-link" href="/"><span className="fa fa-home"></span></a>
         </header>
 
