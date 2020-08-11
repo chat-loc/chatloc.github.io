@@ -73,19 +73,22 @@ const Registration = ({location}) => {
 		console.log(resUserDetails);
     	console.log(resUserDetails, resFilteredOrigin, resFilteredDistrict);
 
-    	if (chatroomRedir) {	// Protect from firing upon page load
+    	if (chatroomRedir) {	// Protect from redirection upon page load
     		const localObj = {
     			resUserDetails,
     			resFilteredOrigin,
     			resFilteredDistrict
     		}
-    		localStorage.setItem("chat-loc", JSON.stringify(localObj));
+
+    		let localItem = localStorage.removeItem("chat-loc");	// First clear local storage to avoid duplicates
+    			
+    		localStorage.setItem("chat-loc", JSON.stringify(localObj));	// Then save in local storage
 
     		history.push("/roomlist");
     	}
 
 	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);
-
+	
 
 	// On form submit
 	const handleSubmit = e => {
@@ -356,7 +359,7 @@ const Registration = ({location}) => {
 	}
 
 	// Get location. 
-	async function geolocate () {
+	function geolocate () {
 		//const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
 
 		// Use getCurrentPosition for now to limit no of fetches and not surpass daily limit
@@ -372,6 +375,8 @@ const Registration = ({location}) => {
 
 	// Header text
 	const HeaderTxt = () => {
+		alert('working');
+
 	    const html = <div className="header-inner">
 				        <h1>Welcome To Chat<span className="fa fa-link loc"></span>Loc</h1>
 				    </div>;
@@ -379,7 +384,11 @@ const Registration = ({location}) => {
 
 	}
 
+
+
 	useEffect (() => {
+
+		alert('working');
 
 		// Modal must only appear on login page to avoid error
 		

@@ -63,7 +63,7 @@ const Roomlist = ({location}) => {
     const HeaderTxt = () => {
         const html = <div className="header-inner">
                          <h1>Join Logged In Users Now</h1>
-                         <Link className="index-link" href="/"><span className="fa fa-home"></span></Link>
+                         <a className="index-link" href="/"><span className="fa fa-home"></span></a>
                      </div>
         return html;
 

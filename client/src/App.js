@@ -19,7 +19,7 @@ const App = () => (
 		<Route path="/" exact component={Login} />	{/*Login Page*/}
 		<Route path="/registration" exact component={Registration} />	{/*Chat Page*/}
 		<Route path="/roomlist" exact component={Roomlist} />	
-		<Route path="/[A-Za-z-.]+-district-room$/" exact component={Chatroom} />	
+		<Route path={/[A-Za-z-.]+-district-room$/} component={Chatroom} />	
 	</Router>
 );
 

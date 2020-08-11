@@ -74,7 +74,10 @@ const Login = ({location}) => {
     			resFilteredOrigin,
     			resFilteredDistrict
     		}
-    		localStorage.setItem("chat-loc", JSON.stringify(localObj));
+
+    		let localItem = localStorage.removeItem("chat-loc");	// First clear local storage to avoid duplicates
+    			
+    		localStorage.setItem("chat-loc", JSON.stringify(localObj));	// Then save in local storage
 
     		history.push("/roomlist");
     	}
@@ -330,7 +333,16 @@ const Login = ({location}) => {
 		return html;
 
 	}
-	
+
+	useEffect (() => {
+
+			// geocode("43.6205", "-79.5132");
+
+			// Modal must only appear on login page to avoid error
+			
+			geolocate().then(closeModal(true));
+
+		}, [ENDPOINT, location.search]);
 
 	return (
 

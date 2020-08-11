@@ -12,16 +12,34 @@ import queryString from 'query-string';
 import Header from '../Header/Header';
 
 // Import css
-import '../form.css';
+import './Chatroom.css';
 
 // Images
-import torontoMap from '../../images/torontoMap.png';
+import moon from '../../images/moon.svg';
+import sun from '../../images/sun.svg';
 
 const Chatroom = ({location}) => {
 
+    const [chatData, setChatData] = useState();
+
+    // SERVER 
+    const [resUserDetails, setResUserDetails] = useState([]);
+
     useEffect(() => {
 
-    });
+        let ChatData = localStorage.getItem("chat-loc");
+        ChatData = JSON.parse(ChatData);
+
+        let userDetails = ChatData.resUserDetails[0];
+        setResUserDetails(userDetails);
+
+        console.log(resUserDetails);
+
+    }, []);
+
+    const capitalise = (word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
 
     // "etobicoke-north" => "Etobicoke North" (Used for the heading in the chatroom)
     const upperCaseSomeSpaces = (input) => {
@@ -37,37 +55,37 @@ const Chatroom = ({location}) => {
 
         <>
 
-        <header class="page-header">     
-            <h1>Welcome to {{header}} room</h1>
+        <header className="page-header-chat">     
+            <h1>Welcome to {resUserDetails.districtLoc} room</h1>
             <a class="index-link" href="/"><span class="fa fa-home"></span></a>
         </header>
 
-        <section id="chat-pane" class="chat-pane">
+        <section id="chat-pane" className="chat-pane">
 
-            <ol id="messages" class="messages">
-                <ol id="old-messages" class="old messages">
+            <ol id="messages" className="messages">
+                <ol id="old-messages" className="old messages">
                 
                 </ol>
             </ol>
-            <!-- Form: Input field, send button, 
-                     Messages: ordered list -->
-            <form id="sendMsg" class="sendMsg">
-                <input type="text" class="msgTextbox" id="txt" autocomplete="off" placeholder="Type message..." name="txt" autofocus>
-                <input type="hidden" name="userRoom" id="userName" value="{{user}}">    {{!-- User name --}}
-                <input type="hidden" name="userRoom" id="userRoom" value="{{room}}">    {{!-- Passed to server to fetch chats for particular room --}}
-                <input type="submit" name="" id="Send" value="Send" class="button-send-message">
+
+            <form id="sendMsg" className="sendMsg">
+                <input type="text" className="msgTextbox" id="txt" autoComplete="off" placeholder="Type message..." name="txt" autoFocus/>
+                <input type="hidden" name="userRoom" id="userName" value=""/>    
+                <input type="hidden" name="userRoom" id="userRoom" value=""/>    
+                <input type="submit" name="" id="Send" value="Send" className="button-send-message"/>
             </form>
+
         </section>
 
-        <div>
+        <section className="light-setting">
             <p id="moon">
-                <img src="/images/moon.svg" alt="" class="night-mode-image">
+                <img src={moon} alt="night time chat" className="night-mode-image"/>
             </p>
 
-            <p id="sun" class="hidden">
-                <img src="/images/sun.svg" alt="" class="night-mode-image">
+            <p id="sun" className="hidden">
+                <img src={sun} alt="day time chat" className="night-mode-image"/>
             </p>
-        </div>
+        </section>
 
         </>
 
