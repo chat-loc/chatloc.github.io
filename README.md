@@ -1,5 +1,4 @@
 LINK : https://chatloc.herokuapp.com/  
-LINK FOR REACT INTERFACE : https://github.com/amnsworld/chatapp-react
 
 # chat-loc.github.io
 This app aims to solve the need of connecting users, who share the same nationality and ethnicity and happen to be in close proximity.
