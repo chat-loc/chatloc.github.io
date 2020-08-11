@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { useHistory } from "react-router";
 
-
 import axios from 'axios';
 
 /* Helps retrieve data from URL*/
@@ -70,12 +69,14 @@ const Login = ({location}) => {
     	console.log(resUserDetails, resFilteredOrigin, resFilteredDistrict);
 
     	if (chatroomRedir) {	// Protect from firing upon page load
-    		history.push({
-						  pathname: "/roomlist",
-						  resUserDetails,
-						  resFilteredOrigin,
-						  resFilteredDistrict
-						});
+    		const localObj = {
+    			resUserDetails,
+    			resFilteredOrigin,
+    			resFilteredDistrict
+    		}
+    		localStorage.setItem("chat-loc", JSON.stringify(localObj));
+
+    		history.push("/roomlist");
     	}
 
 	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);

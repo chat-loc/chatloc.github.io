@@ -306,7 +306,9 @@ router.post("/login", (req, res) => {
 
  	userModel.findOne({name, password}).then(login => {
 
- 		console.log("Login : ", login);
+ 		//console.log("Login : ", login);
+
+ 		const loginID = login._id;	// User's ID; not really used for much
 
  		if (login) {
 
@@ -405,7 +407,7 @@ router.post("/login", (req, res) => {
 						
 						// Fetch 10 loggedin users from same district
 
-						const jsonUserDetails = { name, sex, origin, districtLoc };	// User Details
+						const jsonUserDetails = { name, sex, origin, districtLoc, loginID };	// User Details
 						const jsonFilteredOrigin = filteredOrigin;		// 10 users in same origin
 						const jsonFilteredDistrict = filteredDistrict;	// 10 users in same district
 
