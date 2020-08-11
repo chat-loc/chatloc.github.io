@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useHistory } from "react-router";
 
 import axios from 'axios';
+import io from 'socket.io-client';
 
 /* Helps retrieve data from URL*/
 import queryString from 'query-string';
@@ -18,6 +19,7 @@ import './Chatroom.css';
 import moon from '../../images/moon.svg';
 import sun from '../../images/sun.svg';
 
+let socket;
 
 const Chatroom = ({location}) => {
 
@@ -30,6 +32,8 @@ const Chatroom = ({location}) => {
     const [resUserDetails, setResUserDetails] = useState([]);
 
     useEffect(() => {
+
+        const ENDPOINT = "localhost:5003";  // Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
 
         // 1. Fetch use details from local storage (which has been fetched from DB and stored in login / reg page)
         let ChatData = localStorage.getItem("chat-loc");
@@ -56,6 +60,20 @@ const Chatroom = ({location}) => {
 
         console.log(resUserDetails);
         // console.log(room);
+
+
+        // SOCKET 
+
+        // This is the PORT no (endpoint) of the index.js file in "server" dir
+        socket = io(ENDPOINT);  
+
+        // When user joins, emit message
+        socket.emit('join', { name, room });
+
+        return () => {  /*A return is basically unmounting*/
+            socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
+            socket.off();
+        }
 
     }, [room, chatData]); // On load event set the data (meaning of empty brackets)
 
