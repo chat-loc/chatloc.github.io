@@ -72,7 +72,7 @@ server.listen(PORT, () => {
 
 
 // PREPARE CHAT SCHEMA
-const chatSchema = new Schema({
+const locChatSchema = new Schema({
     name : {
         type : String
     },
@@ -91,7 +91,7 @@ const chatSchema = new Schema({
 /*For every Schema you create (create a schema per collection), you must also create a model
 The model will allow you to perform CRUD operations on a given collection*/
 
-const mongoChat = mongoose.model('Chat', chatSchema);
+const mongoChat = mongoose.model('locChat', locChatSchema);
 
 // const tech = io.of('/tech');	// Do not use this if working in React. (Doesn't work)
 

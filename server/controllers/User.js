@@ -24,62 +24,6 @@ const upperCaseSomeSpaces = (input) => {
     return val.join(" ");
 }
 
-/*
-	UNDERSTANDING THE PARAMETERS PASSED IN THE ROUTERS
-
-	1. userDetails: Contains name, sex, origin, districtLoc, saved in a session. DistrictLoc will be used to 
-		create button leading to District room. While origin, to create button leading to Origin room. Both in
-		"roomlist" page.
-
-	2. filteredOrigin: Fetched users (from login DB) who share the same origin as user and the details fetched 
-		are : id, name, origin, sex, countryLoc, stateLoc, districtLoc, and roadLoc. Also saved in a session.
-		Will be used to display a list of name, sex and road of users who share the same origin in "roomlist" page
-
-	3. filteredDistrict: Fetched users (from login DB) who share the same district as user (not necessarily the 
-		origin) and the details fetched are: id, name, origin, sex, countryLoc, stateloc, districtLoc, roadLoc
-
-	4. page: Used for knowing what stylesheet should be linked to format the appropriate page (on main)
-*/
-
-
-router.get("/-district-room$/", (req, res) => {
-	// Session either get or post. (So there may be no need for query strings)
-	const { jsonUserDetails, jsonFilteredOrigin, jsonFilteredDistrict } = req.session;
-
-	console.log("WHAT REQ.SESSION CONTAINS AT CHATROOM ROUTE: ", req.session);
-
-	res.json({error: "some error"});
-
-	/*res.json({
-		jsonUserDetails,
-		jsonFilteredDistrict,
-		jsonFilteredOrigin,
-
-		user : (jsonUserDetails.name).toLowerCase(),
-		room : (jsonUserDetails.origin).toLowerCase(),
-		header : (upperCaseSomeSpaces(jsonUserDetails.disttrictLoc))
-	});*/
-});
-
-router.get("/-origin-room$/",  (req, res) => {
-	// console.log(req.session) There is still access to 
-	// Session either get or post. (So there may be no need for query strings)
-	const { jsonUserDetails, jsonFilteredOrigin, jsonFilteredDistrict } = req.session;
-	console.log (req.session)
-
-	res.json({
-		jsonUserDetails,
-		jsonFilteredDistrict,
-		jsonFilteredOrigin,
-
-		user : (jsonUserDetails.name).toLowerCase(),
-		room : (jsonUserDetails.origin).toLowerCase(),
-		header : (upperCaseSomeSpaces(jsonUserDetails.origin))
-	});
-});
-
-
-
 //Route to process user's request and data when user submits registration form
 router.post("/registration", (req, res) => {
 
