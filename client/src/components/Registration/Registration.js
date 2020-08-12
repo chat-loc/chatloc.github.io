@@ -28,6 +28,8 @@ const Registration = ({location}) => {
 	const [name, setName] = useState('');
 	const [room, setRoom] = useState('');
 
+	const [loginID, setLoginID] = useState('');
+
 	const [active, setActive] = useState(false);	// For button
 	const [hideApp, setHideApp] = useState(false);	// For entire app
 	const [hideModal, setHideModal] = useState(false);	// For modal
@@ -79,11 +81,11 @@ const Registration = ({location}) => {
     			resFilteredDistrict
     		}
 
-    		let localItem = localStorage.removeItem("chat-loc");	// First clear local storage to avoid duplicates
+    		let localItem = sessionStorage.removeItem(loginID);	// First clear local storage to avoid duplicates
     			
-    		localStorage.setItem("chat-loc", JSON.stringify(localObj));	// Then save in local storage
+    		sessionStorage.setItem(loginID, JSON.stringify(localObj));	// Then save in local storage
 
-    		history.push("/roomlist");
+    		history.push(`/roomlist?id=${loginID}`)
     	}
 
 	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);
@@ -139,6 +141,8 @@ const Registration = ({location}) => {
 	        		setResUserDetails([jsonUserDetails]);
 	        		setResFilteredOrigin([jsonFilteredOrigin]);
 	        		setResfilteredDistrict([jsonFilteredDistrict]);
+
+	        		setLoginID(response.data.jsonUserDetails.loginID);
 
 	        		if (response.data.userExists) {
 	        			alert ("User already registered. Try again or proceed to Login");

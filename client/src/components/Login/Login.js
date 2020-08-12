@@ -28,6 +28,8 @@ const Login = ({location}) => {
 	const [name, setName] = useState('');
 	const [room, setRoom] = useState('');
 
+	const [loginID, setLoginID] = useState('');
+
 	const [active, setActive] = useState(false);	// For button
 	const [hideApp, setHideApp] = useState(false);	// For entire app
 	const [hideModal, setHideModal] = useState(false);	// For modal
@@ -76,11 +78,13 @@ const Login = ({location}) => {
     			resFilteredDistrict
     		}
 
-    		let localItem = localStorage.removeItem("chat-loc");	// First clear local storage to avoid duplicates
-    			
-    		localStorage.setItem("chat-loc", JSON.stringify(localObj));	// Then save in local storage
+    		console.log(loginID);
 
-    		history.push("/roomlist");
+    		let localItem = sessionStorage.removeItem("chat-loc");	// First clear local storage to avoid duplicates
+    			
+    		sessionStorage.setItem(loginID, JSON.stringify(localObj));	// Then save in local storage
+
+    		history.push(`/roomlist?id=${loginID}`);
     	}
 
 	}, [resUserDetails, resFilteredOrigin, resFilteredDistrict, chatroomRedir]);
@@ -126,6 +130,8 @@ const Login = ({location}) => {
 	        		setResUserDetails([jsonUserDetails]);
 	        		setResFilteredOrigin([jsonFilteredOrigin]);
 	        		setResfilteredDistrict([jsonFilteredDistrict]);
+
+	        		setLoginID(response.data.jsonUserDetails.loginID);
 
 	        		setChatroomRedir(true);	// Time to redirect
     	        }

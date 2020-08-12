@@ -36,9 +36,19 @@ const Roomlist = ({location}) => {
     const [userOrigin, setUserOrigin] = useState('');
     const [userSex, setUserSex] = useState('');
 
+    const [loginID, setLoginID] = useState('');
+
 
     useEffect (() => {
-        chatLoc = localStorage.getItem("chat-loc");
+
+        let queryID = window.location.search;
+        let params = new URLSearchParams(queryID);
+        
+        queryID = params.get('id');
+
+        setLoginID(queryID);
+
+        chatLoc = sessionStorage.getItem(queryID);
         chatLoc = JSON.parse(chatLoc);
 
         console.log(chatLoc);
@@ -57,7 +67,7 @@ const Roomlist = ({location}) => {
         console.log(chatLoc);
         console.log (resUserDetails);
 
-    },[chatParams]);    // Using objects may set off infinite loop here
+    },[chatParams, loginID]);    // Using objects may set off infinite loop here
 
       // Header text
     const HeaderTxt = () => {
@@ -101,10 +111,10 @@ const Roomlist = ({location}) => {
             <section className="roomlist">
 
                 <section className="rooms">
-                    <a id="districtLink" className="room-btn btn" href={`${userDistrict}-district-room`}>
+                    <a id="districtLink" className="room-btn btn" href={`chatroom?id=${loginID}&room=${userDistrict}-district-room`}>
                           {upperCaseSomeSpaces(userDistrict)} chatroom</a>
                           <hr/>
-                    <a id="chatroomLink" className="room-btn btn" href={`${userOrigin}-origin-room`}>
+                    <a id="chatroomLink" className="room-btn btn" href={`chatroom?id=${loginID}&room=${userOrigin}-origin-room`}>
                           {upperCaseSomeSpaces(userOrigin)} chatroom
                     </a>
                 </section>

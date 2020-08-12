@@ -9,8 +9,10 @@ import io from 'socket.io-client';
 /* Helps retrieve data from URL*/
 import queryString from 'query-string';
 
-// Import Header 
+// Import Header, Messages
 import Header from '../Header/Header';
+import Messages from '../Messages/Messages';
+
 
 // Import css
 import './Chatroom.css';
@@ -26,29 +28,48 @@ const Chatroom = ({location}) => {
     const [room, setRoom] = useState('');
     const [name, setName] = useState('');
 
+    const [socketName, setSocketName] = useState('');
+    const [socketConnected, setSocketConnected] = useState('');
+    const [socketJustConnectedMsg, setSocketJustConnectedMsg] = useState('');
+
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
+
     const [chatData, setChatData] = useState('');
 
     // SERVER 
     const [resUserDetails, setResUserDetails] = useState([]);
 
+    const ENDPOINT = "localhost:5003";  // Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+
+    const [loginID, setLoginID] = useState('');
+
+
     useEffect(() => {
 
-        const ENDPOINT = "localhost:5003";  // Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+        let queryID = window.location.search;
+        let params = new URLSearchParams(queryID);
+        
+        queryID = params.get('id');
+
+        setLoginID(queryID);
+
+        // console.log(queryID);
 
         // 1. Fetch use details from local storage (which has been fetched from DB and stored in login / reg page)
-        let ChatData = localStorage.getItem("chat-loc");
+        let ChatData = sessionStorage.getItem(queryID);
         ChatData = JSON.parse(ChatData);
 
         let userDetails = ChatData.resUserDetails[0];
         setResUserDetails(userDetails);
 
         let page;
-        let loc = window.location.pathname; // etobicoke-north-district-room
+        let loc = params.get('room'); // etobicoke-north-district-room
         let districtLoc = new RegExp(/[A-Za-z-.]+-district-room$/); // regex for district room
 
         // 2. Determine the room
         page = (districtLoc.test(loc)) ? 'districtLoc' : 'origin' ;
-        console.log(page);
+        // console.log(page);
 
         if (page == "districtLoc") {
             setRoom(userDetails.districtLoc);  
@@ -59,7 +80,7 @@ const Chatroom = ({location}) => {
         setName(userDetails.name);
 
         console.log(resUserDetails);
-        // console.log(room);
+        console.log(room);
 
 
         // SOCKET 
@@ -70,15 +91,40 @@ const Chatroom = ({location}) => {
         // When user joins, emit message
         socket.emit('join', { name, room });
 
-        return () => {  /*A return is basically unmounting*/
-            socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
-            socket.off();
-        }
+        // return () => {  /*A return is basically unmounting*/
+            //socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
+            //socket.off();
+        //}
 
-    }, [room, chatData]); // On load event set the data (meaning of empty brackets)
+    }, [room, chatData, ENDPOINT, loginID]); // On load event set the data (meaning of empty brackets)
+
+
+    /*Response from server after user sends a message: Add the chat to the 'messages' state array*/
+    // message: {user: users.name, text: message}
+    useEffect(() => {
+
+        // 1b. Coming back from server: 'user-connected' is an exposed function coming from BROADCAST.EMIT in server.
+        // Thus, when user makes connection, display a welcome message to the others
+
+        socket.on("user-connected", (data) => { // this message is local to this response and not the state message
+
+            console.log(data);  // name: kodesektor, connected: connected
+
+            const {name, connected} = data;
+
+            setSocketName(name);
+            setSocketConnected(connected);
+            setSocketJustConnectedMsg(`${name} just ${connected}`);
+
+            setMessages([...messages, "this"]);    
+
+            console.log(messages);
+
+        }); 
+
+    }, [messages]);
 
     // Determine if chatroom is for district or origin
-
     const capitalise = (word) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
     }
@@ -100,14 +146,21 @@ const Chatroom = ({location}) => {
         <header className="page-header-chat">     
             <h1>Welcome to {room} room</h1>
             <a className="index-link" href="/"><span className="fa fa-home"></span></a>
+            {socketJustConnectedMsg ?
+                <span className="just-connected">{socketJustConnectedMsg}</span>
+                : ''}
         </header>
 
         <section id="chat-pane" className="chat-pane">
 
             <ol id="messages" className="messages">
                 <ol id="old-messages" className="old messages">
-                
                 </ol>
+                {messages.map((message, i) => 
+                    <li className="joined" key={i}>
+                        
+                    </li>
+                )}
             </ol>
 
             <form id="sendMsg" className="sendMsg">
@@ -132,7 +185,6 @@ const Chatroom = ({location}) => {
         </>
 
     )
-
 
 }
 

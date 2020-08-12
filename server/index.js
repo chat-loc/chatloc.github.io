@@ -1,9 +1,15 @@
 const express = require('express');
+let session = require("express-session");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 require('dotenv').config({path:"./config/key.env"});
+
+// Import router objects
+const userRoutes = require("./controllers/User");
+const generalRoutes = require("./controllers/General");
+
 
 const app = express();
 app.use(cors());
@@ -18,16 +24,37 @@ app.use(bodyParser.urlencoded({extended:false}));
 //express static middleware
 app.use(express.static("public"));
 
+app.use((req,res,next)=>{
+
+    if(req.query.method=="PUT")
+    {
+        req.method="PUT"
+    }
+
+    else if(req.query.method=="DELETE")
+    {
+        req.method="DELETE"
+    }
+
+    next();
+})
+
 const Schema = mongoose.Schema;
 
-
-// Import router objects
-const userRoutes = require("./controllers/User");
-const generalRoutes = require("./controllers/General");
+app.use(session({
+    secret: "chat-loc-2020-09-04",
+    resave: true,
+    saveUninitialized: true,
+    name: 'sid',
+      cookie: {
+        maxAge: 600000
+      }
+}));
 
 // User Routes
 app.use("/", generalRoutes);
 app.use("/user", userRoutes);
+
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true}
@@ -66,7 +93,7 @@ The model will allow you to perform CRUD operations on a given collection*/
 
 const mongoChat = mongoose.model('Chat', chatSchema);
 
-const tech = io.of('/tech');	// Do not use this if working in React. (Doesn't work)
+// const tech = io.of('/tech');	// Do not use this if working in React. (Doesn't work)
 
 const users = {};	// DB for temporary usage
 
@@ -91,7 +118,11 @@ io.on('connection', function (socket) {
 	    // obtained from data. i.e. data.name 
 	    if (data.name != null) {
 
-	        socket.broadcast.emit('user-connected', data);
+	    	console.log("DATA FROM USER: ", data);
+	    	console.log("DATA LOADED : ", data.room);
+
+	    	// Emit message to other 
+	    	socket.broadcast.to(data.room).emit('user-connected', {...data, ...{connected : "connected"}});
 
 	        // 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
 	        // the others because the code will be personalised for them too. Thus, as you're the
@@ -104,7 +135,7 @@ io.on('connection', function (socket) {
 	            }
 	            console.log("Load old messages for newly joined user");
 	            socket.emit("load-chats", docs);
-	            console.log("THE DOCS : ", docs);
+	            // console.log("THE DOCS : ", docs);
 	        });
 
 	        // console.log(users[socket.id]);
