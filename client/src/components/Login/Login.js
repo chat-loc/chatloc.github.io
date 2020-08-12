@@ -5,9 +5,6 @@ import { useHistory } from "react-router";
 
 import axios from 'axios';
 
-/* Helps retrieve data from URL*/
-import queryString from 'query-string';
-
 // Import Header 
 import Header from '../Header/Header';
 
@@ -24,9 +21,6 @@ const Login = ({location}) => {
 	
 	let history = useHistory();
 	const [chatroomRedir, setChatroomRedir] = useState(false);
-
-	const [name, setName] = useState('');
-	const [room, setRoom] = useState('');
 
 	const [loginID, setLoginID] = useState('');
 
@@ -80,7 +74,7 @@ const Login = ({location}) => {
 
     		console.log(loginID);
 
-    		let localItem = localStorage.removeItem(loginID);	// First clear local storage to avoid duplicates
+    		localStorage.removeItem(loginID);	// First clear local storage to avoid duplicates
     			
     		localStorage.setItem(loginID, JSON.stringify(localObj));	// Then save in local storage
 
@@ -166,7 +160,7 @@ const Login = ({location}) => {
 		  	case "name":
 		  		setUsername(value);
 
-	      		if (value.length == 0 ) {	// null fields not allowed
+	      		if (value.length === 0 ) {	// null fields not allowed
 	      			setNullFields({...nullFields, name : false})
 	      		} else {
 	      			setNullFields({...nullFields, name : true})
@@ -176,7 +170,7 @@ const Login = ({location}) => {
 		  	case "password":
 		  		setPassword(value);
 
-			  	if (value.length == 0 ) {	// null fields not allowed
+			  	if (value.length === 0 ) {	// null fields not allowed
 			  		setNullFields({...nullFields, password : false})
 			  	} else {
 			  		setNullFields({...nullFields, password : true})
@@ -216,7 +210,7 @@ const Login = ({location}) => {
 		    // see full list of possible response codes:
 		    // https://opencagedata.com/api#codes
 
-		    if (request.status == 200) { 
+		    if (request.status === 200) { 
 		        // Success!
 		        let data = JSON.parse(request.responseText);
 
@@ -322,7 +316,7 @@ const Login = ({location}) => {
 		//const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
 
 		// Use getCurrentPosition for now to limit no of fetches and not surpass daily limit
-		const watchId = navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+		navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
 			enableHighAccuracy : true, 	//try best to provide with a high accurate location
 			timeout: 5000
 		});	
@@ -360,7 +354,7 @@ const Login = ({location}) => {
 		*/}
 		<Header headerTxt={HeaderTxt()} /> 
 
-		<main className={`login-main ${hideApp == true ? ' hide-app' : ''}`}>
+		<main className={`login-main ${hideApp === true ? ' hide-app' : ''}`}>
 		    
 		    <div className="main-wrapper">
 		    
@@ -386,7 +380,7 @@ const Login = ({location}) => {
 		                    <input type="text" name="name" id="name" className="register-input"  
 		                    	onChange={(event) => handleChange(event)} required/>
 
-		                    {((nullFields.name == false) && (errorDisplay == true)) && (
+		                    {((nullFields.name === false) && (errorDisplay === true)) && (
 		                    	<span className="error">Username should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                                  )}
 		                </div>
@@ -396,7 +390,7 @@ const Login = ({location}) => {
 		                    <input type="password" name="password" id="password" className="register-input" 
 		                    	onChange={(event) => handleChange(event)} required/>
 
-		                    {((nullFields.password == false) && (errorDisplay == true)) && (
+		                    {((nullFields.password === false) && (errorDisplay === true)) && (
 		                    	<span className="error">Password should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                                  )}
 		                </div>
@@ -425,11 +419,11 @@ const Login = ({location}) => {
 		
 		</main>
 
-		<section className={`hide dialog-app-modal ${hideApp == true ? ' hide-app' : ''} ${hideModal == true ? ' hide' : ''}`} id="dialog-app-modal">
+		<section className={`hide dialog-app-modal ${hideApp === true ? ' hide-app' : ''} ${hideModal === true ? ' hide' : ''}`} id="dialog-app-modal">
 		    <div className="modal-app-alert">
 		        <h3 className="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
 
-		        <button id="app-alert-close" className={`app-alert-close ${active == true ? ' allowed' : ''}`}>Close</button>
+		        <button id="app-alert-close" className={`app-alert-close ${active === true ? ' allowed' : ''}`}>Close</button>
 
 		    </div>
 		</section>

@@ -1,12 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-
-import { useHistory } from "react-router";
-
-import axios from 'axios';
-
-/* Helps retrieve data from URL*/
-import queryString from 'query-string';
 
 // Import Header 
 import Header from '../Header/Header';
@@ -21,10 +13,6 @@ import ontario from '../../images/toronto.png';
 
 const Roomlist = ({location}) => {
 
-    const ENDPOINT = "localhost:3000";  // Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
-    let chatLoc = "";   // will hold all chatLoc details
-    let result = "";
-
     // CHAT DATA
     const [chatParams, setChatParams] = useState(false);
     const [resUserDetails, setResUserDetails] = useState([]);     // [{ districtLoc: "etobicoke-north", name: "luigi", sex: "male", origin: "italy"}]
@@ -32,9 +20,7 @@ const Roomlist = ({location}) => {
     const [resFilteredDistrict, setResfilteredDistrict] = useState([]); // [{id:0303, name: "maiken", origin: "georgia"} ... 9 more rows]
 
     const [userDistrict, setUserDistrict] = useState('');
-    const [userName, setUserName] = useState('');
     const [userOrigin, setUserOrigin] = useState('');
-    const [userSex, setUserSex] = useState('');
 
     const [loginID, setLoginID] = useState('');
 
@@ -48,6 +34,9 @@ const Roomlist = ({location}) => {
 
         setLoginID(queryID);
 
+
+        let chatLoc = "";   // will hold all chatLoc details
+
         chatLoc = localStorage.getItem(queryID);
         chatLoc = JSON.parse(chatLoc);
 
@@ -60,9 +49,7 @@ const Roomlist = ({location}) => {
         setChatParams(true);
 
         setUserDistrict(chatLoc.resUserDetails[0].districtLoc);
-        setUserName(chatLoc.resUserDetails[0].name);
         setUserOrigin(chatLoc.resUserDetails[0].origin);
-        setUserSex(chatLoc.resUserDetails[0].sex);
 
         console.log(chatLoc);
         console.log (resUserDetails);
@@ -81,10 +68,6 @@ const Roomlist = ({location}) => {
 
     const capitalise = (word) => {
       return word.charAt(0).toUpperCase() + word.slice(1);
-    }
-
-    const lowerCaseNoSpaces = (input) => {
-      return ((input).toLowerCase()).replace(" ", "-");
     }
 
     const upperCaseSomeSpaces = (input) => {

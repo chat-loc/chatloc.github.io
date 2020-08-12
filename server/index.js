@@ -121,14 +121,16 @@ io.on('connection', function (socket) {
 	    	console.log("DATA FROM USER: ", data);
 	    	console.log("DATA LOADED : ", data.room);
 
+	    	console.log("---Data on Join : ", {...data, ...{connected : "connected"}});
+
 	    	// Emit message to other 
-	    	socket.broadcast.to(data.room).emit('user-connected', {...data, ...{connected : "connected"}});
+	    	socket.broadcast.to(data.room).emit("user-connected", {...data, ...{connected : "connected"}});
 
 	        // 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
 	        // the others because the code will be personalised for them too. Thus, as you're the
 	        // user now, so they are on their machine. 
 
-	        mongoChat.find({room : `${data.room}-room`}, function(err, docs) {
+	        /*mongoChat.find({room : `${data.room}-room`}, function(err, docs) {
 	            console.log("FETCH FROM THIS ROOM IN DB: ", data.room);
 	            if (err) {
 	                throw err;
@@ -136,7 +138,7 @@ io.on('connection', function (socket) {
 	            console.log("Load old messages for newly joined user");
 	            socket.emit("load-chats", docs);
 	            // console.log("THE DOCS : ", docs);
-	        });
+	        });*/
 
 	        // console.log(users[socket.id]);
 	        // load chats to only yourself (privately) to avoid displaying 2ce
@@ -148,7 +150,7 @@ io.on('connection', function (socket) {
 
 	// 2a. Form has been submitted on client.
 	// Display message to everyone, including yourself
-	socket.on('message', (data) => {
+	/*socket.on('message', (data) => {
 	    console.log ("---Message emitted (User): " + users[socket.id]);
 	    console.log ("---Message to be saved: " + data.message);
 	    console.log ("---Room to be saved: " + data.room);
@@ -157,13 +159,13 @@ io.on('connection', function (socket) {
 	    newMsg.save(function (err, chatDoc) {
 	        if (err) throw err;
 	        if (chatDoc) {
-	        	io.to(data.room).emit('message', { message: data.message, name: users[socket.id]});
 	        	console.log("RECORD HAS BEEN SAVED TO MONGODB");
 	        }
+	        io.in(data.room).emit('sendMessage', { message: data.message, name: users[socket.id]});
 	    });
 
 	    
-	});
+	});*/
 
 
 });

@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
-import { useHistory } from "react-router";
-
-import axios from 'axios';
 import io from 'socket.io-client';
 
-/* Helps retrieve data from URL*/
-import queryString from 'query-string';
-
-// Import Header, Messages
-import Header from '../Header/Header';
 import Messages from '../Messages/Messages';
 
 
@@ -30,7 +21,7 @@ const Chatroom = ({location}) => {
 
     const [socketName, setSocketName] = useState('');
     const [socketConnected, setSocketConnected] = useState('');
-    const [socketJustConnectedMsg, setSocketJustConnectedMsg] = useState('');
+    const [socketJustConnectedMsg, setSocketJustConnectedMsg] = useState(false);
 
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
@@ -67,6 +58,8 @@ const Chatroom = ({location}) => {
         
         queryID = params.get('id');
 
+        console.log("QUERY ID : ", queryID);
+
         setLoginID(queryID);
 
         // console.log(queryID);
@@ -75,8 +68,12 @@ const Chatroom = ({location}) => {
         let ChatData = localStorage.getItem(queryID);
         ChatData = JSON.parse(ChatData);
 
+        console.log("CHATDATA : ", ChatData);
+
         let userDetails = ChatData.resUserDetails[0];
         setResUserDetails(userDetails);
+
+        console.log("USER DETAILS : ", userDetails);
 
         let page;
         let loc = params.get('room'); // etobicoke-north-district-room
@@ -86,16 +83,23 @@ const Chatroom = ({location}) => {
         page = (districtLoc.test(loc)) ? 'districtLoc' : 'origin' ;
         // console.log(page);
 
+        let name = userDetails.name;
+        let room = "";
+
         if (page == "districtLoc") {
-            setRoom(userDetails.districtLoc);  
+            room = userDetails.districtLoc;
+            setRoom(room);  
         } else {
-            setRoom(userDetails.origin);
+            room = userDetails.origin;
+            setRoom(room);
         }
 
-        setName(userDetails.name);
+        setName(name);
 
-        console.log(resUserDetails);
-        console.log(room);
+        console.log(name);
+
+        console.log(userDetails);
+        console.log("ROOM AND NAME TO BE PASSED TO SOCKET : ", name, room);
 
 
         // SOCKET 
@@ -106,22 +110,26 @@ const Chatroom = ({location}) => {
         // When user joins, emit message
         socket.emit('join', { name, room });
 
-        // return () => {  /*A return is basically unmounting*/
-            //socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
+        //return () => {  /*A return is basically unmounting*/
+           // socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
             //socket.off();
         //}
 
-    }, [room, chatData, ENDPOINT, loginID]); // On load event set the data (meaning of empty brackets)
+    }, [ENDPOINT, location.search]); // On load event set the data (meaning of empty brackets)
 
 
     /*Response from server after user sends a message: Add the chat to the 'messages' state array*/
     // message: {user: users.name, text: message}
     useEffect(() => {
 
+
         // 1b. Coming back from server: 'user-connected' is an exposed function coming from BROADCAST.EMIT in server.
         // Thus, when user makes connection, display a welcome message to the others
 
         socket.on("user-connected", (data) => { // this message is local to this response and not the state message
+
+            alert('works');
+
 
             console.log(data);  // name: kodesektor, connected: connected
 
@@ -134,14 +142,22 @@ const Chatroom = ({location}) => {
 
         }); 
 
-    }, [messages]);
+        socket.on('sendMessage', (data) => {
+            console.log(data);
+            setMessages([...messages, data.message]);
+        });
+        console.log(messages);
+        alert ('yup');
+
+
+    }, [message]);
+
+
 
     // When user types and submits, pass in message
     const sendMessage = (event) => {
 
         event.preventDefault();
-
-        console.log(message);
 
         if (message) {
 
@@ -161,20 +177,6 @@ const Chatroom = ({location}) => {
         }
     }
 
-    /*Response from server after user sends a message: Add the chat to the 'messages' state array*/
-    // message: {user: users.name, text: message}
-    useEffect(() => {
-        console.log(messages);
-
-        socket.on('message', (data) => {
-            console.log(data);
-            setMessages([...messages, data.message]);
-        });
-
-        console.log(messages)
-
-    }, [messages]);
-
 
     return (
 
@@ -193,8 +195,7 @@ const Chatroom = ({location}) => {
             <ol id="messages" className="messages">
                 <ol id="old-messages" className="old messages">
                 </ol>
-
-             
+                <Messages messages={messages} name={name}/>
             </ol>
 
             <form id="sendMsg" className="sendMsg">

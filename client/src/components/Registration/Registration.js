@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useHistory } from "react-router";
 
 import axios from 'axios';
-
-/* Helps retrieve data from URL*/
-import queryString from 'query-string';
 
 // Import Header 
 import Header from '../Header/Header';
@@ -24,9 +20,6 @@ const Registration = ({location}) => {
 
 	let history = useHistory();
 	const [chatroomRedir, setChatroomRedir] = useState(false);
-
-	const [name, setName] = useState('');
-	const [room, setRoom] = useState('');
 
 	const [loginID, setLoginID] = useState('');
 
@@ -81,7 +74,7 @@ const Registration = ({location}) => {
     			resFilteredDistrict
     		}
 
-    		let localItem = localStorage.removeItem(loginID);	// First clear local storage to avoid duplicates
+    		localStorage.removeItem(loginID);	// First clear local storage to avoid duplicates
     			
     		localStorage.setItem(loginID, JSON.stringify(localObj));	// Then save in local storage
 
@@ -99,7 +92,7 @@ const Registration = ({location}) => {
 	    const fields = Object.values(nullFields);	// Fetch form field state
 	    // console.log(fields);
 
-	    const errors = fields.some(field => field == false);	// any empty field?
+	    const errors = fields.some(field => field === false);	// any empty field?
 	    // console.log (errors);
 
 	    if (errors || !regexMail) {
@@ -184,7 +177,7 @@ const Registration = ({location}) => {
 		  	case "name":
 		  		setUsername(value);
 
-	      		if (value.length == 0 ) {	// null fields not allowed
+	      		if (value.length === 0 ) {	// null fields not allowed
 	      			setNullFields({...nullFields, name : false})
 	      		} else {
 	      			setNullFields({...nullFields, name : true})
@@ -200,7 +193,7 @@ const Registration = ({location}) => {
 					setRegexMail(true);
 				}
 
-			  	if (value.length == 0 ) {	// null fields not allowed
+			  	if (value.length === 0 ) {	// null fields not allowed
 			  		setNullFields({...nullFields, email : false})
 			  	} else {
 			  		setNullFields({...nullFields, email : true})
@@ -211,7 +204,7 @@ const Registration = ({location}) => {
 			case "password" : 
 				setPassword(value);
 
-				if (value.length == 0 ) {	// null fields not allowed
+				if (value.length === 0 ) {	// null fields not allowed
 					setNullFields({...nullFields, password : false})
 				} else {
 					setNullFields({...nullFields, password : true})
@@ -262,7 +255,7 @@ const Registration = ({location}) => {
 		    // see full list of possible response codes:
 		    // https://opencagedata.com/api#codes
 
-		    if (request.status == 200) { 
+		    if (request.status === 200) { 
 		        // Success!
 		        let data = JSON.parse(request.responseText);
 
@@ -366,7 +359,7 @@ const Registration = ({location}) => {
 		//const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
 
 		// Use getCurrentPosition for now to limit no of fetches and not surpass daily limit
-		const watchId = navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+		navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
 			enableHighAccuracy : true, 	//try best to provide with a high accurate location
 			timeout: 5000
 		});	
@@ -434,7 +427,7 @@ const Registration = ({location}) => {
 		                    <input type="text" name="name" id="name" className="register-input"
 		                    	onChange={(event) => handleChange(event)}/>
 
-	                    	{((nullFields.name == false) && (errorDisplay == true)) && (
+	                    	{((nullFields.name === false) && (errorDisplay === true)) && (
 	                    		<span className="error">Username should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 	                    	              )}
 		                </div>
@@ -443,11 +436,11 @@ const Registration = ({location}) => {
 		                    <input type="email" name="email" id="email" className="register-input" pattern="^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,6})$"
 		                    	onChange={(event) => handleChange(event)}/>
 
-		                    {((nullFields.email == false) && (errorDisplay == true)) && (
+		                    {((nullFields.email === false) && (errorDisplay === true)) && (
 		                    	<span className="error">Email should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                                  )}
 
-		                    {((nullFields.email == true) && (regexMail == false) && (errorDisplay == true)) && (
+		                    {((nullFields.email === true) && (regexMail === false) && (errorDisplay === true)) && (
 		                    	<span className="error">Email does not match pattern <span className="fa fa-exclamation-triangle"></span></span>
 		                                  )}
 		                </div>
@@ -457,7 +450,7 @@ const Registration = ({location}) => {
 		                    	onChange={(event) => handleChange(event)}/>
 		                </div>
 
-		                	{((nullFields.password == false) && (errorDisplay == true)) && (
+		                	{((nullFields.password === false) && (errorDisplay === true)) && (
 		                		<span className="error">Password should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                	              )}
 
@@ -745,11 +738,11 @@ const Registration = ({location}) => {
 		
 		</main>
 
-		<section className={`hide dialog-app-modal ${hideApp == true ? ' hide-app' : ''} ${hideModal == true ? ' hide' : ''}`} id="dialog-app-modal">
+		<section className={`hide dialog-app-modal ${hideApp === true ? ' hide-app' : ''} ${hideModal === true ? ' hide' : ''}`} id="dialog-app-modal">
 		    <div className="modal-app-alert">
 		        <h3 className="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
 
-		        <button id="app-alert-close" className={`app-alert-close ${active == true ? ' allowed' : ''}`}>Close</button>
+		        <button id="app-alert-close" className={`app-alert-close ${active === true ? ' allowed' : ''}`}>Close</button>
 
 		    </div>
 		</section>
