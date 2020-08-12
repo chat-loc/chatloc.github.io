@@ -48,7 +48,7 @@ const Roomlist = ({location}) => {
 
         setLoginID(queryID);
 
-        chatLoc = sessionStorage.getItem(queryID);
+        chatLoc = localStorage.getItem(queryID);
         chatLoc = JSON.parse(chatLoc);
 
         console.log(chatLoc);

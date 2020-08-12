@@ -45,6 +45,21 @@ const Chatroom = ({location}) => {
     const [loginID, setLoginID] = useState('');
 
 
+    // Determine if chatroom is for district or origin
+    const capitalise = (word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
+    // "etobicoke-north" => "Etobicoke North" (Used for the heading in the chatroom)
+    const upperCaseSomeSpaces = (input) => {
+        let val = (input).split('-');
+        val.forEach((elm, index, theArray)=> {
+            theArray[index] = capitalise(elm);
+        });
+        return val.join(" ");
+    }
+
+
     useEffect(() => {
 
         let queryID = window.location.search;
@@ -57,7 +72,7 @@ const Chatroom = ({location}) => {
         // console.log(queryID);
 
         // 1. Fetch use details from local storage (which has been fetched from DB and stored in login / reg page)
-        let ChatData = sessionStorage.getItem(queryID);
+        let ChatData = localStorage.getItem(queryID);
         ChatData = JSON.parse(ChatData);
 
         let userDetails = ChatData.resUserDetails[0];
@@ -115,28 +130,50 @@ const Chatroom = ({location}) => {
             setSocketName(name);
             setSocketConnected(connected);
             setSocketJustConnectedMsg(`${name} just ${connected}`);
-
-            setMessages([...messages, "this"]);    
-
             console.log(messages);
 
         }); 
 
     }, [messages]);
 
-    // Determine if chatroom is for district or origin
-    const capitalise = (word) => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
+    // When user types and submits, pass in message
+    const sendMessage = (event) => {
+
+        event.preventDefault();
+
+        console.log(message);
+
+        if (message) {
+
+            const userDetails =  {
+                message,
+                room,
+                name
+            };
+
+            /*Emit message stored in 'message' state (from onchange event on the input) 
+            to socket*/
+            socket.emit('message', userDetails);
+
+            setMessage('');
+            console.log(message);
+           
+        }
     }
 
-    // "etobicoke-north" => "Etobicoke North" (Used for the heading in the chatroom)
-    const upperCaseSomeSpaces = (input) => {
-        let val = (input).split('-');
-        val.forEach((elm, index, theArray)=> {
-            theArray[index] = capitalise(elm);
+    /*Response from server after user sends a message: Add the chat to the 'messages' state array*/
+    // message: {user: users.name, text: message}
+    useEffect(() => {
+        console.log(messages);
+
+        socket.on('message', (data) => {
+            console.log(data);
+            setMessages([...messages, data.message]);
         });
-        return val.join(" ");
-    }
+
+        console.log(messages)
+
+    }, [messages]);
 
 
     return (
@@ -156,18 +193,20 @@ const Chatroom = ({location}) => {
             <ol id="messages" className="messages">
                 <ol id="old-messages" className="old messages">
                 </ol>
-                {messages.map((message, i) => 
-                    <li className="joined" key={i}>
-                        
-                    </li>
-                )}
+
+             
             </ol>
 
             <form id="sendMsg" className="sendMsg">
-                <input type="text" className="msgTextbox" id="txt" autoComplete="off" placeholder="Type message..." name="txt" autoFocus/>
+                <input type="text" className="msgTextbox" id="txt" autoComplete="off" placeholder="Type message..." name="txt" autoFocus    
+                        value={message}
+                        onChange={({ target: { value } }) => setMessage(value)}
+                        onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}/>
+
                 <input type="hidden" name="userRoom" id="userName" value=""/>    
                 <input type="hidden" name="userRoom" id="userRoom" value=""/>    
-                <input type="submit" name="" id="Send" value="Send" className="button-send-message"/>
+                <input type="submit" name="" id="Send" value="Send" className="button-send-message"
+                        onClick={e => sendMessage(e)}/>
             </form>
 
         </section>

@@ -108,7 +108,7 @@ io.on('connection', function (socket) {
 	    user on form 'submit' event.*/
 	    users[socket.id] = data.name; 
 
-	    // console.log(users);
+	    console.log("USER'S NAME, VIA SOCKET ID WAS SAVED : ", users[socket.id]);
 	    users['room'] = data.room;
 
 	    // 1d. Broadcast a welcome message (Load chats when user first joins room)
@@ -141,10 +141,29 @@ io.on('connection', function (socket) {
 	        // console.log(users[socket.id]);
 	        // load chats to only yourself (privately) to avoid displaying 2ce
 
-	       // socket.emit('load-chats', { chats : chatsDB["chats"], otherName: users[socket.id], moniker: data.userMoniker });
-	       // tech.in(data.room).emit('load-chats', { chats : chatsDB[data.room], user : users[socket.id], otherName: users[socket.id]});
 	    }
 
 	});
+
+
+	// 2a. Form has been submitted on client.
+	// Display message to everyone, including yourself
+	socket.on('message', (data) => {
+	    console.log ("---Message emitted (User): " + users[socket.id]);
+	    console.log ("---Message to be saved: " + data.message);
+	    console.log ("---Room to be saved: " + data.room);
+
+	    const newMsg = new mongoChat({msg : data.message, room: data.room, name : users[socket.id]});
+	    newMsg.save(function (err, chatDoc) {
+	        if (err) throw err;
+	        if (chatDoc) {
+	        	io.to(data.room).emit('message', { message: data.message, name: users[socket.id]});
+	        	console.log("RECORD HAS BEEN SAVED TO MONGODB");
+	        }
+	    });
+
+	    
+	});
+
 
 });

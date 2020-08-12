@@ -80,9 +80,9 @@ const Login = ({location}) => {
 
     		console.log(loginID);
 
-    		let localItem = sessionStorage.removeItem("chat-loc");	// First clear local storage to avoid duplicates
+    		let localItem = localStorage.removeItem(loginID);	// First clear local storage to avoid duplicates
     			
-    		sessionStorage.setItem(loginID, JSON.stringify(localObj));	// Then save in local storage
+    		localStorage.setItem(loginID, JSON.stringify(localObj));	// Then save in local storage
 
     		history.push(`/roomlist?id=${loginID}`);
     	}
