@@ -110,10 +110,10 @@ const Chatroom = ({location}) => {
         // When user joins, emit message
         socket.emit('join', { name, room });
 
-        //return () => {  /*A return is basically unmounting*/
-           // socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
-            //socket.off();
-        //}
+        return () => {  /*VERY IMPORTANT. SERVER SOCKET WILL NOT RESPOND WITHOUT THIS*/
+            socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
+            socket.off();
+        }
 
     }, [ENDPOINT, location.search]); // On load event set the data (meaning of empty brackets)
 
@@ -122,16 +122,14 @@ const Chatroom = ({location}) => {
     // message: {user: users.name, text: message}
     useEffect(() => {
 
-
         // 1b. Coming back from server: 'user-connected' is an exposed function coming from BROADCAST.EMIT in server.
         // Thus, when user makes connection, display a welcome message to the others
 
         socket.on("user-connected", (data) => { // this message is local to this response and not the state message
 
-            alert('works');
+            // alert("User Connected");
 
-
-            console.log(data);  // name: kodesektor, connected: connected
+            console.log("DATA FROM 'user-connected' RESPONSE : ", data);  // name: kodesektor, connected: connected
 
             const {name, connected} = data;
 
@@ -143,14 +141,13 @@ const Chatroom = ({location}) => {
         }); 
 
         socket.on('sendMessage', (data) => {
-            console.log(data);
-            setMessages([...messages, data.message]);
+            console.log("DATA FROM 'sendMessage' RESPONSE : ", data);   // { message: "Don't try this at thome", name: "luigi" }
+
+            setMessages([...messages, data]);  
         });
-        console.log(messages);
-        alert ('yup');
+        console.log(messages);  // [ {message: "Dont try this at home", name: "anna" }]
 
-
-    }, [message]);
+    }, [message, messages]);
 
 
 
@@ -172,7 +169,7 @@ const Chatroom = ({location}) => {
             socket.emit('message', userDetails);
 
             setMessage('');
-            console.log(message);
+            console.log(messages);
            
         }
     }

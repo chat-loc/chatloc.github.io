@@ -1,25 +1,21 @@
 import React from 'react';
 
-const Messages = ( messages, name ) => {
+import Message from './Message/Message'
 
-	//const {message, name} = messages;
+const Messages = ( {messages, name} ) => {
 
-	console.log(messages, name);
-
-	let isSentByCurrentUser = false;
+	console.log(messages);	// [{ message: "here we go again", name: "anna" }]
+	console.log(name);	// anna
 	
 	return (
-
 		<>
-			
+		{messages.map((message, i) => 
+			<li key={i}>
+				<Message messages={message} you={name} />
+			</li>
+		)}
 		</>
-
 	)
-
-/*	if(user === trimmedName) {
-	    isSentByCurrentUser = true;
-	}*/
-
 };
 
 export default Messages;

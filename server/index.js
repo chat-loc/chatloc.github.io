@@ -150,7 +150,7 @@ io.on('connection', function (socket) {
 
 	// 2a. Form has been submitted on client.
 	// Display message to everyone, including yourself
-	/*socket.on('message', (data) => {
+	socket.on('message', (data) => {
 	    console.log ("---Message emitted (User): " + users[socket.id]);
 	    console.log ("---Message to be saved: " + data.message);
 	    console.log ("---Room to be saved: " + data.room);
@@ -161,11 +161,15 @@ io.on('connection', function (socket) {
 	        if (chatDoc) {
 	        	console.log("RECORD HAS BEEN SAVED TO MONGODB");
 	        }
+
+	        // Send data back in this format {message: message, name: name}
 	        io.in(data.room).emit('sendMessage', { message: data.message, name: users[socket.id]});
+
+	        // io.to(user.room).emit('message', {user: user.name, text: message});	
 	    });
 
 	    
-	});*/
+	});
 
 
 });
