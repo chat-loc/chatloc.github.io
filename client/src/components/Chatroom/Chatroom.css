@@ -79,6 +79,7 @@ body {
 	position: static;
 	font-size: .7em;
 	opacity: .7;
+	margin-left: 20px;
 	text-shadow: 1px 0 1px rgba(255,255,255,.3);
 }
 .messages .chat-stamp {

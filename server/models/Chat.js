@@ -11,6 +11,9 @@ const chatSchema = new Schema({
     msg : {
         type : String
     },
+    room : {
+        type : String
+    },
     dateCreated : {
         type : Date,
         default : Date.now()
@@ -20,6 +23,6 @@ const chatSchema = new Schema({
 /*For every Schema you create (create a schema per collection), you must also create a model
 The model will allow you to perform CRUD operations on a given collection*/
 
-const chatModel = mongoose.model('User', chatSchema);
+const chatModel = mongoose.model('locchats', chatSchema);
 
 module.exports = chatModel;

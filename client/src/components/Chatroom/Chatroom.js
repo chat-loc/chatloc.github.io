@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-
 import io from 'socket.io-client';
+import axios from 'axios';
+import Moment from 'react-moment';
+
 
 // Import css
 import './Chatroom.css';
@@ -24,6 +26,8 @@ const Chatroom = ({location}) => {
     const [messages, setMessages] = useState([]);
 
     const [chatData, setChatData] = useState('');
+    const [loadedChats, setLoadedChats] = useState([]);
+
 
     // SERVER 
     const [resUserDetails, setResUserDetails] = useState([]);
@@ -109,17 +113,42 @@ const Chatroom = ({location}) => {
         setName(name);
 
         console.log(name);
-
         console.log(userDetails);
         console.log("ROOM AND NAME TO BE PASSED TO SOCKET : ", name, room);
 
+
+        //  4. When page loads, fetch old chats from DB. Socket.io is not an ideal because user first has to emit
+        // Old chats are needed right away; thus axios is the solution 
+
+        /*[ { dateCreated: 2020-08-12T06:50:32.969Z,
+            _id: 5f33991968a20d423c818989,
+            msg: 'test this',
+            room: 'etobicoke-north',
+            name: 'andrea',
+            __v: 0 },
+            ...
+        ]*/
+
+        axios.post("http://localhost:5003/user/chatroom", {
+            params : {
+                room
+            }
+        })
+        .then(response => {
+            console.log(response.data);
+
+            if (response.data) {
+                setLoadedChats (response.data);  // Load all chats
+            }
+
+        });
 
         // SOCKET 
 
         // This is the PORT no (endpoint) of the index.js file in "server" dir
         socket = io(ENDPOINT);  
 
-        // When user joins, emit message
+        // 3. When user joins, emit message
         socket.emit('join', { name, room });
 
         return () => {  /*VERY IMPORTANT. SERVER SOCKET WILL NOT RESPOND WITHOUT THIS*/
@@ -129,12 +158,9 @@ const Chatroom = ({location}) => {
 
     }, [ENDPOINT, location.search]); // On load event set the data (meaning of empty brackets)
 
-
-    /*Response from server after user sends a message: Add the chat to the 'messages' state array*/
-    // message: {user: users.name, text: message}
     useEffect(() => {
 
-        // 1b. Coming back from server: 'user-connected' is an exposed function coming from BROADCAST.EMIT in server.
+        // 5. Coming back from server: 'user-connected' is an exposed function coming from BROADCAST.EMIT in server.
         // Thus, when user makes connection, display a welcome message to the others
 
         socket.on("user-connected", (data) => { // this message is local to this response and not the state message
@@ -152,6 +178,9 @@ const Chatroom = ({location}) => {
 
         }); 
 
+        /* 6. Response from server after user sends a message: Add the chat to the 'messages' state array*/
+        // message: {user: users.name, text: message}
+
         socket.on('sendMessage', (data) => {
             // {message: message, timestamp: 2020-08-14T01:28:24.913Z, datetime: 2020-08-14T03:37:53.389+00:00, name: name}
             console.log("DATA FROM 'sendMessage' RESPONSE : ", data);   
@@ -160,17 +189,19 @@ const Chatroom = ({location}) => {
 
             let chatname = (data.name);
 
+            console.log(name, chatname);
+
             if (name !== chatname) {    // Notify if other users send chat
                 const chatSound = new Audio ("/sounds/swiftly.mp3");    // keep sound in public folder to work
                 chatSound.play();
             }
 
-            setMessages([...messages, data]);  
+            setMessages([...messages, data]);  // Add new chat to existing current chats
         });
+
         console.log(messages);  // [ {message: "Dont try this at home", name: "anna" }]
 
     }, [message, messages]);
-
 
 
     // When user types and submits, pass in message
@@ -195,6 +226,10 @@ const Chatroom = ({location}) => {
         }
     }
 
+
+    // When user hits a message, the 'message' state changes which refreshes this component 
+    // thus the current chats (saved in 'messages' array, get called)
+
     const displayChats = () => {
 
         let msg;
@@ -206,8 +241,32 @@ const Chatroom = ({location}) => {
             return (
                 <li key={i}>
                     <div className={msg}>
-                        <span className="user">{name}: </span>{message.message} 
-                        <time class='chat-stamp' datetime='{message.datetime}'>{message.timestamp}</time>
+                        <span className="user">{message.name} : </span>{message.msg} 
+                        <time class='chat-stamp' datetime={message.datetime}>{message.timestamp}</time>
+                    </div>
+                </li>
+            )
+        })
+
+        return chatMsg;
+    }
+
+
+    const loadChats = () => {
+
+        let msg;
+
+        const chatMsg = loadedChats.map((message, i) => {
+
+            msg = (name === message.name) ? "msg" : "other-msg"; 
+
+            return (
+                <li key={i}>
+                    <div className={msg}>
+                        <span className="user">{message.name} : </span>{message.msg} 
+                        <Moment className="chat-stamp" format="LLL">
+                            {message.dateCreated}
+                        </Moment>
                     </div>
                 </li>
             )
@@ -232,8 +291,7 @@ const Chatroom = ({location}) => {
         <section id="chat-pane" className="chat-pane">
 
             <ol id="messages" className="messages">
-                <ol id="old-messages" className="old messages">
-                </ol>
+                <ol id="old-messages" className="old messages">{loadChats()}</ol>
                 {displayChats()}
             </ol>
 

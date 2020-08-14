@@ -5,6 +5,7 @@ let router = express.Router();
 // Import schema
 const userModel = require("../models/User");
 const loginModel = require("../models/Login");
+const chatModel = require("../models/Chat");
 
 const capitalise = (word) => {
 	return word.charAt(0).toUpperCase() + word.slice(1);
@@ -306,6 +307,43 @@ router.post("/login", (req, res) => {
  		}
 
  	})
+
+});
+
+router.post("/chatroom", (req, res) => {
+
+	const room = req.body.params.room;
+
+	console.log("---Chatroom : ", room);
+
+	// 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
+	// the others because the code will be personalised for them too. Thus, as you're the
+	// user now, so they are on their machine. 
+
+	chatModel.find({room}, function(err, chats) {
+	    if (err) {
+	        throw err;
+	    }
+
+	    if (chats) {
+
+	    	console.log("---Load old messages for newly joined user", chats);
+	    	/*[ { dateCreated: 2020-08-12T06:50:32.969Z,
+	    	    _id: 5f33991968a20d423c818989,
+	    	    msg: 'test this',
+	    	    room: 'etobicoke-north',
+	    	    name: 'andrea',
+	    	    __v: 0 },
+
+	    	    ...
+
+	    	]*/
+
+	    	res.json(chats);	// send chats
+
+	    }
+
+	});
 
 });
 

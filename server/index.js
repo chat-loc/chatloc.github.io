@@ -112,24 +112,11 @@ io.on('connection', function (socket) {
 	    	console.log("DATA FROM USER: ", data);
 	    	console.log("DATA LOADED : ", data.room);
 
+	    	// { name: 'sofia', room: 'etobicoke-north', connected: 'connected' }
 	    	console.log("---Data on Join : ", {...data, ...{connected : "connected"}});
 
 	    	// Emit message to other 
 	    	socket.broadcast.to(data.room).emit("user-connected", {...data, ...{connected : "connected"}});
-
-	        // 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
-	        // the others because the code will be personalised for them too. Thus, as you're the
-	        // user now, so they are on their machine. 
-
-	        /*mongoChat.find({room : `${data.room}-room`}, function(err, docs) {
-	            console.log("FETCH FROM THIS ROOM IN DB: ", data.room);
-	            if (err) {
-	                throw err;
-	            }
-	            console.log("Load old messages for newly joined user");
-	            socket.emit("load-chats", docs);
-	            // console.log("THE DOCS : ", docs);
-	        });*/
 
 	        // console.log(users[socket.id]);
 	        // load chats to only yourself (privately) to avoid displaying 2ce
@@ -165,7 +152,7 @@ io.on('connection', function (socket) {
 
 	        // The timestamp is formatted for humans while the datetime is passed for the <date datetime attribute
 	        // in the HTML 
-	        io.in(data.room).emit('sendMessage', { message: data.message, timestamp, name: users[socket.id]});
+	        io.in(data.room).emit('sendMessage', { msg: data.message, timestamp, name: users[socket.id]});
 
 	        // io.to(user.room).emit('message', {user: user.name, text: message});	
 	    });
