@@ -59,6 +59,7 @@ body {
 	padding-bottom: 50px;
 	background: var(--red);
 	color: #fff;
+	z-index: 100;
 	animation: fadeOut 4s .1s ease-in forwards;
 }
 

@@ -174,6 +174,26 @@ const Chatroom = ({location}) => {
         }
     }
 
+    const displayChats = () => {
+
+        let msg;
+
+        const chatMsg = messages.map((message, i) => {
+
+            msg = (name === message.name) ? "msg" : "other-msg"; 
+
+            return (
+                <li key={i}>
+                    <div className={msg}>
+                        <span className="user">{name}: </span>{message.message}
+                    </div>
+                </li>
+            )
+        })
+
+        return chatMsg;
+    }
+
 
     return (
 
@@ -192,7 +212,7 @@ const Chatroom = ({location}) => {
             <ol id="messages" className="messages">
                 <ol id="old-messages" className="old messages">
                 </ol>
-                <Messages messages={messages} name={name}/>
+                {displayChats()}
             </ol>
 
             <form id="sendMsg" className="sendMsg">

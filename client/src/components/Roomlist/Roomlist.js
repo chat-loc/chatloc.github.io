@@ -10,7 +10,6 @@ import './Roomlist.css';
 import ontario from '../../images/toronto.png';
 
 
-
 const Roomlist = ({location}) => {
 
     // CHAT DATA
