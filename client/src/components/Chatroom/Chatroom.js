@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import io from 'socket.io-client';
 
-import Messages from '../Messages/Messages';
-
-
 // Import css
 import './Chatroom.css';
 
@@ -50,6 +47,21 @@ const Chatroom = ({location}) => {
         return val.join(" ");
     }
 
+    const timeHumanise = () => {
+        let date = new Date();  // get date now
+        let day = date.getDate();   // get day
+
+        let hr = date.getHours();   // hours
+        let min = date.getMinutes();    // mins
+        let sec = date.getSeconds();    // secs 
+
+        let AMPM = (hr >= 12) ? 'PM' : 'AM';
+
+        // Prefix with '0' if second is less than 10
+        (sec) = (sec.toString().length == '1') ? ('0' + sec) : sec;
+        (min) = (min.toString().length == '1') ? ('0' + min) : min;
+        return `<time class='chat-stamp' datetime='${hr}-${min}-${sec}'>${hr}:${min}:${sec} ${AMPM}</time>`;
+    }
 
     useEffect(() => {
 
@@ -185,7 +197,8 @@ const Chatroom = ({location}) => {
             return (
                 <li key={i}>
                     <div className={msg}>
-                        <span className="user">{name}: </span>{message.message}
+                        <span className="user">{name}: </span>{message.message} 
+                        <time class='chat-stamp' datetime='{message.datetime}'>{message.timestamp}</time>;
                     </div>
                 </li>
             )

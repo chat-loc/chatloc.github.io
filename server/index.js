@@ -1,5 +1,5 @@
 const express = require('express');
-let session = require("express-session");
+const moment = require("moment");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -41,15 +41,6 @@ app.use((req,res,next)=>{
 
 const Schema = mongoose.Schema;
 
-app.use(session({
-    secret: "chat-loc-2020-09-04",
-    resave: true,
-    saveUninitialized: true,
-    name: 'sid',
-      cookie: {
-        maxAge: 600000
-      }
-}));
 
 // User Routes
 app.use("/", generalRoutes);
@@ -155,15 +146,26 @@ io.on('connection', function (socket) {
 	    console.log ("---Message to be saved: " + data.message);
 	    console.log ("---Room to be saved: " + data.room);
 
+	    let timestamp, datetime;
+
 	    const newMsg = new mongoChat({msg : data.message, room: data.room, name : users[socket.id]});
 	    newMsg.save(function (err, chatDoc) {
 	        if (err) throw err;
 	        if (chatDoc) {
+	        	datetime = chatDoc.dateCreated;
+	        	timestamp = moment(datetime).format("lll");	// Jun 9 2014 9:32 PM
+
+	        	console.log("---Datetime: ", datetime);
+	        	console.log("---Timestamp : ", timestamp);
 	        	console.log("RECORD HAS BEEN SAVED TO MONGODB");
 	        }
 
-	        // Send data back in this format {message: message, name: name}
-	        io.in(data.room).emit('sendMessage', { message: data.message, name: users[socket.id]});
+	        // Send data back in this format :
+	        // {message: message, timestamp: 2020-08-14T01:28:24.913Z, datetime: 2020-08-14T03:37:53.389+00:00, name: name}
+
+	        // The timestamp is formatted for humans while the datetime is passed for the <date datetime attribute
+	        // in the HTML 
+	        io.in(data.room).emit('sendMessage', { message: data.message, timestamp, name: users[socket.id]});
 
 	        // io.to(user.room).emit('message', {user: user.name, text: message});	
 	    });
