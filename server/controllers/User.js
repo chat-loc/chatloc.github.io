@@ -1,6 +1,5 @@
 /*********************USER ROUTES***************************/
 const express = require('express');
-let session = require('express-session');
 let router = express.Router();
 
 // Import schema
@@ -73,9 +72,6 @@ router.post("/registration", (req, res) => {
         		loginID = savedUser._id;
 
         		// console.log("LOGIN ID : ", loginID);
-
-        		// Set the session right now after database insertion
-        		//req.session.userId = name;
 
         	}).catch(err => console.log(`Error while inserting into the data ${err}`));
 
@@ -161,12 +157,6 @@ router.post("/registration", (req, res) => {
 			const jsonUserDetails = { name, sex, origin, districtLoc, loginID };	// User Details
 			const jsonFilteredOrigin = filteredOrigin;		// 10 users in same origin
 			const jsonFilteredDistrict = filteredDistrict;	// 10 users in same district
-
-			req.session.jsonUserDetails = jsonUserDetails;
-			req.session.jsonFilteredOrigin = jsonFilteredOrigin;
-			req.session.jsonFilteredDistrict = jsonFilteredDistrict;
-
-
 
 			res.json({
 				jsonUserDetails,
@@ -296,14 +286,6 @@ router.post("/login", (req, res) => {
 						const jsonUserDetails = { name, sex, origin, districtLoc, loginID };	// User Details
 						const jsonFilteredOrigin = filteredOrigin;		// 10 users in same origin
 						const jsonFilteredDistrict = filteredDistrict;	// 10 users in same district
-
-						console.log("THE DAMNED SESSION NOW : ", req);
-
-						req.session.jsonUserDetails = jsonUserDetails;
-						req.session.jsonFilteredOrigin = jsonFilteredOrigin;
-						req.session.jsonFilteredDistrict = jsonFilteredDistrict;
-
-						console.log("SESSION AT LOGIN: ", req.session);
 
 						res.json({
 							jsonUserDetails,

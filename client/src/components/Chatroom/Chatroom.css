@@ -16,6 +16,7 @@ body {
     text-align: center;
     padding: 20px;
     background-color: rgba(26, 10, 56, 1);
+    z-index: 2;
 }
 .page-header-chat h1 {
 	order: 1;
@@ -59,7 +60,7 @@ body {
 	padding-bottom: 50px;
 	background: var(--red);
 	color: #fff;
-	z-index: 100;
+	z-index: 1;
 	animation: fadeOut 4s .1s ease-in forwards;
 }
 
@@ -294,12 +295,7 @@ form {
 	0% {
 		opacity : 1;
 	}
-	95%{
-		opacity: 0;
-		top: 90%;
-	}
 	100% {
-		top: -90%;
 		opacity: 0;
 	}
 }

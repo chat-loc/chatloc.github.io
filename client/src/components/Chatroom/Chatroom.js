@@ -153,7 +153,17 @@ const Chatroom = ({location}) => {
         }); 
 
         socket.on('sendMessage', (data) => {
-            console.log("DATA FROM 'sendMessage' RESPONSE : ", data);   // { message: "Don't try this at thome", name: "luigi" }
+            // {message: message, timestamp: 2020-08-14T01:28:24.913Z, datetime: 2020-08-14T03:37:53.389+00:00, name: name}
+            console.log("DATA FROM 'sendMessage' RESPONSE : ", data);   
+
+            // Chat sound for only user
+
+            let chatname = (data.name);
+
+            if (name !== chatname) {    // Notify if other users send chat
+                const chatSound = new Audio ("/sounds/swiftly.mp3");    // keep sound in public folder to work
+                chatSound.play();
+            }
 
             setMessages([...messages, data]);  
         });
@@ -178,10 +188,9 @@ const Chatroom = ({location}) => {
 
             /*Emit message stored in 'message' state (from onchange event on the input) 
             to socket*/
-            socket.emit('message', userDetails);
+            socket.emit('message', userDetails);    // will respond 'sendMessage'
 
-            setMessage('');
-            console.log(messages);
+            setMessage(''); // clear state that holds message; in other words, clear textbox
            
         }
     }
@@ -198,7 +207,7 @@ const Chatroom = ({location}) => {
                 <li key={i}>
                     <div className={msg}>
                         <span className="user">{name}: </span>{message.message} 
-                        <time class='chat-stamp' datetime='{message.datetime}'>{message.timestamp}</time>;
+                        <time class='chat-stamp' datetime='{message.datetime}'>{message.timestamp}</time>
                     </div>
                 </li>
             )
