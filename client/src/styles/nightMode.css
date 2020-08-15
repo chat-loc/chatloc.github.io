@@ -43,3 +43,11 @@ button.light:hover{
 button.light.darkmode {
 	background: #000;	
 }
+.darkmode .is-typing > span {
+	color: #fff;
+	text-shadow: none;
+	border: 0;
+}
+.darkmode .is-typing > span > span {
+	text-shadow: none;
+}
