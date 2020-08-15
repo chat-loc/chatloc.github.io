@@ -41,7 +41,6 @@ app.use((req,res,next)=>{
 
 const Schema = mongoose.Schema;
 
-
 // User Routes
 app.use("/", generalRoutes);
 app.use("/user", userRoutes);
@@ -164,6 +163,14 @@ io.on('connection', function (socket) {
 	// Typing... event
 	socket.on('typing', (data) => {
 	    socket.broadcast.emit('typing', data);
+	});
+
+	// 4a Disconnect event
+
+	socket.on('disconnect', () => {
+		// Emit message to other 
+		socket.broadcast.emit("user-disconnected", users[socket.id]);
+		delete users[socket.id];
 	});
 
 

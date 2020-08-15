@@ -183,6 +183,12 @@ const Chatroom = ({location}) => {
 
         }); 
 
+        socket.once("user-disconnected", name => {
+            // alert(name);
+            setTyping([]);  // remove 'is-typing' on disconnect
+            setSocketJustConnectedMsg(`${name} just disconnected`);
+        });
+
         /* 6. Response from server after user sends a message: Add the chat to the 'messages' state array*/
         // message: {user: users.name, text: message}
 

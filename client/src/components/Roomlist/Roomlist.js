@@ -42,7 +42,7 @@ const Roomlist = ({location}) => {
         chatLoc = localStorage.getItem(queryID);
         chatLoc = JSON.parse(chatLoc);
 
-        console.log(chatLoc);
+        // console.log(chatLoc);
 
         setResUserDetails(chatLoc.resUserDetails[0]);
         setResFilteredOrigin(chatLoc.resFilteredOrigin[0]);
@@ -53,8 +53,8 @@ const Roomlist = ({location}) => {
         setUserDistrict(chatLoc.resUserDetails[0].districtLoc);
         setUserOrigin(chatLoc.resUserDetails[0].origin);
 
-        console.log(chatLoc);
-        console.log (resUserDetails);
+        // console.log(chatLoc);
+        // console.log (resUserDetails);
 
     },[chatParams, loginID]);    // Using objects may set off infinite loop here
 
