@@ -6,6 +6,9 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 
 // Import css
 import './Chatroom.css';
+import '../../styles/header.css';
+import '../../styles/header.responsive.css';
+import './Chatroom.responsive.css';
 
 // Images
 import moon from '../../images/moon.svg';

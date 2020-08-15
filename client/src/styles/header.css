@@ -1,0 +1,21 @@
+.index-link {
+	position: relative;
+	order: 0;
+	font-size: 1.5em;
+	margin-left: -5px;
+    z-index: 1;
+}
+.page-header .header-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: center;
+}
+.page-header h1 {
+    order: 1;
+    flex-grow: 1;
+    margin-left: -20px;
+    font-size: 1.8em;
+    text-align: center;
+    animation: glow 3s infinite ease-in both alternate;
+}

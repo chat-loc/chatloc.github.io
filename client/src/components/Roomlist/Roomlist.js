@@ -5,6 +5,9 @@ import Header from '../Header/Header';
 
 // Import css
 import './Roomlist.css';
+import '../../styles/header.css';
+import '../../styles/header.responsive.css';
+import './Roomlist.responsive.css'
 
 // Import images
 import ontario from '../../images/toronto.png';

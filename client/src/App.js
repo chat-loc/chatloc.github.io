@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 // Import stylesheets
 import "./styles/index.css";
+import "./styles/index.responsive.css";
 import "./styles/font.css";
 import "./styles/nightmode.css";
 

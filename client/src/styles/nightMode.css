@@ -20,12 +20,12 @@
 }
 .light-setting {
 	position: fixed;
-	top: 25px;
-	right: 30px;
+	top: 20px;
+	right: 15px;
 	z-index: 100;
 }
 .mode-image {
-	max-width: 1.3em;
+	max-width: .7em;
 	margin: 1em;
 }
 button.light {

@@ -1,28 +1,10 @@
-.index-link {
-	position: relative;
-	order: 0;
-	font-size: 2em;
-	margin-left: 30px;
-}
-.page-header .header-inner {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: center;
-}
-.page-header h1 {
-    order: 1;
-    flex-grow: 1;
-    margin-left: -85px;
-    text-align: center;
-    animation: glow 3s infinite ease-in both alternate;
-}
 .roomlist-area {
 	position: relative;
 	overflow: hidden;
 }
 .roomlist {
 	display: flex;
+	flex-flow: column;
 	position: relative;
 	min-height: 520px;
 	width: 100%;
@@ -31,20 +13,23 @@
 	z-index: 1;
 }
 .rooms {
-	flex: 0 0 30%;
+	flex: 0 0 100%;
 	padding: 0 25px;
 	min-height: 200px;
 	text-align: center;
 }
 .joined {
-	flex: 0 0 70%;
+	flex: 0 0 100%;
+	width: 80%;
 	display: flex;
+	flex-flow: column-reverse;
 	justify-content: space-around;
 	padding: 10px;
 	border: rgba(255,255,255,.3);
 }
 .origin, .district {
-	flex-basis: 45%;
+	flex-basis: 80%;
+	margin-bottom: 30px;
 	padding: 20px;
 	background-color: rgba(170, 12, 12, 0.35);
 	transform: translateY(50px);
@@ -145,6 +130,7 @@ same-origin em {
 /*map*/
 
 .map-canvas {
+	display: none;
 	position: absolute; 
 	top: 0; 
 	left: 0;
