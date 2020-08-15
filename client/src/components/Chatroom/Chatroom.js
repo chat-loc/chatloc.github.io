@@ -30,6 +30,7 @@ const Chatroom = ({location}) => {
 
     const [light, setLight] = useState('');
     const [modeImage, setModeImage] = useState(moon);   // Start out with moon as image
+    const [typing, setTyping] = useState([]);  
 
 
     // SERVER 
@@ -67,7 +68,7 @@ const Chatroom = ({location}) => {
         // Prefix with '0' if second is less than 10
         (sec) = (sec.toString().length == '1') ? ('0' + sec) : sec;
         (min) = (min.toString().length == '1') ? ('0' + min) : min;
-        return `<time class='chat-stamp' datetime='${hr}-${min}-${sec}'>${hr}:${min}:${sec} ${AMPM}</time>`;
+        return `<time className='chat-stamp' dateTime='${hr}-${min}-${sec}'>${hr}:${min}:${sec} ${AMPM}</time>`;
     }
 
     useEffect(() => {
@@ -83,7 +84,7 @@ const Chatroom = ({location}) => {
 
         // console.log(queryID);
 
-        // 1. Fetch use details from local storage (which has been fetched from DB and stored in login / reg page)
+        // 1. Fetch user details from local storage (which has been fetched from DB and stored in login / reg page)
         let ChatData = localStorage.getItem(queryID);
         ChatData = JSON.parse(ChatData);
 
@@ -120,7 +121,7 @@ const Chatroom = ({location}) => {
         console.log("ROOM AND NAME TO BE PASSED TO SOCKET : ", name, room);
 
 
-        //  4. When page loads, fetch old chats from DB. Socket.io is not an ideal because user first has to emit
+        //  3a. When page loads, fetch old chats from DB. Socket.io is not an ideal because user first has to emit
         // Old chats are needed right away; thus axios is the solution 
 
         /*[ { dateCreated: 2020-08-12T06:50:32.969Z,
@@ -151,7 +152,7 @@ const Chatroom = ({location}) => {
         // This is the PORT no (endpoint) of the index.js file in "server" dir
         socket = io(ENDPOINT);  
 
-        // 3. When user joins, emit message
+        // 4. When user joins, emit message
         socket.emit('join', { name, room });
 
         return () => {  /*VERY IMPORTANT. SERVER SOCKET WILL NOT RESPOND WITHOUT THIS*/
@@ -160,6 +161,31 @@ const Chatroom = ({location}) => {
         }
 
     }, [ENDPOINT, location.search]); // On load event set the data (meaning of empty brackets)
+
+
+    // 3b. Load chats 
+    const loadChats = () => {
+
+        let msg;
+
+        const chatMsg = loadedChats.map((message, i) => {
+
+            msg = (name === message.name) ? "msg" : "other-msg"; 
+
+            return (
+                <li key={i}>
+                    <div className={msg}>
+                        <span className="user">{message.name} : </span>{message.msg} 
+                        <Moment className="chat-stamp" format="LLL">
+                            {message.dateCreated}
+                        </Moment>
+                    </div>
+                </li>
+            )
+        })
+
+        return chatMsg;
+    }
 
     useEffect(() => {
 
@@ -185,7 +211,7 @@ const Chatroom = ({location}) => {
         // message: {user: users.name, text: message}
 
         socket.on('sendMessage', (data) => {
-            // {message: message, timestamp: 2020-08-14T01:28:24.913Z, datetime: 2020-08-14T03:37:53.389+00:00, name: name}
+            // {message: message, timestamp: 2020-08-14T01:28:24.913Z, dateTime: 2020-08-14T03:37:53.389+00:00, name: name}
             console.log("DATA FROM 'sendMessage' RESPONSE : ", data);   
 
             // Chat sound for only user
@@ -204,10 +230,18 @@ const Chatroom = ({location}) => {
 
         console.log(messages);  // [ {message: "Dont try this at home", name: "anna" }]
 
-    }, [message, messages]);
+
+        // 10b. 'Typing...' response from socket
+        socket.on("typing", (data) => {
+            // { user: "sofia", msg: "some text" }
+            setTyping(data);  // Add new chat to existing current chats
+
+        });
+
+    }, [message, messages, typing]);
 
 
-    // When user types and submits, pass in message
+    // 7. When user types and submits, pass message to socket to be stored in DB
     const sendMessage = (event) => {
 
         event.preventDefault();
@@ -230,7 +264,7 @@ const Chatroom = ({location}) => {
     }
 
 
-    // When user hits a message, the 'message' state changes which refreshes this component 
+    // 8. When user hits a message, the 'message' state changes which refreshes this component 
     // thus the current chats (saved in 'messages' array, get called)
 
     const displayChats = () => {
@@ -245,7 +279,7 @@ const Chatroom = ({location}) => {
                 <li key={i}>
                     <div className={msg}>
                         <span className="user">{message.name} : </span>{message.msg} 
-                        <time class='chat-stamp' datetime={message.datetime}>{message.timestamp}</time>
+                        <time className='chat-stamp' dateTime={message.dateTime}>{message.timestamp}</time>
                     </div>
                 </li>
             )
@@ -255,39 +289,48 @@ const Chatroom = ({location}) => {
     }
 
 
-    const loadChats = () => {
-
-        let msg;
-
-        const chatMsg = loadedChats.map((message, i) => {
-
-            msg = (name === message.name) ? "msg" : "other-msg"; 
-
-            return (
-                <li key={i}>
-                    <div className={msg}>
-                        <span className="user">{message.name} : </span>{message.msg} 
-                        <Moment className="chat-stamp" format="LLL">
-                            {message.dateCreated}
-                        </Moment>
-                    </div>
-                </li>
-            )
-        })
-
-        return chatMsg;
-    }
-
-
-    // Set light / dark settings 
+    // 9. Light / dark settings 
 
     const mode = (e) => {
-
         e.preventDefault();
         
         (light === 'darkmode') ? setModeImage(moon) : setModeImage(sun);   // toggle image
         (light === 'darkmode') ? setLight('') : setLight('darkmode');   // toggle darkmode
-        
+    }
+
+
+    // 10a. Typing logic
+
+    const type = e => {
+
+        let msg = e.target.value;
+        if (e.which !== 13) {    // Listen to keyup except 'Enter'
+            socket.emit('typing', {user:name, msg});
+        } 
+    } 
+
+
+    // 10c. Display the 'whoever is typing' message
+
+    const isTyping = () => {
+
+        // typing state { user: "sofia", msg: "some text" }
+
+        console.log(typing);
+
+        if (typing.user) {
+
+            let user = typing.user;
+            user = user.charAt(0).toUpperCase() + user.slice(1);
+
+            return (
+                <li className="is-typing">
+                        <span><span className="other-user">{user}</span> is typing ...</span>
+                </li>
+            )
+
+        }
+
     }
 
 
@@ -306,7 +349,7 @@ const Chatroom = ({location}) => {
             </header>
 
             <section className="light-setting">
-                <button class={`light ${light}`} onClick={e => mode(e)}>
+                <button className={`light ${light}`} onClick={e => mode(e)}>
                     <img src={modeImage} alt={modeImage}className="mode-image"/>
                 </button>
             </section>
@@ -316,16 +359,16 @@ const Chatroom = ({location}) => {
                 <ol id="messages" className="messages">
                     <ol id="old-messages" className="old messages">{loadChats()}</ol>
                     {displayChats()}
+                    {isTyping()}
                 </ol>
 
                 <form id="sendMsg" className="sendMsg">
                     <input type="text" className="msgTextbox" id="txt" autoComplete="off" placeholder="Type message..." name="txt" autoFocus    
                         value={message}
                         onChange={({ target: { value } }) => setMessage(value)}
+                        onKeyUp={(event) => type(event)}
                         onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}/>
-
-                    <input type="hidden" name="userRoom" id="userName" value=""/>    
-                    <input type="hidden" name="userRoom" id="userRoom" value=""/>    
+   
                     <input type="submit" name="" id="Send" value="Send" className="button-send-message"
                         onClick={e => sendMessage(e)}/>
                 </form>

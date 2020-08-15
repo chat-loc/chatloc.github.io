@@ -155,9 +155,15 @@ io.on('connection', function (socket) {
 	        io.in(data.room).emit('sendMessage', { msg: data.message, timestamp, name: users[socket.id]});
 
 	        // io.to(user.room).emit('message', {user: user.name, text: message});	
-	    });
+	    });	    
+	});
 
-	    
+
+	// 3a. 
+
+	// Typing... event
+	socket.on('typing', (data) => {
+	    socket.broadcast.emit('typing', data);
 	});
 
 
