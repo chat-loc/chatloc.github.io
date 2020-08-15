@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 import Moment from 'react-moment';
-
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 // Import css
 import './Chatroom.css';

@@ -1,0 +1,38 @@
+@media (min-width: 480px) {
+	.login-main .main-wrapper {
+	    padding: 35px;
+	}
+	.register-now {
+	    display: flex;
+	    width: 90%;
+	}
+
+}
+
+@media (min-width: 768px) {
+	.login-main .main-wrapper {
+	    padding: 50px;
+	}
+	.register-now {
+	    display: flex;
+	    width: 60%;
+	}
+	.connect {
+    	display: block;
+    }
+    .registration {
+        flex: 0 0 60%;
+    }
+}
+
+@media (min-width: 992px) {
+	.login-main .main-wrapper {
+	    padding: 75px;
+	}
+}   
+
+@media (min-width: 1200px) {
+
+}
+    
+ 

@@ -8,7 +8,8 @@ import axios from 'axios';
 import Header from '../Header/Header';
 
 // Import css
-import '../form.css';
+import '../../styles/form.css';
+import './Registration.responsive.css';
 
 // Images
 import torontoMap from '../../images/torontoMap.png';
@@ -371,8 +372,6 @@ const Registration = ({location}) => {
 
 	// Header text
 	const HeaderTxt = () => {
-		alert('working');
-
 	    const html = <div className="header-inner">
 				        <h1>Welcome To Chat<span className="fa fa-link loc"></span>Loc</h1>
 				    </div>;
@@ -382,11 +381,11 @@ const Registration = ({location}) => {
 
 	useEffect (() => {
 
-		alert('working');
-
 		// Modal must only appear on login page to avoid error
+
+		geolocate();
 		
-		geolocate().then(closeModal(true));
+		// geolocate().then(closeModal(true));	Modal keeps breaking page; not sure why
 
 	}, [location.search]);
 
@@ -738,11 +737,12 @@ const Registration = ({location}) => {
 		
 		</main>
 
-		<section className={`hide dialog-app-modal ${hideApp === true ? ' hide-app' : ''} ${hideModal === true ? ' hide' : ''}`} id="dialog-app-modal">
+		<section className={`dialog-app-modal ${hideApp === true ? ' hide-app' : ''} ${hideModal === true ? ' hide' : ''}`} id="dialog-app-modal">
 		    <div className="modal-app-alert">
 		        <h3 className="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
 
-		        <button id="app-alert-close" className={`app-alert-close ${active === true ? ' allowed' : ''}`}>Close</button>
+		        <button id="app-alert-close" className={`app-alert-close ${active === true ? ' allowed' : ''}`}
+		        	onClick={(event) => closeModal()}>Close</button>
 
 		    </div>
 		</section>

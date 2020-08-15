@@ -9,7 +9,8 @@ import axios from 'axios';
 import Header from '../Header/Header';
 
 // Import css
-import '../form.css';
+import '../../styles/form.css';
+import './Login.responsive.css';
 
 // Images
 import torontoMap from '../../images/torontoMap.png';
@@ -341,7 +342,9 @@ const Login = ({location}) => {
 
 			// Modal must only appear on login page to avoid error
 			
-			geolocate().then(closeModal(true));
+			// geolocate().then(closeModal(true));
+
+			geolocate();
 
 		}, [location.search]);
 
@@ -419,11 +422,12 @@ const Login = ({location}) => {
 		
 		</main>
 
-		<section className={`hide dialog-app-modal ${hideApp === true ? ' hide-app' : ''} ${hideModal === true ? ' hide' : ''}`} id="dialog-app-modal">
+		<section className={`dialog-app-modal ${hideApp === true ? ' hide-app' : ''} ${hideModal === true ? ' hide' : ''}`} id="dialog-app-modal">
 		    <div className="modal-app-alert">
 		        <h3 className="app-alert">CHAT-LOC is dependent on your location. Please turn it on for access.</h3>
 
-		        <button id="app-alert-close" className={`app-alert-close ${active === true ? ' allowed' : ''}`}>Close</button>
+		        <button id="app-alert-close" className={`app-alert-close ${active === true ? ' allowed' : ''}`}
+		        	onClick={(event) => closeModal()}>Close</button>
 
 		    </div>
 		</section>

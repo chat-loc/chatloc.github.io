@@ -18,9 +18,12 @@
   font-size: .8em;
   font-weight: lighter;
 }
+.login-main .main-wrapper {
+    padding: 75px;
+}
 .register-now {
     display: flex;
-    width: 60%;
+    width: 100%;
     margin: auto;
     min-height: 60vh;
 }
@@ -32,6 +35,7 @@
     padding-bottom: 30px;
 }
 .connect {
+    display: none;
     position: relative;
     flex: 0 0 40%;
     background-size: cover;
@@ -54,7 +58,7 @@
     background-color: rgba(0,0,0,.8);
 }
 .registration {
-    flex: 0 0 60%;
+    flex: 0 0 100%;
     position: relative;
     z-index: 1;
     background-color: rgba(247, 247, 247, .7);
