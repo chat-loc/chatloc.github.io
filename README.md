@@ -13,17 +13,17 @@ If user feels not to put in credentials, below are 3 different credentials for t
 
 **Italy:**
 
-Username: Anna<br>
+Username: anna<br>
 Password: Anna123
 
 **Nigeria:**
 
-Username: Enitan<br>
+Username: enitan<br>
 Password: Enitan123
 
 **India:**
 
-Username: Drishti<br>
+Username: drishti<br>
 Password: Drishti123
 
 
