@@ -28,6 +28,9 @@ const Chatroom = ({location}) => {
     const [chatData, setChatData] = useState('');
     const [loadedChats, setLoadedChats] = useState([]);
 
+    const [light, setLight] = useState('');
+    const [modeImage, setModeImage] = useState(moon);   // Start out with moon as image
+
 
     // SERVER 
     const [resUserDetails, setResUserDetails] = useState([]);
@@ -276,47 +279,59 @@ const Chatroom = ({location}) => {
     }
 
 
+    // Set light / dark settings 
+
+    const mode = (e) => {
+
+        e.preventDefault();
+        
+        (light === 'darkmode') ? setModeImage(moon) : setModeImage(sun);   // toggle image
+        (light === 'darkmode') ? setLight('') : setLight('darkmode');   // toggle darkmode
+        
+    }
+
+
     return (
 
         <>
 
-        <header className="page-header-chat">     
-            <h1>Welcome to {room} room</h1>
-            <a className="index-link" href="/"><span className="fa fa-home"></span></a>
-            {socketJustConnectedMsg ?
-                <span className="just-connected">{socketJustConnectedMsg}</span>
-                : ''}
-        </header>
+        <section className={`chatwrap ${light}`}>
 
-        <section id="chat-pane" className="chat-pane">
+            <header className="page-header-chat">     
+                <h1>Welcome to {room} room</h1>
+                <a className="index-link" href="/"><span className="fa fa-home"></span></a>
+                {socketJustConnectedMsg ?
+                    <span className="just-connected">{socketJustConnectedMsg}</span>
+                    : ''}
+            </header>
 
-            <ol id="messages" className="messages">
-                <ol id="old-messages" className="old messages">{loadChats()}</ol>
-                {displayChats()}
-            </ol>
+            <section className="light-setting">
+                <button class={`light ${light}`} onClick={e => mode(e)}>
+                    <img src={modeImage} alt={modeImage}className="mode-image"/>
+                </button>
+            </section>
 
-            <form id="sendMsg" className="sendMsg">
-                <input type="text" className="msgTextbox" id="txt" autoComplete="off" placeholder="Type message..." name="txt" autoFocus    
+            <section id="chat-pane" className={`chat-pane ${light}`}>
+
+                <ol id="messages" className="messages">
+                    <ol id="old-messages" className="old messages">{loadChats()}</ol>
+                    {displayChats()}
+                </ol>
+
+                <form id="sendMsg" className="sendMsg">
+                    <input type="text" className="msgTextbox" id="txt" autoComplete="off" placeholder="Type message..." name="txt" autoFocus    
                         value={message}
                         onChange={({ target: { value } }) => setMessage(value)}
                         onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}/>
 
-                <input type="hidden" name="userRoom" id="userName" value=""/>    
-                <input type="hidden" name="userRoom" id="userRoom" value=""/>    
-                <input type="submit" name="" id="Send" value="Send" className="button-send-message"
+                    <input type="hidden" name="userRoom" id="userName" value=""/>    
+                    <input type="hidden" name="userRoom" id="userRoom" value=""/>    
+                    <input type="submit" name="" id="Send" value="Send" className="button-send-message"
                         onClick={e => sendMessage(e)}/>
-            </form>
+                </form>
 
-        </section>
+            </section>
 
-        <section className="light-setting">
-            <p id="moon">
-                <img src={moon} alt="night time chat" className="night-mode-image"/>
-            </p>
-
-            <p id="sun" className="hidden">
-                <img src={sun} alt="day time chat" className="night-mode-image"/>
-            </p>
         </section>
 
         </>

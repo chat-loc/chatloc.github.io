@@ -1,40 +1,45 @@
-/* REFERNCE
-https://codepen.io/FlorinPop17/pen/XWWZYYG
-*/
-body {
-	background-color: #fafafa;
-	transition: background 0.2s linear;
-}
 
-body.dark {
+.chatwrap {
+	transition: background 1s linear;
+}
+.chatwrap.darkmode {
 	background:  #000000;
 }
-/*chat-messges green colored layout*/
-.dark-mode-bg-color li div{ 
-	background-color: #292C35 !important;
-	color:#ffffff !important;
+.darkmode .old.messages li div {
+	background-color: #292C35;
+	color: #ffffff;
 }
-
-
-
-/*type message input box*/
-.msgTextbox-dark-mode{
+.darkmode .msgTextbox {
 	border: 1px solid #ffffff !important;
 	color:#ffffff !important;
 }
-.button-send-message-dark-mode{
-    color: #000000 !important;
+.darkmode .button-send-message {
+    color: var(--red);
     background-color: #ffffff !important;
     transition: all .2s;
 }
-
-.hidden{
-	display: none;
+.light-setting {
+	position: fixed;
+	top: 25px;
+	right: 30px;
+	z-index: 100;
 }
-.displaysun{
-	display: block;
-}
-.night-mode-image{
-	max-width: 2em;
+.mode-image {
+	max-width: 1.3em;
 	margin: 1em;
+}
+button.light {
+	appearance: none;
+	-webkit-appearance: none;
+	border: outset thin var(--light-grey);
+	outline: none;
+	cursor: pointer;
+	background: var(--grey);
+	transition: opacity .2s;
+}
+button.light:hover{
+	opacity: .7;
+}
+button.light.darkmode {
+	background: #000;	
 }

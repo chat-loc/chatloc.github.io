@@ -1,6 +1,5 @@
 body {
 	margin: 0;
-	/overflow: hidden;
 }
 .page {
 	padding: 1px 0;
@@ -31,7 +30,6 @@ body {
 	animation: glow 3s infinite ease-in both alternate;
 }
 .page-title {
-    /font-size: 2em;
     margin: 0 auto;
     text-align: center;
     color: #020133;
@@ -63,12 +61,10 @@ body {
 	z-index: 1;
 	animation: fadeOut 4s .1s ease-in forwards;
 }
-
 .chat-pane {
 	width: 75%;
 	margin: 0 auto;
 }
-
 .direction {
 	margin-top: 95px;
 	text-align: center;
@@ -90,31 +86,13 @@ body {
 	opacity: .9;
 	text-shadow: 1px 0 1px rgba(255,255,255,.3);
 }
-/* .sendMsg input[type=submit] {
-	display: inline-block;
-    font-weight: 400;
-    color: #212529;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select:none;
-    padding: 0 .75rem;
-    font-size: 1.3em;
-    min-width: 200px;
-    border-radius: .25rem;
-    transition: all .2s;
-    color: var(--red);
-    background-color: black;
-    transition: all .2s;
-} */
 .sendMsg input[type=submit]:hover, .sendMsg input[type=submit]:focus {
 	color: var(--purple)
 }
 .messages {
 	height: calc(81vh - 40px);
 	overflow-y: scroll;
-	padding: 7px 0 10px;
+	padding-bottom: 10px;
 	margin-top: 0;
 }
 .old.messages {
@@ -134,7 +112,6 @@ form {
 	display: flex;
 	margin: 0 auto;
 }
-
 .msgTextbox {
 	font-size: 1.2rem;
 	padding: 10px;
@@ -264,11 +241,6 @@ form {
 }
 .old .msg:before {
 	display: none;
-}
-.light-setting {
-	position: fixed;
-	bottom: 10px;
-	left: 10px;
 }
 
 /*GLOW*/
