@@ -1,0 +1,38 @@
+@media (min-width: 480px) {
+}
+
+@media (min-width: 768px) {
+	.map-canvas {
+		display: block;
+	}
+
+	.joined {
+		flex-flow: row;
+		width: auto;
+	}
+	.origin, .district {
+		flex-basis: 45%;
+		margin-bottom: 0;
+	}
+}
+
+@media (min-width: 992px) {
+	.roomlist {
+		flex-flow: row;
+	}
+	.rooms {
+		flex: 0 0 15%;
+	}
+	.joined {
+		flex: 0 0 85%;
+	}
+}   
+
+@media (min-width: 1200px) {	
+	.rooms {
+		flex: 0 0 30%;
+	}
+	.joined {
+		flex: 0 0 70%;
+	}
+}

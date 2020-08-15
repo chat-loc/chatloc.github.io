@@ -1,0 +1,52 @@
+
+.chatwrap {
+	transition: background 1s linear;
+}
+.chatwrap.darkmode {
+	background:  #000000;
+}
+.darkmode .old.messages li div {
+	background-color: #292C35;
+	color: #ffffff;
+}
+.darkmode .msgTextbox {
+	border: 1px solid #ffffff !important;
+	color:#ffffff !important;
+}
+.darkmode .button-send-message {
+    background-color: var(--red) !important;
+    transition: all .2s;
+}
+.light-setting {
+	position: fixed;
+	top: 20px;
+	right: 15px;
+	z-index: 100;
+}
+.mode-image {
+	max-width: .7em;
+	margin: 1em;
+}
+button.light {
+	appearance: none;
+	-webkit-appearance: none;
+	border: outset thin var(--light-grey);
+	outline: none;
+	cursor: pointer;
+	background: var(--grey);
+	transition: opacity .2s;
+}
+button.light:hover{
+	opacity: .7;
+}
+button.light.darkmode {
+	background: #000;	
+}
+.darkmode .is-typing > span {
+	color: #fff;
+	text-shadow: none;
+	border: 0;
+}
+.darkmode .is-typing > span > span {
+	text-shadow: none;
+}
