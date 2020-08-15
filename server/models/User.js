@@ -29,14 +29,6 @@ const userSchema = new Schema({
         type : String,
         required : true
     }
-    /*,
-    profilePic : {
-        type : String, 
-    },
-    location : {
-        type : String,
-        required : true
-    }*/
 });
 
 /*For every Schema you create (create a schema per collection), you must also create a model

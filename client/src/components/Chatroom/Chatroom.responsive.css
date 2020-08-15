@@ -3,7 +3,6 @@
 	    margin-left: -25px;
 	}
 }
-
 @media (min-width: 768px) {
 	.page-header-chat h1 {
 	    font-size: 2.1em;
@@ -17,6 +16,9 @@
 	.light-setting {
 		right: 25px;
 	}
+	.messages {
+		height: calc(69vh - 100px);
+	}
 	.sendMsg {
 		flex-flow: row;
 	}
@@ -26,10 +28,19 @@
 	.button-send-message {
 	}
 	.messages {
-		height: calc(81vh - 40px);
+		height: calc(81vh - 60px);
+	}
+	.messages .user {
+		display: block;
+	}
+	.msg, .other-msg {
+		padding: 15px 25px;
+	}
+	.is-typing {
+		bottom: 50px;
+		width: 75%;
 	}
 }
-
 @media (min-width: 992px) {
 	.page-header-chat h1 {
 	    font-size: 2.3em;
@@ -46,8 +57,10 @@
 	.chat-pane, .sendMsg {
 		width: 85%;
 	}
+	.msg, .other-msg {
+		padding: 20px 35px;
+	}
 }   
-
 @media (min-width: 1200px) {
 	.page-header-chat h1 {
 	    font-size: 2.5em;
@@ -58,6 +71,9 @@
 	}
 	.chat-pane, .sendMsg {
 		width: 75%;
+	}
+	.msg, .other-msg {
+		padding: 20px 50px;
 	}
 }
    

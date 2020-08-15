@@ -14,8 +14,7 @@
 	color:#ffffff !important;
 }
 .darkmode .button-send-message {
-    color: var(--red);
-    background-color: #ffffff !important;
+    background-color: var(--red) !important;
     transition: all .2s;
 }
 .light-setting {

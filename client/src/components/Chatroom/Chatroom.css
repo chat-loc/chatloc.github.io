@@ -41,7 +41,11 @@ body {
 .just-connected {
 	position: absolute;
 	bottom: 0;
-	left: 41.5%;
+	left:0;
+	right: 0;
+	max-width: 300px;
+	margin-right: auto;
+	margin-left: auto;
 	top: 90px;
 	font-size: 1.2em;
 	font-weight: bolder;
@@ -50,6 +54,7 @@ body {
 	font-family: var(--font-tertiary);
 	padding-bottom: 50px;
 	background: var(--red);
+	opacity: .8;
 	color: #fff;
 	z-index: 1;
 	animation: fadeOut 4s .1s ease-in forwards;
@@ -58,6 +63,7 @@ body {
 	width: 90%;
 	margin: 0 auto;
 }
+
 .direction {
 	margin-top: 95px;
 	text-align: center;
@@ -71,22 +77,22 @@ body {
 	margin-left: 20px;
 	text-shadow: 1px 0 1px rgba(255,255,255,.3);
 }
-.messages .chat-stamp {
-	position: absolute;
-	bottom: 5px;
-	right: 60px;
-	font-size: .9em;
-	opacity: .9;
-	text-shadow: 1px 0 1px rgba(255,255,255,.3);
-}
-.sendMsg input[type=submit]:hover, .sendMsg input[type=submit]:focus {
-	color: var(--purple)
-}
 .messages {
-	height: calc(69vh - 40px);
-	overflow-y: scroll;
+	height: calc(69vh - 70px);
 	padding-bottom: 10px;
 	margin-top: 0;
+}
+::-webkit-scrollbar-track{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb{
+	background-color: #000000;
+	border: 2px solid #555555;
 }
 .old.messages {
 	height: auto;
@@ -106,6 +112,13 @@ body {
 	bottom: 0;
 	display: flex;
 	flex-flow: column;
+	width: 90%;
+	margin: 0 auto;
+}
+.is-typing {
+	position: fixed;
+	bottom: 120px;
+	display: block;
 	width: 90%;
 	margin: 0 auto;
 }
@@ -178,7 +191,7 @@ body {
 }
 .msg, .other-msg {
 	position: relative;
-	padding: 20px 50px;
+	padding: 10px 15px;
 	font-size: 1em;
 	display: block;
 	max-width: 100%;
@@ -214,7 +227,8 @@ body {
 	text-transform: uppercase;
 }
 .messages .user {
-	display: block;
+	display: inline-block;
+	margin-right: 10px;
 	font-size: 1.2em;
 	font-weight: bolder;
 	margin-bottom: 4px;
@@ -238,6 +252,17 @@ body {
 }
 .old .msg:before {
 	display: none;
+}
+.messages .chat-stamp {
+	position: absolute;
+	bottom: 5px;
+	right: 60px;
+	font-size: .9em;
+	opacity: .9;
+	text-shadow: 1px 0 1px rgba(255,255,255,.3);
+}
+.sendMsg input[type=submit]:hover, .sendMsg input[type=submit]:focus {
+	color: var(--purple)
 }
 
 /*GLOW*/
@@ -263,7 +288,7 @@ body {
 
 @keyframes fadeOut {
 	0% {
-		opacity : 1;
+		opacity : 7;
 	}
 	100% {
 		opacity: 0;

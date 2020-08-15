@@ -21,8 +21,6 @@ const Chatroom = ({location}) => {
     const [room, setRoom] = useState('');
     const [name, setName] = useState('');
 
-    const [socketName, setSocketName] = useState('');
-    const [socketConnected, setSocketConnected] = useState('');
     const [socketJustConnectedMsg, setSocketJustConnectedMsg] = useState(false);
 
     const [message, setMessage] = useState('');
@@ -49,30 +47,6 @@ const Chatroom = ({location}) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
     }
 
-    // "etobicoke-north" => "Etobicoke North" (Used for the heading in the chatroom)
-    const upperCaseSomeSpaces = (input) => {
-        let val = (input).split('-');
-        val.forEach((elm, index, theArray)=> {
-            theArray[index] = capitalise(elm);
-        });
-        return val.join(" ");
-    }
-
-    const timeHumanise = () => {
-        let date = new Date();  // get date now
-        let day = date.getDate();   // get day
-
-        let hr = date.getHours();   // hours
-        let min = date.getMinutes();    // mins
-        let sec = date.getSeconds();    // secs 
-
-        let AMPM = (hr >= 12) ? 'PM' : 'AM';
-
-        // Prefix with '0' if second is less than 10
-        (sec) = (sec.toString().length == '1') ? ('0' + sec) : sec;
-        (min) = (min.toString().length == '1') ? ('0' + min) : min;
-        return `<time className='chat-stamp' dateTime='${hr}-${min}-${sec}'>${hr}:${min}:${sec} ${AMPM}</time>`;
-    }
 
     useEffect(() => {
 
@@ -81,7 +55,7 @@ const Chatroom = ({location}) => {
         
         queryID = params.get('id');
 
-        console.log("QUERY ID : ", queryID);
+        // console.log("QUERY ID : ", queryID);
 
         setLoginID(queryID);
 
@@ -91,12 +65,12 @@ const Chatroom = ({location}) => {
         let ChatData = localStorage.getItem(queryID);
         ChatData = JSON.parse(ChatData);
 
-        console.log("CHATDATA : ", ChatData);
+        // console.log("CHATDATA : ", ChatData);
 
         let userDetails = ChatData.resUserDetails[0];
         setResUserDetails(userDetails);
 
-        console.log("USER DETAILS : ", userDetails);
+        // console.log("USER DETAILS : ", userDetails);
 
         let page;
         let loc = params.get('room'); // etobicoke-north-district-room
@@ -119,11 +93,29 @@ const Chatroom = ({location}) => {
 
         setName(name);
 
-        console.log(name);
-        console.log(userDetails);
-        console.log("ROOM AND NAME TO BE PASSED TO SOCKET : ", name, room);
+        // console.log(name);
+        // console.log(userDetails);
+        // console.log("ROOM AND NAME TO BE PASSED TO SOCKET : ", name, room);
 
 
+        // SOCKET 
+
+        // This is the PORT no (endpoint) of the index.js file in "server" dir
+        socket = io(ENDPOINT);  
+
+        // 4. When user joins, emit message
+        socket.emit('join', { name, room });
+
+        return () => {  /*VERY IMPORTANT. SERVER SOCKET WILL NOT RESPOND WITHOUT THIS*/
+            socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
+            socket.off();
+        }
+
+    }, [ENDPOINT, location.search]); // On load event set the data (meaning of empty brackets)
+
+
+    useEffect(() => {
+        
         //  3a. When page loads, fetch old chats from DB. Socket.io is not an ideal because user first has to emit
         // Old chats are needed right away; thus axios is the solution 
 
@@ -142,29 +134,13 @@ const Chatroom = ({location}) => {
             }
         })
         .then(response => {
-            console.log(response.data);
-
+            // console.log(response.data);``
             if (response.data) {
                 setLoadedChats (response.data);  // Load all chats
             }
 
         });
-
-        // SOCKET 
-
-        // This is the PORT no (endpoint) of the index.js file in "server" dir
-        socket = io(ENDPOINT);  
-
-        // 4. When user joins, emit message
-        socket.emit('join', { name, room });
-
-        return () => {  /*VERY IMPORTANT. SERVER SOCKET WILL NOT RESPOND WITHOUT THIS*/
-            socket.emit('disconnect');  /*Thus the ideal event for disconnecting*/
-            socket.off();
-        }
-
-    }, [ENDPOINT, location.search]); // On load event set the data (meaning of empty brackets)
-
+    },[room])
 
     // 3b. Load chats 
     const loadChats = () => {
@@ -195,53 +171,50 @@ const Chatroom = ({location}) => {
         // 5. Coming back from server: 'user-connected' is an exposed function coming from BROADCAST.EMIT in server.
         // Thus, when user makes connection, display a welcome message to the others
 
-        socket.on("user-connected", (data) => { // this message is local to this response and not the state message
+        socket.once("user-connected", (data) => { // this message is local to this response and not the state message
 
             // alert("User Connected");
 
-            console.log("DATA FROM 'user-connected' RESPONSE : ", data);  // name: kodesektor, connected: connected
+            // console.log("DATA FROM 'user-connected' RESPONSE : ", data);  // name: kodesektor, connected: connected
 
             const {name, connected} = data;
-
-            setSocketName(name);
-            setSocketConnected(connected);
             setSocketJustConnectedMsg(`${name} just ${connected}`);
-            console.log(messages);
+            // console.log(messages);
 
         }); 
 
         /* 6. Response from server after user sends a message: Add the chat to the 'messages' state array*/
         // message: {user: users.name, text: message}
 
-        socket.on('sendMessage', (data) => {
+        socket.once('sendMessage', (data) => {
             // {message: message, timestamp: 2020-08-14T01:28:24.913Z, dateTime: 2020-08-14T03:37:53.389+00:00, name: name}
-            console.log("DATA FROM 'sendMessage' RESPONSE : ", data);   
+            // console.log("DATA FROM 'sendMessage' RESPONSE : ", data);   
 
             // Chat sound for only user
 
             let chatname = (data.name);
 
-            console.log(name, chatname);
-
-            if (name !== chatname) {    // Notify if other users send chat
-                const chatSound = new Audio ("/sounds/swiftly.mp3");    // keep sound in public folder to work
-                chatSound.play();
-            }
+           /* if (name && chatname) {
+                if (name != chatname) {    // Notify if other users send chat
+                    const chatSound = new Audio ("/sounds/swiftly.mp3");    // keep sound in public folder to work
+                    chatSound.play();
+                }
+            }*/
 
             setMessages([...messages, data]);  // Add new chat to existing current chats
         });
 
-        console.log(messages);  // [ {message: "Dont try this at home", name: "anna" }]
+        // console.log(messages);  // [ {message: "Dont try this at home", name: "anna" }]
 
 
         // 10b. 'Typing...' response from socket
-        socket.on("typing", (data) => {
+        socket.once("typing", (data) => {
             // { user: "sofia", msg: "some text" }
             setTyping(data);  // Add new chat to existing current chats
 
         });
 
-    }, [message, messages, typing]);
+    }, [message, typing]);
 
 
     // 7. When user types and submits, pass message to socket to be stored in DB
@@ -305,7 +278,6 @@ const Chatroom = ({location}) => {
     // 10a. Typing logic
 
     const type = e => {
-
         let msg = e.target.value;
         if (e.which !== 13) {    // Listen to keyup except 'Enter'
             socket.emit('typing', {user:name, msg});
@@ -319,7 +291,7 @@ const Chatroom = ({location}) => {
 
         // typing state { user: "sofia", msg: "some text" }
 
-        console.log(typing);
+        // console.log(typing);
 
         if (typing.user) {
 
@@ -327,9 +299,9 @@ const Chatroom = ({location}) => {
             user = user.charAt(0).toUpperCase() + user.slice(1);
 
             return (
-                <li className="is-typing">
-                        <span><span className="other-user">{user}</span> is typing ...</span>
-                </li>
+                <b className="is-typing">
+                    <span><span className="other-user">{user}</span> is typing ...</span>
+                </b>
             )
 
         }
@@ -358,12 +330,11 @@ const Chatroom = ({location}) => {
             </section>
 
             <section id="chat-pane" className={`chat-pane ${light}`}>
-
-                <ol id="messages" className="messages">
+                <ScrollToBottom className="messages">
                     <ol id="old-messages" className="old messages">{loadChats()}</ol>
-                    {displayChats()}
-                    {isTyping()}
-                </ol>
+                    <ol>{displayChats()}</ol>
+                </ScrollToBottom>
+                {isTyping()}
 
                 <form id="sendMsg" className="sendMsg">
                     <input type="text" className="msgTextbox" id="txt" autoComplete="off" placeholder="Type message..." name="txt" autoFocus    
