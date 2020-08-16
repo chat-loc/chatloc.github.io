@@ -4,6 +4,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+const path = require('path');	// Req'd for heroku deployment too!
+
 require('dotenv').config({path:"./config/key.env"});
 
 // Import router objects
@@ -45,6 +47,13 @@ const Schema = mongoose.Schema;
 app.use("/", generalRoutes);
 app.use("/user", userRoutes);
 
+// Serve static assets in prod
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static('client/build'));
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+	})
+}
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true}
