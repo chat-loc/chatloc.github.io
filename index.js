@@ -10,8 +10,6 @@ require('dotenv').config({path:"./config/key.env"});
 
 // Import router objects
 const userRoutes = require("./controllers/User");
-const generalRoutes = require("./controllers/General");
-
 
 const app = express();
 app.use(cors());
@@ -44,7 +42,6 @@ app.use((req,res,next)=>{
 const Schema = mongoose.Schema;
 
 // User Routes
-app.use("/", generalRoutes);
 app.use("/user", userRoutes);
 
 // Serve static assets in prod
