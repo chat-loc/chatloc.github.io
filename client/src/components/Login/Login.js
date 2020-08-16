@@ -113,23 +113,28 @@ const Login = ({location}) => {
     			}
     		})
 	        .then(response => {
-	        	console.log(response);
+	        	// console.log(response.data);
 
 	        	if (response.data) {
-	        		let jsonUserDetails = (response.data.jsonUserDetails);
-	        		let jsonFilteredOrigin = (response.data.jsonFilteredOrigin);
-	        		let jsonFilteredDistrict = (response.data.jsonFilteredDistrict);
 
-	        		setResUserDetails([jsonUserDetails]);
-	        		setResFilteredOrigin([jsonFilteredOrigin]);
-	        		setResfilteredDistrict([jsonFilteredDistrict]);
+	        		if (response.data.loginFail) {
+	        			alert(response.data.loginFail);
+	        		} else {
+	        			let jsonUserDetails = (response.data.jsonUserDetails);
+	        			let jsonFilteredOrigin = (response.data.jsonFilteredOrigin);
+	        			let jsonFilteredDistrict = (response.data.jsonFilteredDistrict);
 
-	        		setLoginID(response.data.jsonUserDetails.loginID);
+	        			setResUserDetails([jsonUserDetails]);
+	        			setResFilteredOrigin([jsonFilteredOrigin]);
+	        			setResfilteredDistrict([jsonFilteredDistrict]);
 
-	        		setChatroomRedir(true);	// Time to redirect
+	        			setLoginID(response.data.jsonUserDetails.loginID);
+
+	        			setChatroomRedir(true);	// Time to redirect
+	        		}
     	        }
 
-    	        console.log(resUserDetails);
+    	        // console.log(resUserDetails);
 	        })
 	        .catch(function (error) {
 	        	console.log(error);

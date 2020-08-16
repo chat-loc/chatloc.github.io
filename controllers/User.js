@@ -179,15 +179,14 @@ router.post("/login", (req, res) => {
  	let name = req.body.params.name;
  	let password = req.body.params.password;
 
- 	console.log("AXIOS LOGIN: ", name, password);
-
+ 	// console.log("AXIOS LOGIN: ", name, password);
  	userModel.findOne({name, password}).then(login => {
 
- 		//console.log("Login : ", login);
-
- 		const loginID = login._id;	// User's ID; not really used for much
+ 		console.log("Login : ", login);
 
  		if (login) {
+
+ 			const loginID = login._id;	// User's ID; not really used for much
 
  			// User credentials have been checked; first find his origin and sex
  			// from his record in users DB, to be passed to new page.
@@ -298,11 +297,11 @@ router.post("/login", (req, res) => {
 				});
 			});
 
-
  		} else {
  			// If user's credientials do not exist in database, 
  			// respond with error
  			console.log("Not in DB");
+ 			res.json({loginFail: "Wrong Login Credentials"})
 
  		}
 
