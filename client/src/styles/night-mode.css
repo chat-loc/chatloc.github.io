@@ -12,7 +12,7 @@
 .darkmode .msgTextbox {
 	border: 1px solid #ffffff !important;
 	color:#ffffff !important;
-}
+}  
 .darkmode .button-send-message {
     background-color: var(--red) !important;
     transition: all .2s;

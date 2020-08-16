@@ -6,7 +6,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import "./styles/index.css";
 import "./styles/index.responsive.css";
 import "./styles/font.css";
-import "./styles/nightmode.css";
+import "./styles/night-mode.css";
 
 
 import Login from './components/Login/Login';
