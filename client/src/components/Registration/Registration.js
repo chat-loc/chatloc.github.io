@@ -233,7 +233,7 @@ const Registration = ({location}) => {
 
 		// TURN THIS INTO A FUNCTION FOR REVERSE GEOCODING
 		
-		const apikey = '4cf0cfd43e054b6aa5d2a835ca15449f';
+		const apikey = 'df086dd115604a588664d685b67adc33';
 		const latitude =	lat; // '43.6205';
 		const longitude = 	long; // '-79.5132';
 
