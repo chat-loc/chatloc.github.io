@@ -62,7 +62,7 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {useNewUrlParser: true,
 const PORT = process.env.PORT || 5003;
 
 
-server.listen(PORT, () => {
+server.listen(process.env.PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
 
