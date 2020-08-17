@@ -18,6 +18,7 @@ import Chatroom from './components/Chatroom/Chatroom';
 const App = () => (
 	<Router>
 		<Route path="/" exact component={Login} />	{/*Login Page*/}
+		<Route path="/login" exact component={Login} />	{/*Login Page*/}
 		<Route path="/registration" exact component={Registration} />	{/*Chat Page*/}
 		<Route path="/roomlist" exact component={Roomlist} />	
 		<Route path="/chatroom" component={Chatroom} />	

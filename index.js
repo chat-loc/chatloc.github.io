@@ -61,6 +61,12 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {useNewUrlParser: true,
                     });
 const PORT = process.env.PORT || 5003;
 
+
+server.listen(PORT, () => {
+    console.log(`Server is running on port: ${PORT}`);
+});
+
+
 // PREPARE CHAT SCHEMA
 const locChatSchema = new Schema({
     name : {
@@ -174,9 +180,4 @@ io.on('connection', function (socket) {
 	});
 
 
-});
-
-
-server.listen(PORT, () => {
-    console.log(`Server is running on port: ${PORT}`);
 });
