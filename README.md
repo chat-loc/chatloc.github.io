@@ -16,15 +16,33 @@ If user feels not to put in credentials, below are 3 different credentials for t
 Username: anna<br>
 Password: Anna123
 
+Username: valentina<br>
+Password: Valentina123
+
+Username: sofia<br>
+Password: Sofia123<br>
+
 **Nigeria:**
 
 Username: enitan<br>
 Password: Enitan123
 
+Username: ada<br>
+Password: Ada123
+
+Username: oluchi<br>
+Password: Oluchi123
+
 **India:**
 
 Username: drishti<br>
 Password: Drishti123
+
+Username: vivaan<br>
+Password: Vivaan123
+
+Username: neysa
+Password: Neysa123
 
 
 # Community Application
