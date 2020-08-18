@@ -110,7 +110,7 @@ const Registration = ({location}) => {
 
 	    	console.log (countryLoc, stateLoc);
 	    	// If no errors, check login details. If right, fetch details of the user
-	    	axios.post("http://localhost:5003/user/registration", {
+	    	axios.post("user/registration", {
     			params : {
     				name : username,
     				password : password,

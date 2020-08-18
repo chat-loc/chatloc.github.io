@@ -101,7 +101,7 @@ const Login = ({location}) => {
 	    	e.preventDefault();
 	    	console.log (countryLoc, stateLoc);
 	    	// If no errors, check login details. If right, fetch details of the user
-	    	axios.post("http://localhost:5003/user/login", {
+	    	axios.post("/user/login", {
     			params : {
     				name : username,
     				password : password,
