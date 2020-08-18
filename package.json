@@ -26,6 +26,8 @@
     "mongoose": "^5.9.28",
     "nodemon": "^2.0.4",
     "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^1.0.5"
   }
 }
- 
