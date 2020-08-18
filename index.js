@@ -3,7 +3,6 @@ const moment = require("moment");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const proxy = require('http-proxy-middleware')
 
 const path = require('path');	// Req'd for heroku deployment too!
 
@@ -182,8 +181,3 @@ io.on('connection', function (socket) {
 server.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
-
-module.exports = function(app) {
-    // add other server routes to path array
-    app.use(proxy(['/api' ], { target: 'http://localhost:5003' }));
-} 
