@@ -387,7 +387,7 @@ const Registration = ({location}) => {
 		console.log(location.hostname);
 
 		if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
-			setAxiosURL("/user/login");	// heroku
+			setAxiosURL("/user/registration");	// heroku
 		}
 
 		geolocate();

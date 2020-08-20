@@ -21,6 +21,8 @@ const Chatroom = ({location}) => {
     const [room, setRoom] = useState('');
     const [name, setName] = useState('');
 
+    const [axiosURL, setAxiosURL] = useState("http://localhost:5003/user/chatroom");
+
     const [socketJustConnectedMsg, setSocketJustConnectedMsg] = useState(false);
 
     const [message, setMessage] = useState('');
@@ -49,6 +51,7 @@ const Chatroom = ({location}) => {
     useEffect(() => {
         if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
             setEndPoint("https://chat--loc.herokuapp.com/"); // heroku
+            setAxiosURL("/user/chatroom"); // heroku
         }
     });
 
@@ -131,7 +134,7 @@ const Chatroom = ({location}) => {
             ...
         ]*/
 
-        axios.post("http://localhost:5003/user/chatroom", {
+        axios.post(axiosURL, {
             params : {
                 room
             }
