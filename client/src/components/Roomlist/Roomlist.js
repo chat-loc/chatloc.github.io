@@ -36,7 +36,6 @@ const Roomlist = ({location}) => {
 
         setLoginID(queryID);
 
-
         let chatLoc = "";   // will hold all chatLoc details
 
         chatLoc = localStorage.getItem(queryID);
@@ -69,11 +68,11 @@ const Roomlist = ({location}) => {
     }
 
     const capitalise = (word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1);
+       return word.charAt(0).toUpperCase() + word.slice(1); 
     }
 
     const upperCaseSomeSpaces = (input) => {
-        let val = (input).split('-');
+        let val = (input).split('-');  
         val.forEach((elm, index, theArray)=> {
             theArray[index] = capitalise(elm);
         });
@@ -128,11 +127,11 @@ const Roomlist = ({location}) => {
                         <ul className="same-origin">
                             {resFilteredDistrict.map((district, i) => 
                                 <li key={i}>
-                                      <b className="district-name">{district.name} ({district.sex}) </b>
-                                      <span className="current-loc">
-                                      <em>Currently at</em> :  
-                                      <span className="district-road"> {district.roadLoc}</span>
-                                      </span>
+                                    <b className="district-name">{district.name} ({district.sex}) </b>
+                                    <span className="current-loc">
+                                    <em>Currently at</em> :  
+                                    <span className="district-road"> {district.roadLoc}</span>
+                                    </span>
                                 </li>
                             )}
                         </ul>

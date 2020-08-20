@@ -41,7 +41,6 @@ const Chatroom = ({location}) => {
 
     const [loginID, setLoginID] = useState('');
 
-
     // Determine if chatroom is for district or origin
     const capitalise = (word) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
@@ -73,7 +72,7 @@ const Chatroom = ({location}) => {
         // console.log("USER DETAILS : ", userDetails);
 
         let page;
-        let loc = params.get('room'); // etobicoke-north-district-room
+        let loc = params.get('room'); // etobicoke-north-district-room 
         let districtLoc = new RegExp(/[A-Za-z-.]+-district-room$/); // regex for district room
 
         // 2. Determine the room
@@ -83,14 +82,13 @@ const Chatroom = ({location}) => {
         let name = userDetails.name;
         let room = "";
 
-        if (page == "districtLoc") {
+        if (page === "districtLoc") {
             room = userDetails.districtLoc;
-            setRoom(room);  
         } else {
             room = userDetails.origin;
-            setRoom(room);
         }
 
+        setRoom(room);
         setName(name);
 
         // console.log(name);
@@ -138,7 +136,6 @@ const Chatroom = ({location}) => {
             if (response.data) {
                 setLoadedChats (response.data);  // Load all chats
             }
-
         });
     },[room])
 
@@ -331,7 +328,7 @@ const Chatroom = ({location}) => {
 
             <section className="light-setting">
                 <button className={`light ${light}`} onClick={e => mode(e)}>
-                    <img src={modeImage} alt={modeImage}className="mode-image"/>
+                    <img src={modeImage} alt={modeImage} className="mode-image"/>
                 </button>
             </section>
 

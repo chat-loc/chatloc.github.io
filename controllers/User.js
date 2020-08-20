@@ -200,6 +200,8 @@ router.post("/login", (req, res) => {
  				// console.log("USER'S SEX, ORIGIN: " + user);
 
 				// SAVE THE USER'S RIGHT DETAILS TO THE LOGINDB
+
+				// The countryLoc, stateLoc, districtLoc and roadLoc come from axios 
  				const newUserLocDetails = {
  					name : name,
  					origin : (origin).toLowerCase(),
@@ -210,7 +212,7 @@ router.post("/login", (req, res) => {
    					roadLoc : lowerCaseNoSpaces(req.body.params.roadLoc)
  				}	
 
- 				console.log(newUserLocDetails);
+ 				console.log("NEW USER LOCDETAILS : ", newUserLocDetails);
 
  				// Unpack this, for use in fetching users from the same district.
  				const districtLoc = newUserLocDetails.districtLoc;
@@ -220,7 +222,7 @@ router.post("/login", (req, res) => {
 					// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
 					// UNNECESSARILY ADDING TO THE DB
 					loginModel.findOne({name, password}).then(login =>  {
-				        if (user) {
+				        if (user) {	// Use 'user' instead of 'login' because 'user' contains password and not login
 				        	console.log("WON'T SAVE LOGIN BECAUSE IT EXISTS");
 				        }
 				        if (!user) {
@@ -243,7 +245,7 @@ router.post("/login", (req, res) => {
 			    
 		    	// Fetch 10 loggedin users from same origin AND in the same district
 
-		    	console.log("ORIGIN & DISTRICT BEFORE FETCHING 10 USERS FROM SAME ORIGIN & DISTRICT", origin, districtLoc);
+		    	// console.log("ORIGIN & DISTRICT BEFORE FETCHING 10 USERS FROM SAME ORIGIN & DISTRICT", origin, districtLoc);
 
 		    	loginModel.find({origin : origin, districtLoc : districtLoc}).limit(10).then((logins) => {
 
@@ -313,7 +315,7 @@ router.post("/chatroom", (req, res) => {
 
 	const room = req.body.params.room;
 
-	console.log("---Chatroom : ", room);
+	// log("---Chatroom : ", room);
 
 	// 1e. Now load the chats for your own interface. 'You' don't need to load chats for 
 	// the others because the code will be personalised for them too. Thus, as you're the
@@ -337,9 +339,7 @@ router.post("/chatroom", (req, res) => {
 	    	    ...
 
 	    	]*/
-
 	    	res.json(chats);	// send chats
-
 	    }
 
 	});

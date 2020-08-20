@@ -19,6 +19,8 @@ import torontoMap from '../../images/torontoMap.png';
 const Login = ({location}) => {
 
 	let history = useHistory();
+	const [axiosURL, setAxiosURL] = useState("http://localhost:5003/user/login");
+
 	const [chatroomRedir, setChatroomRedir] = useState(false);
 
 	const [loginID, setLoginID] = useState('');
@@ -74,9 +76,7 @@ const Login = ({location}) => {
     		console.log(loginID);
 
     		localStorage.removeItem(loginID);	// First clear local storage to avoid duplicates
-    			
     		localStorage.setItem(loginID, JSON.stringify(localObj));	// Then save in local storage
-
     		history.push(`/roomlist?id=${loginID}`);
     	}
 
@@ -99,9 +99,9 @@ const Login = ({location}) => {
 	    } else {
 
 	    	e.preventDefault();
-	    	console.log (countryLoc, stateLoc);
+	    	console.log (countryLoc, stateLoc, districtLoc, roadLoc);
 	    	// If no errors, check login details. If right, fetch details of the user
-	    	axios.post("/user/login", {
+	    	axios.post(axiosURL, {
     			params : {
     				name : username,
     				password : password,
@@ -191,7 +191,7 @@ const Login = ({location}) => {
 
 		// TURN THIS INTO A FUNCTION FOR REVERSE GEOCODING
 		
-		const apikey = 'df086dd115604a588664d685b67adc33';
+		const apikey = '4cf0cfd43e054b6aa5d2a835ca15449f';
 		const latitude =	lat; // '43.6205';
 		const longitude = 	long; // '-79.5132';
 
@@ -223,7 +223,7 @@ const Login = ({location}) => {
 		        let components = data.results[0].components;
 		        console.log(components);
 
-		        /*
+		        /* Old response (before 2020-08-20)
 		        ISO_3166-1_alpha-2: "CA"
 				ISO_3166-1_alpha-3: "CAN"
 				city: "Toronto"
@@ -234,21 +234,19 @@ const Login = ({location}) => {
 				house_number: "13"
 				neighbourhood: "West Humber Estates"
 				postcode: "M9V 3W9"
-				road: "Milkwood Avenue"
+				path: "Milkwood Avenue"
 				state: "Ontario"
 				state_code: "ON"
 				_category: "building"
 				_type: "building"
 				*/
 
-		        const {country, state, city_district, road} = components;
+		        const {country, state, city_district, path} = components;
 
 		        setCountryLoc(country);
 		        setStateLoc(state);
 		        setDistrictLoc(city_district);
-		        setRoadLoc(road);
-
-		        // console.log (countryLoc, stateLoc, districtLoc, roadLoc); won't show here; not sure why
+		        setRoadLoc(path);
 
 		    } else if (request.status <= 500){ 
 
@@ -342,10 +340,13 @@ const Login = ({location}) => {
 	useEffect (() => {
 
 			// geocode("43.6205", "-79.5132");
-
-			// Modal must only appear on login page to avoid error
 			
-			// geolocate().then(closeModal(true));
+			// Cater Heroku deployment 
+			console.log("LOCATION: ", window.location);
+
+			if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+				setAxiosURL("/user/login");	// heroku
+			}
 
 			geolocate();
 
@@ -400,11 +401,6 @@ const Login = ({location}) => {
 		                    	<span className="error">Password should not be empty <span className="fa fa-exclamation-triangle"></span></span>
 		                                  )}
 		                </div>
-
-		                <input type="hidden" id="location-country" name="location-country" value=""/> 
-		                <input type="hidden" id="location-state" name="location-state" value=""/>
-		                <input type="hidden" id="location-district" name="location-district" value=""/>
-		                <input type="hidden" id="location-road" name="location-road" value=""/>
 
 		                <div className="form-group">
 		                    <input type="submit" name="submit-btn" value="Log In" id="submit-btn" className="register-button"

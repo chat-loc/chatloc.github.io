@@ -20,6 +20,7 @@ const Registration = ({location}) => {
 	const mailPattern = new RegExp(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9-.]+/);  // kodesektor@rocketmail.com
 
 	let history = useHistory();
+	const [axiosURL, setAxiosURL] = useState("http://localhost:5003/user/registration");
 	const [chatroomRedir, setChatroomRedir] = useState(false);
 
 	const [loginID, setLoginID] = useState('');
@@ -63,6 +64,7 @@ const Registration = ({location}) => {
 	const [resUserDetails, setResUserDetails] = useState([]);
 	const [resFilteredOrigin, setResFilteredOrigin] = useState([]);
 	const [resFilteredDistrict, setResfilteredDistrict] = useState([]);
+
 
 	useEffect (() => {
 		console.log(resUserDetails);
@@ -110,7 +112,7 @@ const Registration = ({location}) => {
 
 	    	console.log (countryLoc, stateLoc);
 	    	// If no errors, check login details. If right, fetch details of the user
-	    	axios.post("user/registration", {
+	    	axios.post(axiosURL, {
     			params : {
     				name : username,
     				password : password,
@@ -276,19 +278,19 @@ const Registration = ({location}) => {
 				house_number: "13"
 				neighbourhood: "West Humber Estates"
 				postcode: "M9V 3W9"
-				road: "Milkwood Avenue"
+				path: "Milkwood Avenue"
 				state: "Ontario"
 				state_code: "ON"
 				_category: "building"
 				_type: "building"
 				*/
 
-		        const {country, state, city_district, road} = components;
+		        const {country, state, city_district, path} = components;
 
 		        setCountryLoc(country);
 		        setStateLoc(state);
 		        setDistrictLoc(city_district);
-		        setRoadLoc(road);
+		        setRoadLoc(path);
 
 		        // console.log (countryLoc, stateLoc, districtLoc, roadLoc); won't show here; not sure why
 
@@ -381,12 +383,15 @@ const Registration = ({location}) => {
 
 	useEffect (() => {
 
-		// Modal must only appear on login page to avoid error
+		// Cater Heroku deployment 
+		console.log(location.hostname);
+
+		if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+			setAxiosURL("/user/login");	// heroku
+		}
 
 		geolocate();
 		
-		// geolocate().then(closeModal(true));	Modal keeps breaking page; not sure why
-
 	}, [location.search]);
 
 
@@ -715,11 +720,6 @@ const Registration = ({location}) => {
 		                    	onChange={(event) => handleChange(event)}/>
 		                    <label htmlFor="male" className="register-switch-label">Male</label>
 		                </div>
-
-		                <input type="hidden" id="location-country" name="location-country" value=""/> 
-		                <input type="hidden" id="location-state" name="location-state" value=""/>
-		                <input type="hidden" id="location-district" name="location-district" value=""/>
-		                <input type="hidden" id="location-road" name="location-road" value=""/>
 
 		                <div className="form-group">
 		                    <input type="submit" name="submit-btn" id="submit-btn" value="Get Started" className="register-button"/>

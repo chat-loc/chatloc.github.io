@@ -109,8 +109,8 @@ io.on('connection', function (socket) {
 	    // obtained from data. i.e. data.name 
 	    if (data.name != null) {
 
-	    	console.log("DATA FROM USER: ", data);
-	    	console.log("DATA LOADED : ", data.room);
+	    	// console.log("DATA FROM USER: ", data);
+	    	// console.log("DATA LOADED : ", data.room); 
 
 	    	// { name: 'sofia', room: 'etobicoke-north', connected: 'connected' }
 	    	console.log("---Data on Join : ", {...data, ...{connected : "connected"}});
