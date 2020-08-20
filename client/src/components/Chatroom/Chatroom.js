@@ -37,7 +37,7 @@ const Chatroom = ({location}) => {
     // SERVER 
     const [resUserDetails, setResUserDetails] = useState([]);
 
-    const ENDPOINT = "localhost:5003";  // Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
+    const [endPoint, setEndPoint] = useState("localhost:5003"); // Put your heroku website link if deployed. This is the PORT no (endpoint) of the index.js file in "server" dir
 
     const [loginID, setLoginID] = useState('');
 
@@ -46,6 +46,11 @@ const Chatroom = ({location}) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
     }
 
+    useEffect(() => {
+        if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+            setEndPoint("https://chat--loc.herokuapp.com/"); // heroku
+        }
+    });
 
     useEffect(() => {
 
@@ -99,7 +104,7 @@ const Chatroom = ({location}) => {
         // SOCKET 
 
         // This is the PORT no (endpoint) of the index.js file in "server" dir
-        socket = io(ENDPOINT);  
+        socket = io(endPoint);  
 
         // 4. When user joins, emit message
         socket.emit('join', { name, room });
@@ -109,7 +114,7 @@ const Chatroom = ({location}) => {
             socket.off();
         }
 
-    }, [ENDPOINT, location.search]); // On load event set the data (meaning of empty brackets)
+    }, [endPoint, location.search]); // On load event set the data (meaning of empty brackets)
 
 
     useEffect(() => {
