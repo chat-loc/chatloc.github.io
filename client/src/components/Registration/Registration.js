@@ -285,12 +285,12 @@ const Registration = ({location}) => {
 				_type: "building"
 				*/
 
-		        const {country, state, city_district, path} = components;
+		        const {country, state, city_district, road} = components;
 
 		        setCountryLoc(country);
 		        setStateLoc(state);
 		        setDistrictLoc(city_district);
-		        setRoadLoc(path);
+		        setRoadLoc(road);
 
 		        // console.log (countryLoc, stateLoc, districtLoc, roadLoc); won't show here; not sure why
 

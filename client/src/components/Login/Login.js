@@ -241,12 +241,12 @@ const Login = ({location}) => {
 				_type: "building"
 				*/
 
-		        const {country, state, city_district, path} = components;
+		        const {country, state, city_district, road} = components;
 
 		        setCountryLoc(country);
 		        setStateLoc(state);
 		        setDistrictLoc(city_district);
-		        setRoadLoc(path);
+		        setRoadLoc(road);
 
 		    } else if (request.status <= 500){ 
 
@@ -318,10 +318,14 @@ const Login = ({location}) => {
 		//const watchId = navigator.geolocation.watchPosition(successCallback, errorCallback, {
 
 		// Use getCurrentPosition for now to limit no of fetches and not surpass daily limit
-		navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
-			enableHighAccuracy : true, 	//try best to provide with a high accurate location
-			timeout: 5000
-		});	
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+				enableHighAccuracy : true, 	//try best to provide with a high accurate location
+				timeout: 5000
+			});
+		} else {
+			alert ('App can\'t run because of unavailability of location details');
+		}	
 	}
 
 	const closeModal = () => {
