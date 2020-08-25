@@ -383,7 +383,7 @@ const Registration = ({location}) => {
 
 	useEffect (() => {
 
-		// Cater Heroku deployment 
+		// Cater for Heroku deployment 
 		console.log(location.hostname);
 
 		if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {

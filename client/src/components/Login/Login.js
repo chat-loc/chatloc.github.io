@@ -345,7 +345,7 @@ const Login = ({location}) => {
 
 			// geocode("43.6205", "-79.5132");
 			
-			// Cater Heroku deployment 
+			// Cater for Heroku deployment 
 			console.log("LOCATION: ", window.location);
 
 			if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
@@ -414,7 +414,7 @@ const Login = ({location}) => {
 		            </form>
 
 		            <p className="have-account">Already have an account?
-		           		<Link to={"/registration"}>Register Instead</Link>
+		           		<Link to={"/registration"}> Register Instead</Link>
 		            </p>
 
 		        </section>

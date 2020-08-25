@@ -34,25 +34,38 @@ router.post("/registration", (req, res) => {
 
 	// console.log("REQ BODY PARAMS: ", req.body.params);
 
+	// console.log(req.body.params);
+
 	let loginID = "";
+
+	let reqName = ((req.body.params.name).trim()).toLowerCase();
+	let reqPassword = (req.body.params.password).trim();
+	let reqEmail = (req.body.params.email).trim();
+	let reqOrigin = ((req.body.params.origin).trim()).toLowerCase();
+	let reqSex = ((req.body.params.sex).trim()).toLowerCase();
+
+	let reqCountryLoc = lowerCaseNoSpaces(req.body.params.countryLoc);
+	let reqStateLoc = lowerCaseNoSpaces(req.body.params.stateLoc);
+	let reqDistrictLoc = lowerCaseNoSpaces(req.body.params.districtLoc);
+	let reqRoadLoc = lowerCaseNoSpaces(req.body.params.roadLoc) || "No road specified";
 
 	// Fetch user details from body object
 	const newUser = {
-		name : ((req.body.params.name).trim()).toLowerCase(),
-		password : (req.body.params.password).trim(),
-		email : (req.body.params.email).trim(),
-		origin : ((req.body.params.origin).trim()).toLowerCase(),
-		sex : (req.body.params.sex).trim()
+		name : reqName,
+		password : reqPassword,
+		email : reqEmail,
+		origin : reqOrigin,
+		sex : reqSex
 	}
 
 	const newUserLocDetails = {
-		name : ((req.body.params.name).trim()).toLowerCase(),
-		origin : ((req.body.params.origin).trim()).toLowerCase(),
-		sex :(req.body.params.sex).trim(),
-		countryLoc: lowerCaseNoSpaces(req.body.params.countryLoc),
-		stateLoc : lowerCaseNoSpaces(req.body.params.stateLoc),
-		districtLoc : lowerCaseNoSpaces(req.body.params.districtLoc),
-		roadLoc : lowerCaseNoSpaces(req.body.params.roadLoc)
+		name : reqName,
+		origin : reqOrigin,
+		sex : reqSex,
+		countryLoc: reqCountryLoc,
+		stateLoc : reqStateLoc,
+		districtLoc : reqDistrictLoc,
+		roadLoc : reqRoadLoc
 	}
 
 	const { name, sex, origin, password } = newUser;
@@ -78,7 +91,6 @@ router.post("/registration", (req, res) => {
 
         } else {
         	// console.log("User already in DB");
-
         	res.json({userExists : "User already in database"});
         }
     });
@@ -116,8 +128,7 @@ router.post("/registration", (req, res) => {
 
     
 	// Fetch 10 loggedin users from same origin
-
-	console.log(origin);
+	// console.log(origin);
 
 	loginModel.find({origin : origin}).limit(10).then((logins) => {
 
@@ -165,9 +176,7 @@ router.post("/registration", (req, res) => {
 				jsonFilteredDistrict
 			});
 		});
-
 	});
-
 });
 
 // Coming from login form
@@ -175,14 +184,21 @@ router.post("/registration", (req, res) => {
 router.post("/login", (req, res) => { 
 
  	// Check if login details exist in DB
+ 	// console.log(req.body.params)
 
- 	let name = req.body.params.name;
- 	let password = req.body.params.password;
+ 	let reqName = lowerCaseNoSpaces((req.body.params.name).trim());
+ 	let reqPassword = (req.body.params.password).trim();	// Leave case of password as-is
 
- 	// console.log("AXIOS LOGIN: ", name, password);
- 	userModel.findOne({name, password}).then(login => {
+ 	// Use lowerCaseNoSpaces instead of a simple .lowerCase() because the location details 
+ 	// are API data and are likely to have a mix of uppercase and spaces
+ 	let reqCountryLoc = lowerCaseNoSpaces((req.body.params.countryLoc).trim());
+ 	let reqStateLoc = lowerCaseNoSpaces((req.body.params.stateLoc).trim());
+ 	let reqDistrictLoc = lowerCaseNoSpaces((req.body.params.districtLoc).trim());
+ 	let reqRoadLoc = lowerCaseNoSpaces((req.body.params.roadLoc).trim()) || "No road specified";	// Do this because opencagedata changes this often
 
- 		console.log("Login : ", login);
+ 	userModel.findOne({name:reqName, password: reqPassword}).then(login => {
+
+ 		// console.log("Login : ", login);
 
  		if (login) {
 
@@ -192,7 +208,7 @@ router.post("/login", (req, res) => {
  			// from his record in users DB, to be passed to new page.
 
  			// ORIGIN AND SEX OBTAINED FOR USER HERE
- 			userModel.findOne({name, password}, {"origin": 1, "sex": 1}).then((user) => {
+ 			userModel.findOne({name: reqName, password: reqPassword}, {"origin": 1, "sex": 1}).then((user) => {
 
  				const { origin, sex } = user;
 
@@ -203,16 +219,16 @@ router.post("/login", (req, res) => {
 
 				// The countryLoc, stateLoc, districtLoc and roadLoc come from axios 
  				const newUserLocDetails = {
- 					name : name,
+ 					name : reqName,
  					origin : (origin).toLowerCase(),
  					sex : sex,
-   					countryLoc: lowerCaseNoSpaces(req.body.params.countryLoc),
-   					stateLoc : lowerCaseNoSpaces(req.body.params.stateLoc),
-   					districtLoc : lowerCaseNoSpaces(req.body.params.districtLoc),
-   					roadLoc : lowerCaseNoSpaces(req.body.params.roadLoc)
+   					countryLoc: reqCountryLoc,
+   					stateLoc : reqStateLoc,
+   					districtLoc : reqDistrictLoc,
+   					roadLoc : reqRoadLoc
  				}	
 
- 				console.log("NEW USER LOCDETAILS : ", newUserLocDetails);
+ 				// console.log("NEW USER LOCDETAILS : ", newUserLocDetails);
 
  				// Unpack this, for use in fetching users from the same district.
  				const districtLoc = newUserLocDetails.districtLoc;
@@ -221,7 +237,7 @@ router.post("/login", (req, res) => {
 
 					// SINCE LOGOUT FUNCTIONALITY HAS NOT BEEN CREATED YET, ANY LOGIN KEEPS
 					// UNNECESSARILY ADDING TO THE DB
-					loginModel.findOne({name, password}).then(login =>  {
+					loginModel.findOne({reqName, reqPassword}).then(login =>  {
 				        if (user) {	// Use 'user' instead of 'login' because 'user' contains password and not login
 				        	console.log("WON'T SAVE LOGIN BECAUSE IT EXISTS");
 				        }
@@ -244,10 +260,9 @@ router.post("/login", (req, res) => {
 
 			    
 		    	// Fetch 10 loggedin users from same origin AND in the same district
-
 		    	// console.log("ORIGIN & DISTRICT BEFORE FETCHING 10 USERS FROM SAME ORIGIN & DISTRICT", origin, districtLoc);
 
-		    	loginModel.find({origin : origin, districtLoc : districtLoc}).limit(10).then((logins) => {
+		    	loginModel.find({origin, districtLoc : reqDistrictLoc}).limit(10).then((logins) => {
 
 					const filteredOrigin = logins.map(login => {
 						return {
@@ -262,11 +277,11 @@ router.post("/login", (req, res) => {
 						}
 					});
 
-					console.log("LIST OF USERS FROM THE SAME ORIGIN", filteredOrigin);
+					// console.log("LIST OF USERS FROM THE SAME ORIGIN", filteredOrigin);
 
 					// Fetch 10 loggedin users from same district
 
-			    	loginModel.find({districtLoc : districtLoc}).limit(10).then((logins) => {
+			    	loginModel.find({districtLoc : reqDistrictLoc}).limit(10).then((logins) => {
 
 						const filteredDistrict = logins.map(login => {
 							return {
@@ -284,8 +299,7 @@ router.post("/login", (req, res) => {
 						// console.log(filteredDistrict);
 						
 						// Fetch 10 loggedin users from same district
-
-						const jsonUserDetails = { name, sex, origin, districtLoc, loginID };	// User Details
+						const jsonUserDetails = { name: reqName, sex, origin, districtLoc: reqDistrictLoc, loginID };	// User Details
 						const jsonFilteredOrigin = filteredOrigin;		// 10 users in same origin
 						const jsonFilteredDistrict = filteredDistrict;	// 10 users in same district
 

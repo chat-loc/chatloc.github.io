@@ -34,6 +34,8 @@ const Roomlist = ({location}) => {
         
         queryID = params.get('id');
 
+        // console.log(queryID);
+
         setLoginID(queryID);
 
         let chatLoc = "";   // will hold all chatLoc details
