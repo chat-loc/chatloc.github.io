@@ -8,6 +8,9 @@ import axios from 'axios';
 // Import Header 
 import Header from '../Header/Header';
 
+// Import API key
+import {opencagedataAPIKey} from '../../config.js';
+
 // Import css
 import '../../styles/form.css';
 import './Login.responsive.css';
@@ -191,7 +194,7 @@ const Login = ({location}) => {
 
 		// TURN THIS INTO A FUNCTION FOR REVERSE GEOCODING
 		
-		const apikey = '4cf0cfd43e054b6aa5d2a835ca15449f';
+		const apikey = opencagedataAPIKey;
 		const latitude =	lat; // '43.6205';
 		const longitude = 	long; // '-79.5132';
 
